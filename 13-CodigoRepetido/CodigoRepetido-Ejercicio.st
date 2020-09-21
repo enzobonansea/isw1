@@ -165,7 +165,6 @@ assertErrorIsForEmptyName: anError andCustomerBookStillsEmpty: customerBook
 	self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
 	self assert: customerBook isEmpty ! !
 
-
 
 !classDefinition: #CustomerBook category: #'CodigoRepetido-Ejercicio'!
 Object subclass: #CustomerBook
@@ -192,52 +191,36 @@ initialize
 	suspended:= OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
-addCustomerNamed: aName
+!CustomerBook methodsFor: 'customer management' stamp: 'ja 9/21/2020 19:17:26'!
+addCustomerNamed: potentialCustomerName
 
-	aName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
-	((active includes: aName) or: [suspended includes: aName]) ifTrue: [ self signalCustomerAlreadyExists ].
+	potentialCustomerName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
+	(self includesCustomerNamed: potentialCustomerName) ifTrue: [ self signalCustomerAlreadyExists ].
 	
-	active add: aName ! !
+	active add: potentialCustomerName ! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
 numberOfActiveCustomers
 	
 	^active size! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'ja 9/21/2020 18:43:08'!
 numberOfCustomers
 	
-	^active size + suspended size! !
+	^(self numberOfActiveCustomers) + (self numberOfSuspendedCustomers).! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 9/19/2018 17:36:09'!
 numberOfSuspendedCustomers
 	
 	^suspended size! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'eb 9/19/2020 23:07:00'!
-removeCustomerNamed: aName 
- 	
-	| removeFromActive removeFromSuspended notFound |
+!CustomerBook methodsFor: 'customer management' stamp: 'ja 9/21/2020 19:16:47'!
+removeCustomerNamed: customerName 
 	
-	removeFromActive := [self removeFrom: active elementNamed: aName].
-	removeFromSuspended := [self removeFrom: suspended elementNamed: aName].
-	notFound := [NotFound signal].
-
-	self halt.! !
-
-!CustomerBook methodsFor: 'customer management' stamp: 'eb 9/19/2020 22:50:34'!
-removeFrom: collection elementNamed: elementName
-	self halt.
-	^[1 to: collection size do: 
-		[ :index | 
-			self halt.
-			elementName = (collection at: index) ifTrue: 
-			[ collection removeAt: index. 
-			  ^ elementName.
-			].
-		].
-	].! !
+	^ active remove: customerName ifAbsent: [ 
+		suspended remove: customerName ifAbsent: [ 
+			  NotFound signal ]
+		]! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:52'!
 signalCustomerAlreadyExists 
@@ -249,14 +232,12 @@ signalCustomerNameCannotBeEmpty
 
 	self error: self class customerCanNotBeEmptyErrorMessage ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
-suspendCustomerNamed: aName 
+!CustomerBook methodsFor: 'customer management' stamp: 'ja 9/21/2020 19:17:06'!
+suspendCustomerNamed: customerName 
 	
-	(active includes: aName) ifFalse: [^CantSuspend signal].
-	
-	active remove: aName.
-	
-	suspended add: aName
+	(active includes: customerName) ifFalse: [^CantSuspend signal].	
+	active remove: customerName.
+	suspended add: customerName
 ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
