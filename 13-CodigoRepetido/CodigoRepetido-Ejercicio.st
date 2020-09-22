@@ -55,7 +55,7 @@ test03CanNotAddACustomerWithEmptyName
 		on: Error 
 		do: [ :anError | self assertErrorIsForEmptyName: anError andCustomerBookStillsEmpty: emptyCustomerBook ]! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/19/2020 21:22:30'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/22/2020 20:22:24'!
 test04CanNotRemoveAnInvalidCustomer
 	
 	| customerBook johnLennon |
@@ -65,10 +65,10 @@ test04CanNotRemoveAnInvalidCustomer
 	
 	[ customerBook removeCustomerNamed: 'Paul McCartney'. self fail ]
 		on: NotFound 
-		do: [ self assertCustomerBook: customerBook hasOneCustomerWhoseNameIs: johnLennon ]
+		do: [ self assertCustomerBook: customerBook hasOnlyOneCustomerCalled: johnLennon ]
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/19/2020 21:22:51'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/22/2020 20:25:02'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
@@ -76,8 +76,7 @@ test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 	paulMcCartney := 'Paul Mc Cartney'.
 	customerBook := CustomerBook createCustomerBookWithOneSuspendedCustomerCalled: paulMcCartney.
 	
-	self assertCustomerBookHasOnlyOneSuspendedCustomer: customerBook.
-	self assert: (customerBook includesCustomerNamed: paulMcCartney).
+	self assertCustomerBook: customerBook hasOnlyOneSuspendedCustomerCalled: paulMcCartney.
 	
 
 	
@@ -99,7 +98,7 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/19/2020 21:22:33'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/22/2020 20:22:24'!
 test07CanNotSuspendAnInvalidCustomer
 	
 	| customerBook johnLennon |
@@ -110,10 +109,10 @@ test07CanNotSuspendAnInvalidCustomer
 	[ customerBook suspendCustomerNamed: 'George Harrison'.
 	self fail ]
 		on: CantSuspend 
-		do: [ self assertCustomerBook: customerBook hasOneCustomerWhoseNameIs: johnLennon ]
+		do: [ self assertCustomerBook: customerBook hasOnlyOneCustomerCalled: johnLennon ]
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/19/2020 21:23:03'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'eb 9/22/2020 20:22:24'!
 test08CanNotSuspendAnAlreadySuspendedCustomer
 	
 	| customerBook johnLennon |
@@ -124,33 +123,36 @@ test08CanNotSuspendAnAlreadySuspendedCustomer
 	[ customerBook suspendCustomerNamed: johnLennon.
 	self fail ]
 		on: CantSuspend 
-		do: [ self assertCustomerBook: customerBook hasOneCustomerWhoseNameIs: johnLennon ]
+		do: [ self assertCustomerBook: customerBook hasOnlyOneCustomerCalled: johnLennon ]
 ! !
 
 
-!CustomerBookTest methodsFor: 'private' stamp: 'eb 9/19/2020 21:15:11'!
+!CustomerBookTest methodsFor: 'private' stamp: 'eb 9/22/2020 20:16:07'!
 assertClosureExecution: aBlock takesLessThan: quantity inUnit: unit 
 
-	| millisecondsBeforeRunning millisecondsAfterRunning |
+	| timeBeforeRunning timeAfterRunning |
 		
-	millisecondsBeforeRunning := Time millisecondClockValue * unit.
+	timeBeforeRunning := Time millisecondClockValue * unit.
 	aBlock value.
-	millisecondsAfterRunning := Time millisecondClockValue * unit.
+	timeAfterRunning := Time millisecondClockValue * unit.
 	
-	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < (quantity * unit)! !
+	self assert: (timeAfterRunning-timeBeforeRunning) < (quantity * unit)! !
 
-!CustomerBookTest methodsFor: 'private' stamp: 'eb 9/19/2020 21:26:34'!
-assertCustomerBook: customerBook hasOneCustomerWhoseNameIs: customerName
+!CustomerBookTest methodsFor: 'private' stamp: 'eb 9/22/2020 20:22:24'!
+assertCustomerBook: customerBook hasOnlyOneCustomerCalled: customerName
 
 	self assert: customerBook numberOfCustomers = 1.
 	self assert: (customerBook includesCustomerNamed: customerName)! !
 
-!CustomerBookTest methodsFor: 'private' stamp: 'eb 9/19/2020 21:26:44'!
-assertCustomerBookHasOnlyOneSuspendedCustomer: customerBook
+!CustomerBookTest methodsFor: 'private' stamp: 'eb 9/22/2020 20:24:08'!
+assertCustomerBook: customerBook hasOnlyOneSuspendedCustomerCalled: customerName
 
 	self assert: 0 equals: customerBook numberOfActiveCustomers.
 	self assert: 1 equals: customerBook numberOfSuspendedCustomers.
-	self assert: 1 equals: customerBook numberOfCustomers.! !
+	self assert: 1 equals: customerBook numberOfCustomers.
+	
+	self assert: (customerBook includesCustomerNamed: customerName).
+! !
 
 !CustomerBookTest methodsFor: 'private' stamp: 'eb 9/19/2020 21:26:49'!
 assertCustomerBookIsEmpty: customerBook
