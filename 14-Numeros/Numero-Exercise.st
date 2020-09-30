@@ -333,6 +333,22 @@ addEntero: aNumber
 addFraction:aNumber
 	^self subclassResponsibility ! !
 
+!Numero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:14:59'!
+divideByEntero: aDivisor
+	^self subclassResponsibility ! !
+
+!Numero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:15:20'!
+divideByFraccion: aDivisor
+	^self subclassResponsibility ! !
+
+!Numero methodsFor: 'zzz' stamp: 'ja 9/28/2020 20:56:56'!
+subtractEntero: aNumero
+	^self subclassResponsibility ! !
+
+!Numero methodsFor: 'zzz' stamp: 'ja 9/28/2020 20:56:27'!
+subtractFraccion: aNumber
+	^self subclassResponsibility ! !
+
 
 !Numero methodsFor: 'testing' stamp: 'NR 9/23/2018 23:36:49'!
 isNegative
@@ -348,6 +364,14 @@ isOne
 isZero
 
 	self subclassResponsibility ! !
+
+!Numero methodsFor: 'testing' stamp: 'ja 9/30/2020 17:04:26'!
+multiplyByEntero: aNumber
+	^self subclassResponsibility ! !
+
+!Numero methodsFor: 'testing' stamp: 'ja 9/30/2020 17:04:42'!
+multiplyByFraccion: aNumber
+	^self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -373,9 +397,9 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 17:25:17'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 16:58:01'!
 * aMultiplier 
-	[aMultiplier isKindOf: Entero] value ifTrue:[
+	"[aMultiplier isKindOf: Entero] value ifTrue:[
 		^self class with: value * aMultiplier integerValue
 		] ifFalse:[
 		|aMultiplierNumerator aMultiplierDenominator numerator|
@@ -383,7 +407,8 @@ Numero subclass: #Entero
 		aMultiplierDenominator := aMultiplier denominator .
 		numerator := (self class with: value) * aMultiplierNumerator .
 		^ numerator / aMultiplierDenominator .
-		]
+		]"
+	^ aMultiplier multiplyByEntero: self.
 	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 19:46:53'!
@@ -393,27 +418,30 @@ Numero subclass: #Entero
 
 ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 17:43:05'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:48:21'!
 - aSubtrahend 
-	[aSubtrahend isKindOf: Entero] value ifTrue:[
+	"[aSubtrahend isKindOf: Entero] value ifTrue:[
 		^ self class with: value - aSubtrahend integerValue.
 		] ifFalse: [
 		|aSubNumerator aSubDenominator |
 		aSubNumerator := aSubtrahend numerator .
 		aSubDenominator := aSubtrahend denominator .
 		^ ((self class with: value) * aSubDenominator - aSubNumerator ) / aSubDenominator . 
-		] ! !
+		] ."
+	
+	^aSubtrahend subtractEntero: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 17:37:27'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:17:34'!
 / aDivisor 
-	[aDivisor isKindOf: Entero] value ifTrue:[
+	"[aDivisor isKindOf: Entero] value ifTrue:[
 		^Fraccion with: self over: aDivisor
 		] ifFalse:[
 		|num den |
 		num := aDivisor numerator .
 		den := aDivisor denominator .
 		^ ((self class with: value) * den) / num.
-		]! !
+		]"
+	^ aDivisor divideByEntero: self! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -487,16 +515,50 @@ isZero
 	^value = 0! !
 
 
-!Entero methodsFor: 'zzz' stamp: 'ja 9/27/2020 18:40:42'!
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:50:46'!
 addEntero: anEntero 
-	^self class with: value + anEntero integerValue! !
+	^self class with: (value + anEntero integerValue)! !
 
-!Entero methodsFor: 'zzz' stamp: 'ja 9/27/2020 18:55:43'!
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:52:36'!
 addFraccion: aFraccion 
 	| newNumerator newDenominator |
-	newNumerator := aFraccion numerator.
-		newDenominator := aFraccion denominator .
-		^ ( newNumerator + ((self class with: value) * newDenominator ) / newDenominator ).! !
+	newNumerator := aFraccion numerator + (self * aFraccion  denominator ).
+	newDenominator := aFraccion denominator .
+	^ newNumerator / newDenominator ! !
+
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:22:41'!
+divideByEntero: anEntero
+	^Fraccion with: self over: anEntero ! !
+
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:45:30'!
+divideByFraccion: aDivisor
+	|num den |
+	num := aDivisor numerator .
+	den := aDivisor denominator .
+	^Fraccion with:  (self class with: (value * den integerValue )) over: num.! !
+
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:55:25'!
+multiplyByEntero: anEntero 
+	^self class with: (value * anEntero integerValue)! !
+
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:57:27'!
+multiplyByFraccion: aMultiplier
+	|aMultiplierNumerator aMultiplierDenominator numerator|
+	aMultiplierNumerator := aMultiplier numerator .
+	aMultiplierDenominator := aMultiplier denominator .
+	numerator := self class with:( value * aMultiplierNumerator ).
+	^ numerator / aMultiplierDenominator.! !
+
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:53:51'!
+subtracFraccion: aFraccion 
+	| newNumerator newDenominator |
+	newNumerator := aFraccion numerator - (self * aFraccion  denominator ).
+	newDenominator := aFraccion denominator .
+	^ newNumerator / newDenominator  ! !
+
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:54:08'!
+subtractEntero: aSubtrahend 
+	^ self class with: (value - aSubtrahend  integerValue).! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -524,9 +586,9 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 17:30:42'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:02:36'!
 * aMultiplier 
-	[aMultiplier isKindOf: Fraccion] value ifTrue:[
+	"[aMultiplier isKindOf: Fraccion] value ifTrue:[
 		^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
 		] ifFalse:[
 		|aMultiplierNumerator aMultiplierDenominator otherNumerator|
@@ -534,16 +596,17 @@ Numero subclass: #Fraccion
 		aMultiplierDenominator := self denominator .
 		otherNumerator := aMultiplier  * aMultiplierNumerator .
 		^ otherNumerator / aMultiplierDenominator .
-		]! !
+		]"
+	^aMultiplier multiplyByFraccion: self.! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 19:47:18'!
 + anAdder 
 	^ anAdder addFraccion: self.
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 17:46:28'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 18:03:02'!
 - aSubtrahend 
-	
+	"
 	| newNumerator newDenominator |
 	[aSubtrahend isKindOf: Fraccion] value ifTrue:[
 		newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
@@ -554,11 +617,14 @@ Numero subclass: #Fraccion
 		newNumerator := self numerator.
 		newDenominator := self denominator .
 		^ ( newNumerator - (aSubtrahend * newDenominator ) / newDenominator ).
-		]! !
+		]
+	"
+	^ aSubtrahend subtractFraccion: self.
+	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 17:40:46'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:17:55'!
 / aDivisor 
-	[aDivisor isKindOf: Fraccion] value ifTrue:[
+	"[aDivisor isKindOf: Fraccion] value ifTrue:[
 		^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)
 		] ifFalse: [
 		| numSelf denSelf den |
@@ -566,7 +632,8 @@ Numero subclass: #Fraccion
 		denSelf := self denominator .
 		den := denSelf * aDivisor .
 		^ numSelf  / den.
-		]! !
+		]"
+	^ aDivisor divideByFraccion: self! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
@@ -618,21 +685,60 @@ isZero
 	^false! !
 
 
-!Fraccion methodsFor: 'zzz' stamp: 'ja 9/27/2020 18:46:50'!
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 16:44:49'!
 addEntero: anEntero
 	|adderNumerator adderDenominator |
-		adderNumerator := self numerator .
-		adderDenominator := self denominator .
-		^ (anEntero * adderDenominator + adderNumerator ) / adderDenominator . ! !
+	adderNumerator := self numerator .
+	adderDenominator := self denominator .
+	
+	^ (anEntero * adderDenominator + adderNumerator ) / adderDenominator . ! !
 
-!Fraccion methodsFor: 'zzz' stamp: 'ja 9/27/2020 18:53:13'!
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 18:00:52'!
 addFraccion: aFraccion 
 	| newNumerator newDenominator |	
-		
-		newNumerator := (numerator * aFraccion denominator) + (denominator * aFraccion numerator).
-		newDenominator := denominator * aFraccion denominator.
-		
-		^newNumerator / newDenominator ! !
+	newDenominator := denominator * (aFraccion denominator).
+	newNumerator := (numerator * (aFraccion denominator) ) + (denominator * (aFraccion numerator)).
+	
+	^ newNumerator / newDenominator .! !
+
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 18:01:58'!
+divideByEntero: anEntero
+	| num denSelf den |
+	num := self numerator .
+	denSelf := self denominator .
+	den := denSelf * anEntero .
+	^ num  / den.! !
+
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:39:33'!
+divideByFraccion: aFraccion
+	^(numerator * aFraccion denominator) / (denominator * aFraccion numerator) ! !
+
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:09:45'!
+multiplyByEntero: aMultiplier
+	|aMultiplierNumerator aMultiplierDenominator otherNumerator|
+	aMultiplierNumerator := self numerator .
+	aMultiplierDenominator := self denominator .
+	otherNumerator := aMultiplier  * aMultiplierNumerator .
+	^ otherNumerator / aMultiplierDenominator .! !
+
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:03:27'!
+multiplyByFraccion: aFraccion 
+	^(numerator * aFraccion numerator) / (denominator * aFraccion denominator)! !
+
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 18:00:12'!
+subtracFraccion: aFraccion 
+	| newNumerator newDenominator |	
+	newDenominator := denominator * (aFraccion denominator).
+	newNumerator := (numerator * (aFraccion denominator) ) - (denominator * (aFraccion numerator)).
+	
+	^  newNumerator / newDenominator .! !
+
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/28/2020 21:16:39'!
+subtractEntero: aSubtrahend
+	| newDenominator newNumerator |
+	newNumerator := self numerator.
+	newDenominator := self denominator .
+	^ ( newNumerator - (aSubtrahend * newDenominator ) / newDenominator ).! !
 
 
 !Fraccion methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:54:46'!
