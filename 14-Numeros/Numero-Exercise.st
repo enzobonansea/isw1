@@ -314,42 +314,39 @@ Object subclass: #Numero
 
 	self subclassResponsibility ! !
 
+!Numero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 22:48'!
+invalidNumberType
+
+	self error: self class invalidNumberTypeErrorDescription! !
+
 !Numero methodsFor: 'arithmetic operations' stamp: 'NR 9/23/2018 23:37:13'!
 negated
 	
 	^self * (Entero with: -1)! !
 
 
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 18:28:24'!
-addEntero: anEntero
+!Numero methodsFor: 'zzz' stamp: 'ja 9/27/2020 19:45:34'!
+addEntero: aNumber
 	^self subclassResponsibility ! !
 
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 18:29:40'!
-addFraccion: aFraccion
+!Numero methodsFor: 'zzz' stamp: 'ja 9/27/2020 19:46:09'!
+addFraction:aNumber
 	^self subclassResponsibility ! !
 
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 18:29:03'!
-divideByEntero: anEntero
+!Numero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:14:59'!
+divideByEntero: aDivisor
 	^self subclassResponsibility ! !
 
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 18:29:09'!
-divideByFraccion: aFraccion
+!Numero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:15:20'!
+divideByFraccion: aDivisor
 	^self subclassResponsibility ! !
 
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 18:30:28'!
-multiplyByEntero: anEntero
+!Numero methodsFor: 'zzz' stamp: 'ja 9/28/2020 20:56:56'!
+subtractEntero: aNumero
 	^self subclassResponsibility ! !
 
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 18:30:32'!
-multiplyByFraccion: aFraccion
-	^self subclassResponsibility ! !
-
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 18:29:53'!
-subtractEntero: anEntero
-	^self subclassResponsibility ! !
-
-!Numero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:39:38'!
-subtractFraccion: aFraccion
+!Numero methodsFor: 'zzz' stamp: 'ja 9/28/2020 20:56:27'!
+subtractFraccion: aNumber
 	^self subclassResponsibility ! !
 
 
@@ -368,11 +365,13 @@ isZero
 
 	self subclassResponsibility ! !
 
+!Numero methodsFor: 'testing' stamp: 'ja 9/30/2020 17:04:26'!
+multiplyByEntero: aNumber
+	^self subclassResponsibility ! !
 
-!Numero methodsFor: 'error handling' stamp: 'HernanWilkinson 5/7/2016 22:48'!
-invalidNumberType
-
-	self error: self class invalidNumberTypeErrorDescription! !
+!Numero methodsFor: 'testing' stamp: 'ja 9/30/2020 17:04:42'!
+multiplyByFraccion: aNumber
+	^self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -398,26 +397,55 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 18:37:10'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 16:58:01'!
 * aMultiplier 
+	"[aMultiplier isKindOf: Entero] value ifTrue:[
+		^self class with: value * aMultiplier integerValue
+		] ifFalse:[
+		|aMultiplierNumerator aMultiplierDenominator numerator|
+		aMultiplierNumerator := aMultiplier numerator .
+		aMultiplierDenominator := aMultiplier denominator .
+		numerator := (self class with: value) * aMultiplierNumerator .
+		^ numerator / aMultiplierDenominator .
+		]"
 	^ aMultiplier multiplyByEntero: self.
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 22:17:46'!
-+ anAdder 	
-	^ anAdder addEntero: self.! !
+!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 19:46:53'!
++ anAdder 
+	^ anAdder addEntero: self.
+	
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 18:38:02'!
+! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:48:21'!
 - aSubtrahend 
+	"[aSubtrahend isKindOf: Entero] value ifTrue:[
+		^ self class with: value - aSubtrahend integerValue.
+		] ifFalse: [
+		|aSubNumerator aSubDenominator |
+		aSubNumerator := aSubtrahend numerator .
+		aSubDenominator := aSubtrahend denominator .
+		^ ((self class with: value) * aSubDenominator - aSubNumerator ) / aSubDenominator . 
+		] ."
+	
 	^aSubtrahend subtractEntero: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 22:19:21'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:17:34'!
 / aDivisor 
+	"[aDivisor isKindOf: Entero] value ifTrue:[
+		^Fraccion with: self over: aDivisor
+		] ifFalse:[
+		|num den |
+		num := aDivisor numerator .
+		den := aDivisor denominator .
+		^ ((self class with: value) * den) / num.
+		]"
+	^ aDivisor divideByEntero: self! !
 
-	^ aDivisor divideByEntero: self .! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 18:41:07'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
+	
 	^self class with: value // aDivisor integerValue! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
@@ -487,53 +515,50 @@ isZero
 	^value = 0! !
 
 
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:32:38'!
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:50:46'!
 addEntero: anEntero 
+	^self class with: (value + anEntero integerValue)! !
 
-	^self class with: (value + anEntero integerValue) .! !
-
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 22:17:11'!
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:52:36'!
 addFraccion: aFraccion 
+	| newNumerator newDenominator |
+	newNumerator := aFraccion numerator + (self * aFraccion  denominator ).
+	newDenominator := aFraccion denominator .
+	^ newNumerator / newDenominator ! !
 
-	| numerator denominator |
-	numerator := (aFraccion numerator) + (self * (aFraccion  denominator )) .
-	denominator := aFraccion denominator .
-	^ numerator / denominator .! !
-
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 20:21:06'!
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:22:41'!
 divideByEntero: anEntero
+	^Fraccion with: self over: anEntero ! !
 
-	^ Fraccion new initializeWith: self over: anEntero.! !
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:45:30'!
+divideByFraccion: aDivisor
+	|num den |
+	num := aDivisor numerator .
+	den := aDivisor denominator .
+	^Fraccion with:  (self class with: (value * den integerValue )) over: num.! !
 
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:32:29'!
-divideByFraccion: aFraccion
-	| numerator denominator |
-	numerator := self * aFraccion denominator .
-	denominator := aFraccion numerator .
-	^ numerator / denominator .! !
-
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:32:54'!
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:55:25'!
 multiplyByEntero: anEntero 
-	^self class with: (value * anEntero integerValue) .! !
+	^self class with: (value * anEntero integerValue)! !
 
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:34:25'!
-multiplyByFraccion: aFraccion	
-	| numerator denominator |
-	numerator := self * aFraccion numerator .
-	denominator := aFraccion denominator .
-	^ numerator / denominator .! !
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:57:27'!
+multiplyByFraccion: aMultiplier
+	|aMultiplierNumerator aMultiplierDenominator numerator|
+	aMultiplierNumerator := aMultiplier numerator .
+	aMultiplierDenominator := aMultiplier denominator .
+	numerator := self class with:( value * aMultiplierNumerator ).
+	^ numerator / aMultiplierDenominator.! !
 
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:40:10'!
-subtractEntero: anEntero 
-	^ self class with: (value - anEntero  integerValue).! !
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:53:51'!
+subtracFraccion: aFraccion 
+	| newNumerator newDenominator |
+	newNumerator := aFraccion numerator - (self * aFraccion  denominator ).
+	newDenominator := aFraccion denominator .
+	^ newNumerator / newDenominator  ! !
 
-!Entero methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:39:06'!
-subtractFraccion: aFraccion
-
-	| numerator denominator |
-	numerator := aFraccion numerator + (self * aFraccion denominator) .
-	denominator := aFraccion denominator .
-	^ numerator / denominator .! !
+!Entero methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:54:08'!
+subtractEntero: aSubtrahend 
+	^ self class with: (value - aSubtrahend  integerValue).! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -561,8 +586,17 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 19:54:02'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:02:36'!
 * aMultiplier 
+	"[aMultiplier isKindOf: Fraccion] value ifTrue:[
+		^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
+		] ifFalse:[
+		|aMultiplierNumerator aMultiplierDenominator otherNumerator|
+		aMultiplierNumerator := self numerator .
+		aMultiplierDenominator := self denominator .
+		otherNumerator := aMultiplier  * aMultiplierNumerator .
+		^ otherNumerator / aMultiplierDenominator .
+		]"
 	^aMultiplier multiplyByFraccion: self.! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/27/2020 19:47:18'!
@@ -570,14 +604,35 @@ Numero subclass: #Fraccion
 	^ anAdder addFraccion: self.
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 19:54:27'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 18:03:02'!
 - aSubtrahend 
+	"
+	| newNumerator newDenominator |
+	[aSubtrahend isKindOf: Fraccion] value ifTrue:[
+		newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
+		newDenominator := denominator * aSubtrahend denominator.
+		
+		^newNumerator / newDenominator 
+		] ifFalse: [
+		newNumerator := self numerator.
+		newDenominator := self denominator .
+		^ ( newNumerator - (aSubtrahend * newDenominator ) / newDenominator ).
+		]
+	"
 	^ aSubtrahend subtractFraccion: self.
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'eb 9/30/2020 19:54:44'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'ja 9/30/2020 17:17:55'!
 / aDivisor 
-
+	"[aDivisor isKindOf: Fraccion] value ifTrue:[
+		^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)
+		] ifFalse: [
+		| numSelf denSelf den |
+		numSelf := self numerator .
+		denSelf := self denominator .
+		den := denSelf * aDivisor .
+		^ numSelf  / den.
+		]"
 	^ aDivisor divideByFraccion: self! !
 
 
@@ -630,51 +685,60 @@ isZero
 	^false! !
 
 
-!Fraccion methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:41:50'!
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 16:44:49'!
 addEntero: anEntero
+	|adderNumerator adderDenominator |
+	adderNumerator := self numerator .
+	adderDenominator := self denominator .
+	
+	^ (anEntero * adderDenominator + adderNumerator ) / adderDenominator . ! !
 
-	^ anEntero addFraccion: self .! !
-
-!Fraccion methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 20:00:22'!
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 18:00:52'!
 addFraccion: aFraccion 
-
-	| newNumerator newDenominator selfNumeratorOverNewDenominator aFraccionNumeratorOverNewDenominator |
-	newDenominator := (self denominator) * (aFraccion denominator) .
-	selfNumeratorOverNewDenominator := (self numerator) * (aFraccion denominator) .
-	aFraccionNumeratorOverNewDenominator := (aFraccion numerator) * (self denominator) .
-	newNumerator := selfNumeratorOverNewDenominator + aFraccionNumeratorOverNewDenominator .
+	| newNumerator newDenominator |	
+	newDenominator := denominator * (aFraccion denominator).
+	newNumerator := (numerator * (aFraccion denominator) ) + (denominator * (aFraccion numerator)).
+	
 	^ newNumerator / newDenominator .! !
 
-!Fraccion methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:49:46'!
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 18:01:58'!
 divideByEntero: anEntero
+	| num denSelf den |
+	num := self numerator .
+	denSelf := self denominator .
+	den := denSelf * anEntero .
+	^ num  / den.! !
 
-	^ anEntero divideByFraccion: self .! !
-
-!Fraccion methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:55:26'!
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:39:33'!
 divideByFraccion: aFraccion
-	^Fraccion initializeWith: (numerator * aFraccion denominator) over: (denominator * aFraccion numerator) .! !
+	^(numerator * aFraccion denominator) / (denominator * aFraccion numerator) ! !
 
-!Fraccion methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:50:32'!
-multiplyByEntero: anEntero
-	^ anEntero multiplyByFraccion: self .! !
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:09:45'!
+multiplyByEntero: aMultiplier
+	|aMultiplierNumerator aMultiplierDenominator otherNumerator|
+	aMultiplierNumerator := self numerator .
+	aMultiplierDenominator := self denominator .
+	otherNumerator := aMultiplier  * aMultiplierNumerator .
+	^ otherNumerator / aMultiplierDenominator .! !
 
-!Fraccion methodsFor: 'dependency inversion' stamp: 'ja 9/30/2020 17:03:27'!
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 17:03:27'!
 multiplyByFraccion: aFraccion 
 	^(numerator * aFraccion numerator) / (denominator * aFraccion denominator)! !
 
-!Fraccion methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 19:50:55'!
-subtractEntero: anEntero
-	^ anEntero subtractFraccion: self.! !
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/30/2020 18:00:12'!
+subtracFraccion: aFraccion 
+	| newNumerator newDenominator |	
+	newDenominator := denominator * (aFraccion denominator).
+	newNumerator := (numerator * (aFraccion denominator) ) - (denominator * (aFraccion numerator)).
+	
+	^  newNumerator / newDenominator .! !
 
-!Fraccion methodsFor: 'dependency inversion' stamp: 'eb 9/30/2020 20:00:33'!
-subtractFraccion: aFraccion 
-
-	| newNumerator newDenominator selfNumeratorOverNewDenominator aFraccionNumeratorOverNewDenominator |
-	newDenominator := (self denominator) * (aFraccion denominator) .
-	selfNumeratorOverNewDenominator := (self numerator) * (aFraccion denominator) .
-	aFraccionNumeratorOverNewDenominator := (aFraccion numerator) * (self denominator) .
-	newNumerator := selfNumeratorOverNewDenominator - aFraccionNumeratorOverNewDenominator .
-	^ newNumerator / newDenominator .! !
+!Fraccion methodsFor: 'zzz' stamp: 'ja 9/28/2020 21:16:39'!
+subtractEntero: aSubtrahend
+	| newDenominator newNumerator |
+	newNumerator := self numerator.
+	newDenominator := self denominator .
+	^ ( newNumerator - (aSubtrahend * newDenominator ) / newDenominator ).! !
 
 
 !Fraccion methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:54:46'!
