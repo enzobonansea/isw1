@@ -161,10 +161,10 @@ initializeStack
 isEmpty
 	^(stackElement size = 0)! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 13:23:32'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 13:29:05'!
 pop
 	(stackElement size > 0) ifTrue: [^stackElement removeLast].
-	^ self error: self class stackEmptyErrorDescription ! !
+	(stackElement size = 0) ifTrue:[^ self error: self class stackEmptyErrorDescription ]! !
 
 !OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 12:57:14'!
 push: anElement 
@@ -175,10 +175,10 @@ push: anElement
 size
 	^stackElement size! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 13:22:33'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 13:28:37'!
 top
 	(stackElement size > 0) ifTrue: [^stackElement at: stackElement size].
-	^self error: self class stackEmptyErrorDescription ! !
+	(stackElement size = 0) ifTrue: [^self error: self class stackEmptyErrorDescription ]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
