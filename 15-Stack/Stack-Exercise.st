@@ -46,7 +46,7 @@ test04PopReturnsLastPushedObject
 	
 	self assert: stack pop = pushedObject! !
 
-!OOStackTest methodsFor: 'test' stamp: 'eb 10/4/2020 20:56:51'!
+!OOStackTest methodsFor: 'test' stamp: 'NR 5/13/2020 13:30:48'!
 test05StackBehavesLIFO
 
 	| stack firstPushedObject secondPushedObject |
@@ -147,63 +147,51 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'elements topElement topIndex'
+	instanceVariableNames: 'elements typeElements'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'initialization' stamp: 'eb 10/4/2020 20:42:01'!
+!OOStack methodsFor: 'initialization' stamp: 'ja 10/4/2020 23:15:39'!
 initialize
-	elements := OrderedCollection new .
-	topElement := EmptyStackTop new .
-	topIndex  := OOStackIndex new initializeWith: 1.! !
+	elements := OrderedCollection new.
+	typeElements := OrderedCollection new.
+	typeElements add: EmptyElement new.! !
 
 
-!OOStack methodsFor: 'operations' stamp: 'eb 10/4/2020 20:42:07'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:12:47'!
 isEmpty
-	^ topIndex indexValue = 1 .! !
+	^(elements size = 0)! !
 
-!OOStack methodsFor: 'operations' stamp: 'eb 10/4/2020 21:00:14'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:29:08'!
 pop
-	| topValue |
-	
-	topValue := topElement topValue .
-	
-	topIndex dec.
-	
-	self removeElementsAfterIndex .
-	
-	self resetTopElement .
-		
-	^ topValue .
-	
+
+	| tope | 
+	tope := typeElements at: typeElements size.
+	tope popElement.
+	typeElements removeLast.
+	^elements removeLast.
+	"(elements size > 0) ifTrue: [^elements removeLast].
+	(elements size = 0) ifTrue:[^ self error: self class stackEmptyErrorDescription ]"! !
+
+!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:16:14'!
+push: anElement
+	typeElements add: NotEmptyElement  new.
+	elements  add: anElement.
 	! !
 
-!OOStack methodsFor: 'operations' stamp: 'eb 10/4/2020 21:12:49'!
-push: anElement 
-	elements  add: anElement.	topElement := NotEmptyStackTop new initializeWith: anElement .
-	topIndex  inc .
-	! !
-
-!OOStack methodsFor: 'operations' stamp: 'eb 10/4/2020 20:42:29'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:13:20'!
 size
-	^ topIndex indexValue - 1.! !
+	^elements size! !
 
-!OOStack methodsFor: 'operations' stamp: 'eb 10/4/2020 20:33:40'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:29:48'!
 top
-	^ topElement topValue .! !
-
-
-!OOStack methodsFor: 'private' stamp: 'eb 10/4/2020 21:08:28'!
-removeElementsAfterIndex
-	
-	elements := elements select: [ :each | (elements indexOf: each) <= topIndex indexValue ].! !
-
-!OOStack methodsFor: 'private' stamp: 'eb 10/4/2020 21:16:08'!
-resetTopElement
-	(topIndex indexValue = 1) 
-		ifTrue: [topElement := EmptyStackTop new.] 
-		ifFalse: [topElement := NotEmptyStackTop new initializeWith: elements last]! !
+	| tope | 
+	tope := typeElements at: typeElements size.
+	tope topElement.
+	^elements at: elements size.
+	"(elements size > 0) ifTrue: [^elements at: elements size].
+	(elements size = 0) ifTrue: [^self error: self class stackEmptyErrorDescription ]"! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -211,7 +199,7 @@ resetTopElement
 OOStack class
 	instanceVariableNames: ''!
 
-!OOStack class methodsFor: 'error descriptions' stamp: 'eb 10/4/2020 20:27:55'!
+!OOStack class methodsFor: 'error descriptions' stamp: 'ja 10/4/2020 23:10:55'!
 new
 	^super new initialize! !
 
@@ -221,76 +209,44 @@ stackEmptyErrorDescription
 	^ 'Stack is empty!!'! !
 
 
-!classDefinition: #OOStackIndex category: #'Stack-Exercise'!
-Object subclass: #OOStackIndex
-	instanceVariableNames: 'value'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
-
-!OOStackIndex methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:51:30'!
-dec
-	
-	value := value - 1! !
-
-!OOStackIndex methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:37:15'!
-inc
-	
-	value := value + 1.! !
-
-!OOStackIndex methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:29:59'!
-indexValue
-	
-	^ value .! !
-
-!OOStackIndex methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:27:01'!
-initializeWith: aValue
-	
-	value := aValue .! !
-
-
-!classDefinition: #OOStackTop category: #'Stack-Exercise'!
-Object subclass: #OOStackTop
+!classDefinition: #OOStackElement category: #'Stack-Exercise'!
+Object subclass: #OOStackElement
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStackTop methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:25:15'!
-topValue
-
-	^ self subclassResponsibility .! !
-
 
-!classDefinition: #EmptyStackTop category: #'Stack-Exercise'!
-OOStackTop subclass: #EmptyStackTop
+!classDefinition: #EmptyElement category: #'Stack-Exercise'!
+OOStackElement subclass: #EmptyElement
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!EmptyStackTop methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:43:26'!
-topValue
-	
-	^ self error: OOStack stackEmptyErrorDescription .! !
+!EmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:25:44'!
+popElement
+	self error: OOStack stackEmptyErrorDescription! !
+
+!EmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:26:04'!
+topElement
+	self error: OOStack stackEmptyErrorDescription! !
 
 
-!classDefinition: #NotEmptyStackTop category: #'Stack-Exercise'!
-OOStackTop subclass: #NotEmptyStackTop
-	instanceVariableNames: 'value'
+!classDefinition: #NotEmptyElement category: #'Stack-Exercise'!
+OOStackElement subclass: #NotEmptyElement
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!NotEmptyStackTop methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:24:23'!
-initializeWith: aValue
-	
-	value := aValue .! !
+!NotEmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:26:14'!
+popElement
+	^self.! !
 
-!NotEmptyStackTop methodsFor: 'as yet unclassified' stamp: 'eb 10/4/2020 20:26:03'!
-topValue
-	
-	^ value .! !
+!NotEmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:26:22'!
+topElement
+	^self.! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
