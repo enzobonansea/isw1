@@ -147,51 +147,49 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'elements typeElements'
+	instanceVariableNames: 'elements'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'initialization' stamp: 'ja 10/4/2020 23:15:39'!
+!OOStack methodsFor: 'initialization' stamp: 'ja 10/5/2020 18:33:02'!
 initialize
 	elements := OrderedCollection new.
-	typeElements := OrderedCollection new.
-	typeElements add: EmptyElement new.! !
+	elements add: NoElement new. ! !
 
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:12:47'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:40:23'!
 isEmpty
-	^(elements size = 0)! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:29:08'!
+	^self size = 1! !
+
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:24:00'!
 pop
 
 	| tope | 
-	tope := typeElements at: typeElements size.
-	tope popElement.
-	typeElements removeLast.
-	^elements removeLast.
-	"(elements size > 0) ifTrue: [^elements removeLast].
-	(elements size = 0) ifTrue:[^ self error: self class stackEmptyErrorDescription ]"! !
-
-!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:16:14'!
-push: anElement
-	typeElements add: NotEmptyElement  new.
-	elements  add: anElement.
+	tope := elements last.
+	^tope popElement.
 	! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:13:20'!
-size
-	^elements size! !
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:34:41'!
+push: anElement
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/4/2020 23:29:48'!
+	elements add: (Element new initializeWith: anElement).
+	"elements  add: anElement."
+	! !
+
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:39:53'!
+size
+
+	^((elements size) -1)! !
+
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:34:52'!
 top
+
 	| tope | 
-	tope := typeElements at: typeElements size.
-	tope topElement.
-	^elements at: elements size.
-	"(elements size > 0) ifTrue: [^elements at: elements size].
-	(elements size = 0) ifTrue: [^self error: self class stackEmptyErrorDescription ]"! !
+	tope := elements last.
+	^tope topElement.
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -217,36 +215,43 @@ Object subclass: #OOStackElement
 	category: 'Stack-Exercise'!
 
 
-!classDefinition: #EmptyElement category: #'Stack-Exercise'!
-OOStackElement subclass: #EmptyElement
-	instanceVariableNames: ''
+!classDefinition: #Element category: #'Stack-Exercise'!
+OOStackElement subclass: #Element
+	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!EmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:25:44'!
-popElement
-	self error: OOStack stackEmptyErrorDescription! !
+!Element methodsFor: 'as yet unclassified' stamp: 'ja 10/5/2020 18:23:00'!
+initializeWith: anElement
+	
+	value := anElement.! !
 
-!EmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:26:04'!
+!Element methodsFor: 'as yet unclassified' stamp: 'ja 10/5/2020 18:24:51'!
+popElement
+	
+	^value ! !
+
+!Element methodsFor: 'as yet unclassified' stamp: 'ja 10/5/2020 18:24:58'!
 topElement
-	self error: OOStack stackEmptyErrorDescription! !
+	
+	^value .! !
 
 
-!classDefinition: #NotEmptyElement category: #'Stack-Exercise'!
-OOStackElement subclass: #NotEmptyElement
+!classDefinition: #NoElement category: #'Stack-Exercise'!
+OOStackElement subclass: #NoElement
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!NotEmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:26:14'!
+!NoElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:25:44'!
 popElement
-	^self.! !
+	self error: OOStack stackEmptyErrorDescription! !
 
-!NotEmptyElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:26:22'!
+!NoElement methodsFor: 'as yet unclassified' stamp: 'ja 10/4/2020 23:26:04'!
 topElement
-	^self.! !
+	self error: OOStack stackEmptyErrorDescription! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
@@ -255,3 +260,33 @@ Object subclass: #SentenceFinderByPrefix
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ja 10/5/2020 18:14:15'!
+find: aPrefixToFind in: aStack
+	
+	| otherStack lastSentenceThatMatchWithPrefix currentSentence |
+	
+	(aStack isEmpty) ifTrue: [^'El stack esta vacio'].
+	(aPrefixToFind isEmpty) ifTrue: [^'No se admiten prefijos vacios'].
+	(aPrefixToFind findString: ' ').
+	
+	
+	otherStack := aStack .
+	
+	[otherStack isEmpty] whileFalse: [
+		currentSentence := otherStack pop.
+		 (currentSentence findString: aPrefixToFind startingAt: 1 = 1) ifTrue: [
+				lastSentenceThatMatchWithPrefix := currentSentence		.	
+			].
+		].
+	^ lastSentenceThatMatchWithPrefix .
+	
+	
+	"while (!!aStack isEmpty){
+		if coincide(aStack.top , aPrefixToFind){
+			lastSentence... = aStack.pop
+		} else {
+			aStack.pop
+		}
+	}
+	"! !
