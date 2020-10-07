@@ -144,6 +144,122 @@ TestCase subclass: #SentenceFinderByPrefixTest
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 16:57:55'!
+test01
+	
+	| aStack finder aPrefix |
+	aStack := OOStack new.
+	aStack push: 'abc'.
+	aPrefix := ''.
+	
+	finder := 	SentenceFinderByPrefix new.
+	
+	[ finder find: aPrefix in: aStack . self fail] 
+		on: Error 
+		do: [ :anError | self assert: anError messageText = 'No se admiten prefijos vacios' ]! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 16:58:47'!
+test02
+	
+	| aStack finder aPrefix |
+	aStack := OOStack new.
+	aStack push: 'abc'.
+	aPrefix := 'a a'.
+	
+	finder := 	SentenceFinderByPrefix new.
+	
+	[ finder find: aPrefix in: aStack . self fail] 
+		on: Error 
+		do: [ :anError | self assert: anError messageText = 'El prefijo no puede contener espacios vacios' ]! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 16:59:41'!
+test03
+	
+	| aStack finder aPrefix |
+	aStack := OOStack new.
+	aPrefix := 'ab'.
+	
+	finder := 	SentenceFinderByPrefix new.
+	
+	[ finder find: aPrefix in: aStack . self fail] 
+		on: Error 
+		do: [ :anError | self assert: anError messageText = 'El stack esta vacio']! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 17:02:50'!
+test04
+	| sentencesThathMatchWithAPrefix  aStack finder aPrefix emptyCollection |
+	aStack := OOStack new.
+	aStack push: 'abc'.
+	aStack push: 'abcd'.	
+	aStack push: 'dabc'.	
+	aStack push: 'fabc'.
+	aPrefix := 'zz'.
+	
+	finder := 	SentenceFinderByPrefix new.
+	
+	sentencesThathMatchWithAPrefix := finder find: aPrefix in: aStack.
+	
+	emptyCollection := Bag new.
+	
+	self assert: emptyCollection = sentencesThathMatchWithAPrefix.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 17:07:46'!
+test05
+	| sentencesThathMatchWithAPrefix  aStack finder aPrefix expectedCollection |
+	aStack := OOStack new.
+	aStack push: 'abc'.
+	aStack push: 'abcd'.	
+	aStack push: 'dabc'.	
+	aStack push: 'fabc'.
+	aStack push: 'abc'.
+	aStack push: 'abcdefg'.
+	aPrefix := 'ab'.
+	
+	finder := 	SentenceFinderByPrefix new.
+	
+	sentencesThathMatchWithAPrefix := finder find: aPrefix in: aStack.
+	
+	expectedCollection := Bag with: 'abcd' with: 'abc' with: 'abcdefg' with: 'abc'.
+	
+	self assert: expectedCollection = sentencesThathMatchWithAPrefix.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 17:10:58'!
+test06CaseSensitive
+	| sentencesThathMatchWithAPrefix  aStack finder aPrefix expectedCollection |
+	aStack := OOStack new.
+	aStack push: 'abc'.
+	aStack push: 'abcd'.	
+	aStack push: 'dabc'.	
+	aStack push: 'fabc'.
+	aStack push: 'abc'.
+	aStack push: 'abcdefg'.
+	aPrefix := 'AB'.
+	
+	finder := 	SentenceFinderByPrefix new.
+	
+	sentencesThathMatchWithAPrefix := finder find: aPrefix in: aStack.
+	
+	expectedCollection := Bag new.
+	
+	self assert: expectedCollection = sentencesThathMatchWithAPrefix.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 17:33:04'!
+test07
+	| aStack finder aPrefix expectedStack |
+	aStack := OOStack new.
+	aStack push: 'abc'.
+	aStack push: 'abcd'.	
+	aStack push: 'abcde'.	
+	expectedStack := aStack copy .
+	aPrefix := 'ab'.
+	
+	finder := 	SentenceFinderByPrefix new.
+	
+	finder find: aPrefix in: aStack.
+	expectedStack pop.
+	
+	self assert: expectedStack = aStack .! !
+
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
@@ -158,37 +274,34 @@ initialize
 	elements add: NoElement new. ! !
 
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:40:23'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 20:41:20'!
 isEmpty
 
-	^self size = 1! !
+	^self size = 0! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:24:00'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 20:41:47'!
 pop
 
-	| tope | 
-	tope := elements last.
-	^tope popElement.
+	^elements removeLast popElement .
+	
 	! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:34:41'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 20:42:05'!
 push: anElement
 
 	elements add: (Element new initializeWith: anElement).
-	"elements  add: anElement."
+	
 	! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:39:53'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 19:31:44'!
 size
 
-	^((elements size) -1)! !
+	^elements size - 1! !
 
-!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 18:34:52'!
+!OOStack methodsFor: 'operations' stamp: 'ja 10/5/2020 20:42:29'!
 top
 
-	| tope | 
-	tope := elements last.
-	^tope topElement.
+	^elements last topElement.
 	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -261,32 +374,26 @@ Object subclass: #SentenceFinderByPrefix
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ja 10/5/2020 18:14:15'!
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ja 10/7/2020 16:57:30'!
 find: aPrefixToFind in: aStack
 	
-	| otherStack lastSentenceThatMatchWithPrefix currentSentence |
+	| stackElemets sentencesThatMatchWithPrefix  |
 	
-	(aStack isEmpty) ifTrue: [^'El stack esta vacio'].
-	(aPrefixToFind isEmpty) ifTrue: [^'No se admiten prefijos vacios'].
-	(aPrefixToFind findString: ' ').
-	
-	
-	otherStack := aStack .
-	
-	[otherStack isEmpty] whileFalse: [
-		currentSentence := otherStack pop.
-		 (currentSentence findString: aPrefixToFind startingAt: 1 = 1) ifTrue: [
-				lastSentenceThatMatchWithPrefix := currentSentence		.	
-			].
-		].
-	^ lastSentenceThatMatchWithPrefix .
+	(aStack isEmpty) ifTrue: [self error: 'El stack esta vacio'].
+	(aPrefixToFind isEmpty) ifTrue: [self error: 'No se admiten prefijos vacios'].
+	((aPrefixToFind findString: ' ') ~= 0) ifTrue: [self error: 'El prefijo no puede contener espacios vacios'].
 	
 	
-	"while (!!aStack isEmpty){
-		if coincide(aStack.top , aPrefixToFind){
-			lastSentence... = aStack.pop
-		} else {
-			aStack.pop
-		}
-	}
-	"! !
+	stackElemets := OrderedCollection new.
+	sentencesThatMatchWithPrefix  := Bag new.
+	[aStack isEmpty] whileFalse: [ stackElemets add: aStack pop ].
+	
+	sentencesThatMatchWithPrefix := stackElemets select:[:each| (each findString: aPrefixToFind startingAt: 1) = 1].
+	
+	stackElemets reverse do: [:element| aStack push: element].
+	
+	^sentencesThatMatchWithPrefix asBag .
+	
+	
+	
+	! !
