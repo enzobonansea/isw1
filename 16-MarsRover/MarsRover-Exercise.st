@@ -14,12 +14,12 @@ assertThat: aMarsRover isInPosition: aPosition poitingTo: aCardinalPoint
 	! !
 
 
-!MarsRoverTest methodsFor: 'setUp/tearDown' stamp: 'ja 10/25/2020 13:54:40'!
+!MarsRoverTest methodsFor: 'setUp/tearDown' stamp: 'ja 10/25/2020 16:28:14'!
 setUp 
 	
-	marsRoverInOriginPoitingToNorth _ MarsRover inPosition: (0@0) andCardinalPoint: $N.
+	marsRoverInOriginPoitingToNorth _ MarsRover inPosition: (0@0) andDirection: $N.
 	
-	marsRoverInOriginPoitingToSouth _ MarsRover inPosition: (0@0) andCardinalPoint: $S.! !
+	marsRoverInOriginPoitingToSouth _ MarsRover inPosition: (0@0) andDirection: $S.! !
 
 
 !MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 14:13:37'!
@@ -36,13 +36,13 @@ test07MakesComposedMovementCorrectly
 
 	! !
 
-!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 14:42:52'!
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 16:28:31'!
 test08ComposedMovementIsExecutedUntilInvalidCommandFound
 	
 	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
 	
-	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andCardinalPoint: $N.
-	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andCardinalPoint: $N.
+	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
 	
 	marsRoverThatWillReceiveInvalidCommand move: 'frrjb'.
 	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
@@ -130,22 +130,22 @@ test01AtTheBeginningHasPositionAndCardinalPoint
 	! !
 
 
-!MarsRoverTest methodsFor: 'testing-input validation' stamp: 'ja 10/25/2020 14:54:10'!
+!MarsRoverTest methodsFor: 'testing-input validation' stamp: 'ja 10/25/2020 16:28:38'!
 test09PositionShouldBeAPoint
 
 	| invalidMarsRover |
 	
-	self should: [invalidMarsRover _ MarsRover inPosition: 'something' andCardinalPoint: $N. self fail]
+	self should: [invalidMarsRover _ MarsRover inPosition: 'something' andDirection: $N. self fail]
 	      raise: Error 
 	      withMessageText: MarsRover invalidPositionProvidedErrorDescription.
 	! !
 
-!MarsRoverTest methodsFor: 'testing-input validation' stamp: 'ja 10/25/2020 14:59:26'!
+!MarsRoverTest methodsFor: 'testing-input validation' stamp: 'ja 10/25/2020 16:28:46'!
 test10CardinalPointShouldBeValid
 
 	| invalidMarsRover |
 	
-	self should: [invalidMarsRover _ MarsRover inPosition: (0@0) andCardinalPoint: $K. self fail]
+	self should: [invalidMarsRover _ MarsRover inPosition: (0@0) andDirection: $K. self fail]
 	      raise: Error 
 	      withMessageText: MarsRover invalidCardinalPointProvidedErrorDescription.
 	! !
@@ -153,17 +153,17 @@ test10CardinalPointShouldBeValid
 
 !classDefinition: #MarsRover category: #'MarsRover-Exercise'!
 Object subclass: #MarsRover
-	instanceVariableNames: 'position marsRoverCardinalPoint'
+	instanceVariableNames: 'position direction'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover-Exercise'!
 
-!MarsRover methodsFor: 'initialization' stamp: 'ja 10/25/2020 14:39:02'!
-initializeInPosition: aPosition andCardinalPoint: aMarsRoverCardinalPoint 
+!MarsRover methodsFor: 'initialization' stamp: 'ja 10/25/2020 16:27:01'!
+initializeInPosition: aPosition andDirection: aCardinalPoint 
 	
 	position := aPosition.
 	
-	marsRoverCardinalPoint := aMarsRoverCardinalPoint .! !
+	direction := aCardinalPoint .! !
 
 
 !MarsRover methodsFor: 'testing' stamp: 'ja 10/25/2020 14:39:35'!
@@ -171,16 +171,16 @@ isInPosition: aPosition
 	
 	^ position = aPosition .! !
 
-!MarsRover methodsFor: 'testing' stamp: 'ja 10/25/2020 12:22:57'!
+!MarsRover methodsFor: 'testing' stamp: 'ja 10/25/2020 16:22:57'!
 isPointingTo: aCardinalPoint 
 	
-	^ marsRoverCardinalPoint is: aCardinalPoint  .! !
+	^ direction is: aCardinalPoint  .! !
 
 
-!MarsRover methodsFor: 'accessing' stamp: 'ja 10/25/2020 14:39:46'!
-marsRoverCardinalPoint
+!MarsRover methodsFor: 'accessing' stamp: 'ja 10/25/2020 16:42:32'!
+direction
 	
-	^ marsRoverCardinalPoint! !
+	^ direction! !
 
 !MarsRover methodsFor: 'accessing' stamp: 'ja 10/25/2020 13:31:37'!
 position
@@ -188,37 +188,42 @@ position
 	^position! !
 
 
-!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 12:46:08'!
+!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 16:22:57'!
 pointToEast
 
-	marsRoverCardinalPoint _ East new.! !
+	direction _ East new.! !
 
-!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 12:46:20'!
+!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 16:22:57'!
 pointToNorth
 
-	marsRoverCardinalPoint _ North new.! !
+	direction _ North new.! !
 
-!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 12:46:34'!
+!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 16:22:56'!
 pointToSouth
 
-	marsRoverCardinalPoint _ South new.! !
+	direction _ South new.! !
 
-!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 12:46:43'!
+!MarsRover methodsFor: 'rotation' stamp: 'ja 10/25/2020 16:22:56'!
 pointToWest
 
-	marsRoverCardinalPoint _ West new.! !
+	direction _ West new.! !
 
 
-!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 14:40:18'!
-move: commands
+!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 16:33:20'!
+exec: aCommand
 											
-	commands do: [ :command | [ marsRoverCardinalPoint move: self following: command ] on: Error do: [ ^ self ]]! !
+	 direction follow: aCommand on: self . ! !
+
+!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 16:07:49'!
+move: aCommandCollection
+											
+	aCommandCollection do: [ :command | [ self exec: command ] on: Error do: [ ^ self ]]! !
 
 
-!MarsRover methodsFor: 'comparation' stamp: 'ja 10/25/2020 13:27:45'!
+!MarsRover methodsFor: 'comparation' stamp: 'ja 10/25/2020 16:42:43'!
 = anOtherMarsRover
 
-	^ position = anOtherMarsRover position and: (marsRoverCardinalPoint = anOtherMarsRover 	marsRoverCardinalPoint).! !
+	^ position = anOtherMarsRover position and: (direction = anOtherMarsRover 	direction).! !
 
 
 !MarsRover methodsFor: 'translation' stamp: 'ja 10/25/2020 12:45:16'!
@@ -247,80 +252,251 @@ incrementPositionY
 MarsRover class
 	instanceVariableNames: ''!
 
-!MarsRover class methodsFor: 'error handling' stamp: 'ja 10/25/2020 15:00:02'!
+!MarsRover class methodsFor: 'error handling-description' stamp: 'ja 10/25/2020 15:00:02'!
 invalidCardinalPointProvidedErrorDescription
 
 	^ 'El punto cardinal es invalido'! !
 
-!MarsRover class methodsFor: 'error handling' stamp: 'ja 10/25/2020 15:02:54'!
-invalidCardinalPointProvidedErrorSignal
-	
-	self error: self invalidCardinalPointProvidedErrorDescription .! !
-
-!MarsRover class methodsFor: 'error handling' stamp: 'ja 10/25/2020 13:04:27'!
+!MarsRover class methodsFor: 'error handling-description' stamp: 'ja 10/25/2020 13:04:27'!
 invalidComandErrorDescription
 	
 	^ 'Comando invalido'! !
 
-!MarsRover class methodsFor: 'error handling' stamp: 'ja 10/25/2020 13:11:36'!
-invalidComandErrorSignal
-	
-	self error: self invalidComandErrorDescription ! !
-
-!MarsRover class methodsFor: 'error handling' stamp: 'ja 10/25/2020 14:55:06'!
+!MarsRover class methodsFor: 'error handling-description' stamp: 'ja 10/25/2020 14:55:06'!
 invalidPositionProvidedErrorDescription
 
 	^ 'La posición debe ser un punto'! !
 
 
-!MarsRover class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 15:00:32'!
-inPosition: aPosition andCardinalPoint: aCardinalPoint
+!MarsRover class methodsFor: 'error handling-signal' stamp: 'ja 10/25/2020 15:02:54'!
+invalidCardinalPointProvidedErrorSignal
 	
-	| marsRoverCardinalPoint |
+	self error: self invalidCardinalPointProvidedErrorDescription .! !
+
+!MarsRover class methodsFor: 'error handling-signal' stamp: 'ja 10/25/2020 13:11:36'!
+invalidComandErrorSignal
 	
-	(aPosition isKindOf: Point) ifFalse: [self error: self invalidPositionProvidedErrorDescription ].
+	self error: self invalidComandErrorDescription ! !
+
+
+!MarsRover class methodsFor: 'private-input validation' stamp: 'ja 10/25/2020 16:48:13'!
+shouldBeAPoint: aPosition
+
+	^ (aPosition isKindOf: Point) ifFalse: [ self error: self invalidPositionProvidedErrorDescription ]! !
+
+
+!MarsRover class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 16:48:13'!
+inPosition: aPosition andDirection: aCardinalPoint
 	
-	marsRoverCardinalPoint _ MarsRoverCardinalPoint from: aCardinalPoint .
+	| direction |
 	
-	^ self new initializeInPosition: aPosition andCardinalPoint: marsRoverCardinalPoint .! !
+	self shouldBeAPoint: aPosition.
+	
+	direction _ MarsRoverDirection from: aCardinalPoint .
+	
+	^ self new initializeInPosition: aPosition andDirection: direction .! !
 
 
-!classDefinition: #MarsRoverCardinalPoint category: #'MarsRover-Exercise'!
-Object subclass: #MarsRoverCardinalPoint
+!classDefinition: #MarsRoverCommand category: #'MarsRover-Exercise'!
+Object subclass: #MarsRoverCommand
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover-Exercise'!
 
-!MarsRoverCardinalPoint methodsFor: 'movement' stamp: 'ja 10/25/2020 14:20:56'!
-move: aMarsRover following: aCommand
+!MarsRoverCommand methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:18'!
+execWhenPointingToEastOn: aMarsRover 
+	
+	self subclassResponsibility ! !
+
+!MarsRoverCommand methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:36'!
+execWhenPointingToNorthOn: aMarsRover 
+	
+	self subclassResponsibility ! !
+
+!MarsRoverCommand methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:47'!
+execWhenPointingToSouthOn: aMarsRover 
+	
+	self subclassResponsibility ! !
+
+!MarsRoverCommand methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:59'!
+execWhenPointingToWestOn: aMarsRover 
+	
+	self subclassResponsibility ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarsRoverCommand class' category: #'MarsRover-Exercise'!
+MarsRoverCommand class
+	instanceVariableNames: 'uniqueInstance'!
+
+!MarsRoverCommand class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 15:36:55'!
+from: aCommand
+
+	aCommand = $f ifTrue: [^ Forward  new].
+	aCommand = $b ifTrue: [^ Backward new].
+	aCommand = $r ifTrue: [^ Rigth new].
+	aCommand = $l ifTrue: [^ Left new].
+	
+	MarsRover invalidComandErrorSignal.
+	
+! !
+
+!MarsRoverCommand class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 15:37:29'!
+new
+
+	uniqueInstance ifNil: [ uniqueInstance _  self basicNew ].
+	^ uniqueInstance  ! !
+
+
+!classDefinition: #Backward category: #'MarsRover-Exercise'!
+MarsRoverCommand subclass: #Backward
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-Exercise'!
+
+!Backward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:18'!
+execWhenPointingToEastOn: aMarsRover 
+
+	^ aMarsRover decrementPositionX .! !
+
+!Backward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:36'!
+execWhenPointingToNorthOn: aMarsRover 
+	
+	^ aMarsRover decrementPositionY .! !
+
+!Backward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:47'!
+execWhenPointingToSouthOn: aMarsRover 
+
+	^ aMarsRover incrementPositionY .! !
+
+!Backward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:59'!
+execWhenPointingToWestOn: aMarsRover 
+
+	^ aMarsRover incrementPositionX ! !
+
+
+!classDefinition: #Forward category: #'MarsRover-Exercise'!
+MarsRoverCommand subclass: #Forward
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-Exercise'!
+
+!Forward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:18'!
+execWhenPointingToEastOn: aMarsRover 
+
+	^ aMarsRover incrementPositionX ! !
+
+!Forward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:36'!
+execWhenPointingToNorthOn: aMarsRover 
+	
+	^ aMarsRover incrementPositionY.! !
+
+!Forward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:47'!
+execWhenPointingToSouthOn: aMarsRover 
+	
+	^ aMarsRover decrementPositionY .! !
+
+!Forward methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:59'!
+execWhenPointingToWestOn: aMarsRover 
+
+	^ aMarsRover decrementPositionX .! !
+
+
+!classDefinition: #Left category: #'MarsRover-Exercise'!
+MarsRoverCommand subclass: #Left
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-Exercise'!
+
+!Left methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:18'!
+execWhenPointingToEastOn: aMarsRover 
+	
+	^ aMarsRover pointToNorth .! !
+
+!Left methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:36'!
+execWhenPointingToNorthOn: aMarsRover 
+
+	^ aMarsRover pointToWest .! !
+
+!Left methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:47'!
+execWhenPointingToSouthOn: aMarsRover 
+
+	^ aMarsRover  pointToEast .! !
+
+!Left methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:59'!
+execWhenPointingToWestOn: aMarsRover 
+
+	^ aMarsRover  pointToSouth .! !
+
+
+!classDefinition: #Rigth category: #'MarsRover-Exercise'!
+MarsRoverCommand subclass: #Rigth
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-Exercise'!
+
+!Rigth methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:18'!
+execWhenPointingToEastOn: aMarsRover 
+
+	^ aMarsRover pointToSouth .! !
+
+!Rigth methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:36'!
+execWhenPointingToNorthOn: aMarsRover 
+
+	^ aMarsRover pointToEast .! !
+
+!Rigth methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:47'!
+execWhenPointingToSouthOn: aMarsRover 
+
+	^ aMarsRover pointToWest .! !
+
+!Rigth methodsFor: 'execution' stamp: 'ja 10/25/2020 16:37:59'!
+execWhenPointingToWestOn: aMarsRover 
+
+	^ aMarsRover pointToNorth .! !
+
+
+!classDefinition: #MarsRoverDirection category: #'MarsRover-Exercise'!
+Object subclass: #MarsRoverDirection
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-Exercise'!
+
+!MarsRoverDirection methodsFor: 'movement' stamp: 'ja 10/25/2020 16:34:27'!
+follow: aCommand on: aMarsRover
 
 	self subclassResponsibility ! !
 
 
-!MarsRoverCardinalPoint methodsFor: 'testing' stamp: 'ja 10/25/2020 12:24:51'!
+!MarsRoverDirection methodsFor: 'testing' stamp: 'ja 10/25/2020 12:24:51'!
 is: aCardinalPoint 
 	
 	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'MarsRoverCardinalPoint class' category: #'MarsRover-Exercise'!
-MarsRoverCardinalPoint class
+!classDefinition: 'MarsRoverDirection class' category: #'MarsRover-Exercise'!
+MarsRoverDirection class
 	instanceVariableNames: 'uniqueInstance'!
 
-!MarsRoverCardinalPoint class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 15:03:22'!
+!MarsRoverDirection class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 16:46:27'!
 from: aCardinalPoint
 
-	aCardinalPoint = $N ifTrue: [ ^ North new].
-	aCardinalPoint = $S ifTrue: [ ^ South new].
-	aCardinalPoint = $E ifTrue: [ ^ East new].
-	aCardinalPoint = $W ifTrue: [ ^ West new].
+	aCardinalPoint = $N ifTrue: [ ^ North new ].
+	aCardinalPoint = $S ifTrue: [ ^ South new ].
+	aCardinalPoint = $E ifTrue: [ ^ East new ].
+	aCardinalPoint = $W ifTrue: [ ^ West new ].
 	
 	MarsRover invalidCardinalPointProvidedErrorSignal .
 	! !
 
-!MarsRoverCardinalPoint class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 13:36:00'!
+!MarsRoverDirection class methodsFor: 'class initialization' stamp: 'ja 10/25/2020 13:36:00'!
 new
 
 	uniqueInstance ifNil: [ uniqueInstance _  self basicNew ].
@@ -328,21 +504,18 @@ new
 
 
 !classDefinition: #East category: #'MarsRover-Exercise'!
-MarsRoverCardinalPoint subclass: #East
+MarsRoverDirection subclass: #East
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover-Exercise'!
 
-!East methodsFor: 'movement' stamp: 'ja 10/25/2020 14:21:13'!
-move: aMarsRover following: aCommand
-
-	aCommand = $f ifTrue: [^ aMarsRover incrementPositionX ].
-	aCommand = $b ifTrue: [^ aMarsRover decrementPositionX ].
-	aCommand = $r ifTrue: [^ aMarsRover pointToSouth ].
-	aCommand = $l ifTrue: [^ aMarsRover pointToNorth ].
+!East methodsFor: 'movement' stamp: 'ja 10/25/2020 16:38:53'!
+follow: aCommand on: aMarsRover
 	
-	aMarsRover class invalidComandErrorSignal.! !
+	^ (MarsRoverCommand from: aCommand) execWhenPointingToEastOn: aMarsRover .
+	
+! !
 
 
 !East methodsFor: 'testing' stamp: 'ja 10/25/2020 12:25:37'!
@@ -352,7 +525,7 @@ is: aCardinalPoint
 
 
 !classDefinition: #North category: #'MarsRover-Exercise'!
-MarsRoverCardinalPoint subclass: #North
+MarsRoverDirection subclass: #North
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -364,20 +537,14 @@ is: aCardinalPoint
 	^ aCardinalPoint = $N! !
 
 
-!North methodsFor: 'movement' stamp: 'ja 10/25/2020 14:21:27'!
-move: aMarsRover following: aCommand
+!North methodsFor: 'movement' stamp: 'ja 10/25/2020 16:39:06'!
+follow: aCommand on: aMarsRover
 
-	aCommand = $f ifTrue: [^ aMarsRover incrementPositionY ].
-	aCommand = $b ifTrue: [^ aMarsRover decrementPositionY ].
-	aCommand = $r ifTrue: [^ aMarsRover pointToEast ].
-	aCommand = $l ifTrue: [^ aMarsRover pointToWest ].
-	
-	aMarsRover class invalidComandErrorSignal.
-	! !
+	^ (MarsRoverCommand from: aCommand) execWhenPointingToNorthOn: aMarsRover .! !
 
 
 !classDefinition: #South category: #'MarsRover-Exercise'!
-MarsRoverCardinalPoint subclass: #South
+MarsRoverDirection subclass: #South
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -389,19 +556,14 @@ is: aCardinalPoint
 	^ aCardinalPoint = $S! !
 
 
-!South methodsFor: 'movement' stamp: 'ja 10/25/2020 14:21:38'!
-move: aMarsRover following: aCommand
+!South methodsFor: 'movement' stamp: 'ja 10/25/2020 16:39:13'!
+follow: aCommand on: aMarsRover
 
-	aCommand = $f ifTrue: [^ aMarsRover decrementPositionY ].
-	aCommand = $b ifTrue: [^ aMarsRover incrementPositionY ].
-	aCommand = $r ifTrue: [^ aMarsRover pointToWest ].
-	aCommand = $l ifTrue: [^ aMarsRover pointToEast ].
-	
-	aMarsRover class invalidComandErrorSignal.! !
+	^ (MarsRoverCommand from: aCommand) execWhenPointingToSouthOn: aMarsRover .! !
 
 
 !classDefinition: #West category: #'MarsRover-Exercise'!
-MarsRoverCardinalPoint subclass: #West
+MarsRoverDirection subclass: #West
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -413,12 +575,7 @@ is: aCardinalPoint
 	^ aCardinalPoint = $W! !
 
 
-!West methodsFor: 'movement' stamp: 'ja 10/25/2020 14:21:49'!
-move: aMarsRover following: aCommand
+!West methodsFor: 'movement' stamp: 'ja 10/25/2020 16:39:18'!
+follow: aCommand on: aMarsRover
 
-	aCommand = $f ifTrue: [^ aMarsRover decrementPositionX ].
-	aCommand = $b ifTrue: [^ aMarsRover incrementPositionX ].
-	aCommand = $r ifTrue: [^ aMarsRover pointToNorth ].
-	aCommand = $l ifTrue: [^ aMarsRover pointToSouth ].
-	
-	aMarsRover class invalidComandErrorSignal.! !
+	^ (MarsRoverCommand from: aCommand) execWhenPointingToWestOn: aMarsRover .! !
