@@ -13,6 +13,15 @@ assertThat: aMarsRover isInPosition: aPosition poitingTo: aCardinalPoint
 	self assert: (aMarsRover isPointingTo: aCardinalPoint).
 	! !
 
+!MarsRoverTest methodsFor: 'private' stamp: 'ja 10/25/2020 21:47:04'!
+should: aBlockWithInvalidCommand raiseInvalidCommandErrorAsserting: aBlockToAssert 
+	
+	self should: aBlockWithInvalidCommand 
+		raise: Error 
+		withMessageText: MarsRover invalidComandErrorDescription.
+		
+	aBlockToAssert value! !
+
 
 !MarsRoverTest methodsFor: 'setUp/tearDown' stamp: 'ja 10/25/2020 16:28:14'!
 setUp 
@@ -36,18 +45,20 @@ test07MakesComposedMovementCorrectly
 
 	! !
 
-!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 16:28:31'!
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 21:48:32'!
 test08ComposedMovementIsExecutedUntilInvalidCommandFound
 	
 	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
 	
 	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
 	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
 	
-	marsRoverThatWillReceiveInvalidCommand move: 'frrjb'.
 	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
 	
-	self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand .! !
+	self should:  [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail] 
+	      raiseInvalidCommandErrorAsserting: [self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand ].
+! !
 
 
 !MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 14:03:03'!
@@ -105,20 +116,11 @@ test05MovesBackwardCorrectly
 	
 	! !
 
-!MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 14:09:56'!
-test06DoNothingOnInvalidCommand
-	
-	marsRoverInOriginPoitingToNorth move: 'k'.
-	
-	marsRoverInOriginPoitingToSouth move: 'k'.
-		
-	self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.
+!MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 21:46:57'!
+test06OnInvalidCommandDoNothingAndRaiseException
 
-	self assertThat: marsRoverInOriginPoitingToSouth isInPosition: (0@0) poitingTo: 	$S.
-	
-	
-	
-	! !
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raiseInvalidCommandErrorAsserting: [self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	]! !
 
 
 !MarsRoverTest methodsFor: 'testing-initialization' stamp: 'ja 10/25/2020 14:01:22'!
@@ -214,10 +216,10 @@ exec: aCommand
 											
 	 direction follow: aCommand on: self . ! !
 
-!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 16:07:49'!
+!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 21:31:50'!
 move: aCommandCollection
 											
-	aCommandCollection do: [ :command | [ self exec: command ] on: Error do: [ ^ self ]]! !
+	aCommandCollection do: [ :aCommand |  self exec: aCommand  ]! !
 
 
 !MarsRover methodsFor: 'comparation' stamp: 'ja 10/25/2020 16:42:43'!

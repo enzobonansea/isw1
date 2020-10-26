@@ -73697,3 +73697,415 @@ PASSED!
 
 !testRun: #MarsRoverTest #test10CardinalPointShouldBeValid stamp: 'ja 10/25/2020 16:49:52'!
 PASSED!
+
+----QUIT----(25 October 2020 18:54:46) CuisUniversity-4365.image priorSource: 19439037!
+
+----STARTUP---- (25 October 2020 21:21:02) as /home/jampuero/Documentos/isw1/linux64/CuisUniversity-4365.image!
+
+!MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 21:29:10' prior: 50941731!
+test06DoNothingOnInvalidCommand
+	
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	
+	
+! !
+!MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 21:30:21'!
+test06InvalidCommandRaisesExceptionAndDontModifyMarsRover
+	
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	
+	
+! !
+
+!methodRemoval: MarsRoverTest #test06DoNothingOnInvalidCommand stamp: 'ja 10/25/2020 21:30:21'!
+test06DoNothingOnInvalidCommand
+	
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	
+	
+!
+!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 21:31:08' prior: 50943041!
+move: aCommandCollection
+											
+	aCommandCollection do: [ :command | [ self exec: command ] ]! !
+!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 21:31:20' prior: 50944164!
+move: aCommandCollection
+											
+	aCommandCollection do: [ :command |  self exec: command  ]! !
+!MarsRover methodsFor: 'movement' stamp: 'ja 10/25/2020 21:31:50' prior: 50944170!
+move: aCommandCollection
+											
+	aCommandCollection do: [ :aCommand |  self exec: aCommand  ]! !
+
+!testRun: #MarsRoverTest #test06InvalidCommandRaisesExceptionAndDontModifyMarsRover stamp: 'ja 10/25/2020 21:32:08'!
+PASSED!
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 21:33:18' prior: 50943469!
+test08ComposedMovementIsExecutedUntilInvalidCommandFound
+	
+	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
+	
+	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
+	marsRoverThatWillReceiveInvalidCommand move: 'frrjb'.
+	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
+	
+	self should: [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail]  
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand .! !
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:33:27'!
+ERROR!
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:33:27'!
+ERROR!
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 21:33:58' prior: 50944187!
+test08ComposedMovementIsExecutedUntilInvalidCommandFound
+	
+	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
+	
+	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
+	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
+	
+	self should: [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail]  
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand .! !
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:34:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test01AtTheBeginningHasPositionAndCardinalPoint stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test02MovesForwardCorrectly stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test03MovesRigthCorrectly stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test04MovesLeftCorrectly stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test05MovesBackwardCorrectly stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test06InvalidCommandRaisesExceptionAndDontModifyMarsRover stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test07MakesComposedMovementCorrectly stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test09PositionShouldBeAPoint stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+
+!testRun: #MarsRoverTest #test10CardinalPointShouldBeValid stamp: 'ja 10/25/2020 21:34:07'!
+PASSED!
+!MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 21:35:39'!
+test06OnInvalidCommandDoNothingAndRaiseException
+	
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	
+	
+! !
+
+!methodRemoval: MarsRoverTest #test06InvalidCommandRaisesExceptionAndDontModifyMarsRover stamp: 'ja 10/25/2020 21:35:39'!
+test06InvalidCommandRaisesExceptionAndDontModifyMarsRover
+	
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	
+	
+!
+
+!testRun: #MarsRoverTest #test01AtTheBeginningHasPositionAndCardinalPoint stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test02MovesForwardCorrectly stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test03MovesRigthCorrectly stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test04MovesLeftCorrectly stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test05MovesBackwardCorrectly stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test07MakesComposedMovementCorrectly stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test09PositionShouldBeAPoint stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test10CardinalPointShouldBeValid stamp: 'ja 10/25/2020 21:35:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test01AtTheBeginningHasPositionAndCardinalPoint stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test02MovesForwardCorrectly stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test03MovesRigthCorrectly stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test04MovesLeftCorrectly stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test05MovesBackwardCorrectly stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test07MakesComposedMovementCorrectly stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test09PositionShouldBeAPoint stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+
+!testRun: #MarsRoverTest #test10CardinalPointShouldBeValid stamp: 'ja 10/25/2020 21:36:04'!
+PASSED!
+!MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 21:43:29' prior: 50944282!
+test06OnInvalidCommandDoNothingAndRaiseException
+	
+"	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription ."
+	
+	
+	
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raiseInvalidCommandErrorAsserting: [self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	]! !
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:43:46'!
+ERROR!
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:43:46'!
+ERROR!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'ja 10/25/2020 21:43:55'!
+should: aBlockClosure raiseInvalidCommandErrorAsserting: aBlockClosure2 
+	self shouldBeImplemented.! !
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'ja 10/25/2020 21:45:13' prior: 50944397!
+should: aBlockClosure raiseInvalidCommandErrorAsserting: aBlockClosure2 
+	
+	self should: aBlockClosure value 
+		raise: Error 
+		withMessageText: MarsRover invalidComandErrorDescription.
+		
+	aBlockClosure2 value! !
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'ja 10/25/2020 21:46:31' prior: 50944404!
+should: aBlockWithInvalidCommand raiseInvalidCommandErrorAsserting: aBlockToAssert 
+	
+	self should: aBlockWithInvalidCommand value 
+		raise: Error 
+		withMessageText: MarsRover invalidComandErrorDescription.
+		
+	aBlockToAssert value! !
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:46:33'!
+ERROR!
+!MarsRoverTest methodsFor: 'testing-simple movements' stamp: 'ja 10/25/2020 21:46:57' prior: 50944374!
+test06OnInvalidCommandDoNothingAndRaiseException
+
+	self should: [marsRoverInOriginPoitingToNorth move: 'k'. self fail] 
+	       raiseInvalidCommandErrorAsserting: [self assertThat: marsRoverInOriginPoitingToNorth isInPosition: (0@0) poitingTo: 	$N.	]! !
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'ja 10/25/2020 21:47:04' prior: 50944414!
+should: aBlockWithInvalidCommand raiseInvalidCommandErrorAsserting: aBlockToAssert 
+	
+	self should: aBlockWithInvalidCommand 
+		raise: Error 
+		withMessageText: MarsRover invalidComandErrorDescription.
+		
+	aBlockToAssert value! !
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:47:07'!
+PASSED!
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 21:47:58' prior: 50944221!
+test08ComposedMovementIsExecutedUntilInvalidCommandFound
+	
+	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
+	
+	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
+	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
+	
+	
+	self should:  [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail] 
+		raiseInvalidCommandErrorAsserting: [self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand ].
+	
+	
+	
+	self should: [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail]  
+	       raise: Error
+	       withMessageText: MarsRover invalidComandErrorDescription .
+	
+	self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand .! !
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 21:48:03' prior: 50944455!
+test08ComposedMovementIsExecutedUntilInvalidCommandFound
+	
+	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
+	
+	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
+	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
+	
+	
+	self should:  [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail] 
+		raiseInvalidCommandErrorAsserting: [self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand ].
+! !
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:48:06'!
+PASSED!
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 21:48:20' prior: 50944487!
+test08ComposedMovementIsExecutedUntilInvalidCommandFound
+	
+	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
+	
+	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
+	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
+	
+	self should:  [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail] 
+	      raiseInvalidCommandErrorAsserting: [self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand ].
+! !
+!MarsRoverTest methodsFor: 'testing-composed movements' stamp: 'ja 10/25/2020 21:48:32' prior: 50944514!
+test08ComposedMovementIsExecutedUntilInvalidCommandFound
+	
+	| marsRoverThatWillReceiveInvalidCommand marsRoverThatWillNotReceiveInvalidCommand |
+	
+	marsRoverThatWillReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
+	marsRoverThatWillNotReceiveInvalidCommand _ MarsRover inPosition: (0@0) andDirection: $N.
+	
+	marsRoverThatWillNotReceiveInvalidCommand move: 'frr'.
+	
+	self should:  [marsRoverThatWillReceiveInvalidCommand move: 'frrjb'. self fail] 
+	      raiseInvalidCommandErrorAsserting: [self  assert: marsRoverThatWillReceiveInvalidCommand = marsRoverThatWillNotReceiveInvalidCommand ].
+! !
+
+!testRun: #MarsRoverTest #test01AtTheBeginningHasPositionAndCardinalPoint stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test02MovesForwardCorrectly stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test03MovesRigthCorrectly stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test04MovesLeftCorrectly stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test05MovesBackwardCorrectly stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test07MakesComposedMovementCorrectly stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test09PositionShouldBeAPoint stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test10CardinalPointShouldBeValid stamp: 'ja 10/25/2020 21:48:48'!
+PASSED!
+
+!testRun: #MarsRoverTest #test01AtTheBeginningHasPositionAndCardinalPoint stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test02MovesForwardCorrectly stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test03MovesRigthCorrectly stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test04MovesLeftCorrectly stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test05MovesBackwardCorrectly stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test07MakesComposedMovementCorrectly stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test09PositionShouldBeAPoint stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test10CardinalPointShouldBeValid stamp: 'ja 10/25/2020 21:49:43'!
+PASSED!
+
+!testRun: #MarsRoverTest #test01AtTheBeginningHasPositionAndCardinalPoint stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test02MovesForwardCorrectly stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test03MovesRigthCorrectly stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test04MovesLeftCorrectly stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test05MovesBackwardCorrectly stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test06OnInvalidCommandDoNothingAndRaiseException stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test07MakesComposedMovementCorrectly stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test08ComposedMovementIsExecutedUntilInvalidCommandFound stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test09PositionShouldBeAPoint stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
+
+!testRun: #MarsRoverTest #test10CardinalPointShouldBeValid stamp: 'ja 10/25/2020 21:51:02'!
+PASSED!
