@@ -28,8 +28,8 @@ test02OCannotInitGame
 		raise: Error
 		withMessageText: game class playerXShouldPlayErrorDescription .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/29/2020 19:27:02'!
-test03OPlaysAfterX
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:45:17'!
+test03OPutsAfterX
 	
 	| game |
 	
@@ -41,8 +41,8 @@ test03OPlaysAfterX
 	
 	self deny: game isPlayingX .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/29/2020 19:26:05'!
-test04XPlaysAfterO
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:45:26'!
+test04XPutsAfterO
 	
 	| game |
 	
@@ -56,7 +56,7 @@ test04XPlaysAfterO
 	
 	self deny: game isPlayingO .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/29/2020 21:03:30'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 15:45:39'!
 test05XTokensShouldBePlacedIntoBoardInAValidPosition
 
 	| game |
@@ -65,29 +65,29 @@ test05XTokensShouldBePlacedIntoBoardInAValidPosition
 	
 	self should: [ game putXAt: -1@0. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putXAt: 0@-1. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putXAt: 3@0. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putXAt: 0@3. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putXAt: 0.5@1. self fail.]
 		raise: Error
-		withMessageText: game class playerPositionIsInvalidErrorDescription.
+		withMessageText: game class positionIsInvalidErrorDescription.
 	
 	self should: [ game putXAt: 1@0.5. self fail.]
 		raise: Error
-		withMessageText: game class playerPositionIsInvalidErrorDescription.! !
+		withMessageText: game class positionIsInvalidErrorDescription.! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/29/2020 21:03:42'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 15:45:39'!
 test06OTokensShouldBePlacedIntoBoardnAValidPosition
 
 	| game |
@@ -98,27 +98,27 @@ test06OTokensShouldBePlacedIntoBoardnAValidPosition
 	
 	self should: [ game putOAt: -1@0. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putOAt: 0@-1. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putOAt: 3@0. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putOAt: 0@3. self fail.]
 		raise: Error
-		withMessageText: game class playerIsOutsideBoardErrorDescription.
+		withMessageText: game class positionIsOutsideBoardErrorDescription.
 		
 	self should: [ game putOAt: 0.5@1. self fail.]
 		raise: Error
-		withMessageText: game class playerPositionIsInvalidErrorDescription.
+		withMessageText: game class positionIsInvalidErrorDescription.
 	
 	self should: [ game putOAt: 1@0.5. self fail.]
 		raise: Error
-		withMessageText: game class playerPositionIsInvalidErrorDescription.! !
+		withMessageText: game class positionIsInvalidErrorDescription.! !
 
 !TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/29/2020 21:03:49'!
 test07XTokensShouldBePlacedIntoAvailablePositions
@@ -202,7 +202,7 @@ test10XTokensCanBeMovedOnlyWhenThereAreThreeXTokens
 		raise: Error
 		withMessageText: game class movementsCanOnlyBeDoneWithThreeTokens .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/29/2020 21:24:08'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:17:27'!
 test11OTokensCanBeMovedOnlyWhenThereAreThreeOTokens
 
 	| game |
@@ -217,11 +217,255 @@ test11OTokensCanBeMovedOnlyWhenThereAreThreeOTokens
 	
 	game putOAt: 1@1 .
 	
-	game putXAt: 2@0.
+	game putXAt: 0@1.
 	
-	self should: [ game moveOTokenFrom: 0@2 to: 0@1. self fail. ] 
+	self should: [ game moveOTokenFrom: 0@2 to: 1@2. self fail. ] 
 		raise: Error
 		withMessageText: game class movementsCanOnlyBeDoneWithThreeTokens .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:20:48'!
+test12XTokensCannotBeMovedToPositionsWithOTokens
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+	
+	self should: [ game moveXTokenFrom: 1@0 to: 1@1. self fail. ] 
+		raise: Error
+		withMessageText: game class positionIsNotAvailableErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:28:55'!
+test13XTokensCannotBeMovedToPositionsWithXTokens
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+	
+	self should: [ game moveXTokenFrom: 1@0 to: 0@0. self fail. ] 
+		raise: Error
+		withMessageText: game class positionIsNotAvailableErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:32:22'!
+test14OTokensCannotBeMovedToPositionsWithOTokens
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+	
+	game moveXTokenFrom: 1@0 to: 2@0.
+	
+	self should: [ game moveOTokenFrom: 1@1 to: 1@2. self fail. ] 
+		raise: Error
+		withMessageText: game class positionIsNotAvailableErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:59:06'!
+test15OTokensCannotBeMovedToPositionsWithXTokens
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+	
+	game moveXTokenFrom: 1@0 to: 2@0.
+	
+	self should: [ game moveOTokenFrom: 1@1 to: 2@0. self fail. ] 
+		raise: Error
+		withMessageText: game class positionIsNotAvailableErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:46:57'!
+test16XCannotMoveTwice
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+	
+	game moveXTokenFrom: 1@0 to: 2@0.
+	
+	self should: [ game moveXTokenFrom: 2@0 to: 2@1. self fail. ] 
+		raise: Error
+		withMessageText: game class cannotMoveTwiceErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 14:54:23'!
+test17OCannotMoveTwice
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+	
+	game moveXTokenFrom: 1@0 to: 2@0.
+	
+	game moveOTokenFrom: 1@1 to: 2@1.
+	
+	self should: [ game moveOTokenFrom: 2@1 to: 2@2. self fail. ] 
+		raise: Error
+		withMessageText: game class cannotMoveTwiceErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 15:12:47'!
+test18XMovementsLengthShouldBeOne
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+		
+	self should: [ game moveXTokenFrom: 1@0 to: 2@2. self fail. ] 
+		raise: Error
+		withMessageText: game class movementsLengthShouldBeOneErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 15:27:47'!
+test19OMovementsLengthShouldBeOne
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+	
+	game moveXTokenFrom: 1@0 to: 2@0 .
+		
+	self should: [ game moveOTokenFrom: 0@2 to: 2@2. self fail. ] 
+		raise: Error
+		withMessageText: game class movementsLengthShouldBeOneErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 15:33:11'!
+test20XTokensMovementsSourcesAreAlreadyInBoard
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+		
+	self should: [ game moveXTokenFrom: 2@2 to: 2@1 . self fail. ] 
+		raise: Error
+		withMessageText: game class movementSourceHasNotTokenErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 10/31/2020 15:40:10'!
+test21OTokensMovementsSourcesAreAlreadyInBoard
+
+	| game |
+	
+	game _ TerniLapilli new .
+	
+	game putXAt: 0@0 .
+	
+	game putOAt: 0@2 .
+	
+	game putXAt: 1@0.
+	
+	game putOAt: 1@1 .
+	
+	game putXAt: 0@1.
+	
+	game putOAt: 1@2.
+		
+	game moveXTokenFrom: 1@0 to: 2@0.
+	
+	self should: [ game moveOTokenFrom: 2@2 to: 2@1. self fail. ] 
+		raise: Error
+		withMessageText: game class movementSourceHasNotTokenErrorDescription .! !
 
 
 !classDefinition: #TerniLapilli category: #'TerniLapilli-Exercise'!
@@ -247,6 +491,24 @@ initialize
 	isPlayingX _ true .! !
 
 
+!TerniLapilli methodsFor: 'testing' stamp: 'eb 10/31/2020 15:25:37'!
+assertThat: aSourcePoint isWithinOneUnitDistanceTo: aTargetPoint
+	
+	| dX dY verticalDistanceIsOne horizontalDistanceIsOne diagonalDistanceIsOne |
+	
+	dX _ (aSourcePoint x - aTargetPoint x) abs.
+	
+	dY _ (aSourcePoint y - aTargetPoint y) abs.
+	
+	verticalDistanceIsOne _ (dX = 0 and: [dY = 1]) .
+	
+	horizontalDistanceIsOne _ (dX = 1 and: [dY = 0]).
+	
+	diagonalDistanceIsOne _ (dX = 1 and: [dY = 1]).
+	
+	(verticalDistanceIsOne or: horizontalDistanceIsOne or: diagonalDistanceIsOne) ifFalse: 
+		[ self error: self class movementsLengthShouldBeOneErrorDescription .]! !
+
 !TerniLapilli methodsFor: 'testing' stamp: 'eb 10/29/2020 19:18:33'!
 boardIsEmpty
 	
@@ -263,22 +525,56 @@ isPlayingX
 	^ isPlayingX.! !
 
 
-!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/29/2020 21:24:25'!
+!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/31/2020 15:41:51'!
 moveOTokenFrom: aSourcePoint to: aTargetPoint
 	
-	self error: self class movementsCanOnlyBeDoneWithThreeTokens.! !
-
-!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/29/2020 21:23:05'!
-moveXTokenFrom: aSourcePoint to: aTargetPoint
+	(OTokens size < 3) ifTrue: [ self error: self class movementsCanOnlyBeDoneWithThreeTokens. ].
 	
-	self error: self class movementsCanOnlyBeDoneWithThreeTokens.! !
+	((XTokens includes: aTargetPoint ) or: [ OTokens includes: aTargetPoint ]) 
+		ifTrue: [self error: self class positionIsNotAvailableErrorDescription ].
+		
+	isPlayingX ifTrue: [ self error: self class cannotMoveTwiceErrorDescription ].
+		
+	self assertThat: aSourcePoint isWithinOneUnitDistanceTo: aTargetPoint.
+	
+	((XTokens includes: aSourcePoint ) or: [ OTokens includes: aSourcePoint ]) 
+		ifFalse: [self error: self class movementSourceHasNotTokenErrorDescription ].
+	
+	OTokens remove: aSourcePoint .
+	
+	OTokens add: aTargetPoint .
+	
+	isPlayingX _ true .! !
 
-!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/29/2020 20:56:13'!
+!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/31/2020 15:38:03'!
+moveXTokenFrom: aSourcePoint to: aTargetPoint
+
+	(XTokens size < 3) ifTrue: [ self error: self class movementsCanOnlyBeDoneWithThreeTokens. ].
+	
+	((XTokens includes: aTargetPoint ) or: [ OTokens includes: aTargetPoint ]) 
+		ifTrue: [self error: self class positionIsNotAvailableErrorDescription ].
+		
+	isPlayingX ifFalse: [ self error: self class cannotMoveTwiceErrorDescription ].
+	
+	self assertThat: aSourcePoint isWithinOneUnitDistanceTo: aTargetPoint.
+	
+	((XTokens includes: aSourcePoint ) or: [ OTokens includes: aSourcePoint ]) 
+		ifFalse: [ self error: self class movementSourceHasNotTokenErrorDescription ].
+		
+	XTokens remove: aSourcePoint .
+	
+	XTokens add: aTargetPoint .
+	
+	isPlayingX _ false .
+	
+! !
+
+!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/31/2020 15:45:39'!
 putOAt: aPoint 
 
-	(self board containsPoint: aPoint) ifFalse: [ self error: self class playerIsOutsideBoardErrorDescription ].
+	(self board containsPoint: aPoint) ifFalse: [ self error: self class positionIsOutsideBoardErrorDescription ].
 	
-	(aPoint isIntegerPoint) ifFalse: [self error: self class playerPositionIsInvalidErrorDescription ].
+	(aPoint isIntegerPoint) ifFalse: [self error: self class positionIsInvalidErrorDescription ].
 	
 	(XTokens includes: aPoint) ifTrue: [self error: self class positionIsNotAvailableErrorDescription ].
 	
@@ -290,12 +586,12 @@ putOAt: aPoint
 		
 	isPlayingX _ true .! !
 
-!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/29/2020 21:10:39'!
+!TerniLapilli methodsFor: 'playing' stamp: 'eb 10/31/2020 15:45:39'!
 putXAt: aPoint 
 	
-	(self board containsPoint: aPoint) ifFalse: [ self error: self class playerIsOutsideBoardErrorDescription ].
+	(self board containsPoint: aPoint) ifFalse: [ self error: self class positionIsOutsideBoardErrorDescription ].
 	
-	(aPoint isIntegerPoint) ifFalse: [self error: self class playerPositionIsInvalidErrorDescription ].
+	(aPoint isIntegerPoint) ifFalse: [self error: self class positionIsInvalidErrorDescription ].
 	
 	(XTokens includes: aPoint) ifTrue: [self error: self class positionIsNotAvailableErrorDescription ].
 	
@@ -313,33 +609,48 @@ putXAt: aPoint
 TerniLapilli class
 	instanceVariableNames: ''!
 
+!TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/31/2020 14:48:02'!
+cannotMoveTwiceErrorDescription
+
+	^ 'Player cannot move twice'.! !
+
 !TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/29/2020 21:08:44'!
 cannotPutMoreThanThreeXTokensErrorDescription
 	
 	^ 'Cannot put more than three X tokens into board' .! !
+
+!TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/31/2020 15:33:58'!
+movementSourceHasNotTokenErrorDescription
+
+	^ 'Movement source has not token'.! !
 
 !TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/29/2020 21:20:13'!
 movementsCanOnlyBeDoneWithThreeTokens
 	
 	^ 'Movements can only be done with three tokens'.! !
 
-!TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/29/2020 19:33:28'!
-playerIsOutsideBoardErrorDescription
-	
-	^ 'Player is outside board'.! !
+!TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/31/2020 15:17:55'!
+movementsLengthShouldBeOneErrorDescription
 
-!TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/29/2020 20:42:06'!
-playerPositionIsInvalidErrorDescription
-
-	^ 'Player position is invalid'.
-! !
+	^ 'Movements length should be one'.! !
 
 !TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/29/2020 19:38:22'!
 playerXShouldPlayErrorDescription
 
 	^ 'Player X should play' .! !
 
+!TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/31/2020 15:44:58'!
+positionIsInvalidErrorDescription
+
+	^ 'Position is invalid'.
+! !
+
 !TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/29/2020 20:50:12'!
 positionIsNotAvailableErrorDescription
 	
 	^ 'Position is not available'.! !
+
+!TerniLapilli class methodsFor: 'error descriptions' stamp: 'eb 10/31/2020 15:45:39'!
+positionIsOutsideBoardErrorDescription
+	
+	^ 'Position is outside board'.! !
