@@ -98267,3 +98267,165 @@ PASSED!
 
 !testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 16:54:33'!
 PASSED!
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 16:56:53'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 16:56:54'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 16:57:07'!
+PASSED!

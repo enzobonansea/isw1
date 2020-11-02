@@ -433,10 +433,25 @@ Object subclass: #TerniLapilli
 	poolDictionaries: ''
 	category: 'TerniLapilli-Exercise'!
 
+!TerniLapilli methodsFor: 'accessing' stamp: 'eb 11/2/2020 16:41:00'!
+allTokens
+	
+	^ XTokens union: OTokens .! !
+
 !TerniLapilli methodsFor: 'accessing' stamp: 'eb 10/29/2020 20:34:03'!
 board
 	
 	^ 0@0 corner: 3@3 .! !
+
+!TerniLapilli methodsFor: 'accessing' stamp: 'eb 11/2/2020 16:13:28'!
+notPrincipalDiagonal
+	
+	^  #(0@2. 1@1. 2@0.).! !
+
+!TerniLapilli methodsFor: 'accessing' stamp: 'eb 11/2/2020 16:12:59'!
+principalDiagonal
+	
+	^ #(0@0. 1@1. 2@2.) .! !
 
 
 !TerniLapilli methodsFor: 'initialization' stamp: 'eb 11/2/2020 08:53:05'!
@@ -526,6 +541,11 @@ assertThatPositionIsIntoTheBoard: aPosition
 
 	(self board containsPoint: aPosition) ifFalse: [ self error: self class positionIsOutsideBoardErrorDescription ]! !
 
+!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:19:41'!
+assertThatThereAreThreeTokensInto: aPositionCollection
+
+	^ (aPositionCollection size < 3) ifTrue: [ self error: self class movementsCanOnlyBeDoneWithThreeTokens. ]! !
+
 !TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:14:37'!
 isInSomeDiagonal: aPosition
 	
@@ -600,17 +620,7 @@ putXAt: aPosition
 	isPlayingX _ false .! !
 
 
-!TerniLapilli methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 16:41:00'!
-allTokens
-	
-	^ XTokens union: OTokens .! !
-
-!TerniLapilli methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 16:19:41'!
-assertThatThereAreThreeTokensInto: aPositionCollection
-
-	^ (aPositionCollection size < 3) ifTrue: [ self error: self class movementsCanOnlyBeDoneWithThreeTokens. ]! !
-
-!TerniLapilli methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 16:13:24'!
+!TerniLapilli methodsFor: 'playing-private' stamp: 'eb 11/2/2020 16:13:24'!
 lookForVictoryIn: aPositionCollection
 
 	| verticalWin horizontalWin diagonalWin |
@@ -625,22 +635,12 @@ lookForVictoryIn: aPositionCollection
 	
 	^ verticalWin or: horizontalWin or: diagonalWin.! !
 
-!TerniLapilli methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 16:36:52'!
+!TerniLapilli methodsFor: 'playing-private' stamp: 'eb 11/2/2020 16:36:52'!
 moveFrom: aSourcePosition to: aTargetPosition using: aPositionCollection
 	
 	aPositionCollection remove: aSourcePosition .
 	
 	aPositionCollection add: aTargetPosition .! !
-
-!TerniLapilli methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 16:13:28'!
-notPrincipalDiagonal
-	
-	^  #(0@2. 1@1. 2@0.).! !
-
-!TerniLapilli methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 16:12:59'!
-principalDiagonal
-	
-	^ #(0@0. 1@1. 2@2.) .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
