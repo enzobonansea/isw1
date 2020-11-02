@@ -443,10 +443,10 @@ board
 	
 	^ 0@0 corner: 3@3 .! !
 
-!TerniLapilli methodsFor: 'accessing' stamp: 'eb 11/2/2020 16:13:28'!
+!TerniLapilli methodsFor: 'accessing' stamp: 'eb 11/2/2020 17:02:58'!
 notPrincipalDiagonal
 	
-	^  #(0@2. 1@1. 2@0.).! !
+	^ #(0@2. 1@1. 2@0.).! !
 
 !TerniLapilli methodsFor: 'accessing' stamp: 'eb 11/2/2020 16:12:59'!
 principalDiagonal
@@ -464,10 +464,15 @@ initialize
 	isPlayingX _ true .! !
 
 
-!TerniLapilli methodsFor: 'testing' stamp: 'eb 10/29/2020 19:18:33'!
+!TerniLapilli methodsFor: 'testing' stamp: 'eb 11/2/2020 17:03:13'!
 boardIsEmpty
 	
-	^ XTokens isEmpty and: [ OTokens  isEmpty ] .! !
+	^ self allTokens isEmpty .! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'eb 11/2/2020 16:14:37'!
+isInSomeDiagonal: aPosition
+	
+	^ (self principalDiagonal includes: aPosition) or: [ self notPrincipalDiagonal includes: aPosition].! !
 
 !TerniLapilli methodsFor: 'testing' stamp: 'eb 10/29/2020 19:28:36'!
 isPlayingO
@@ -503,7 +508,7 @@ assertThat: aSourcePosition isWithinOneUnitDistanceTo: aTargetPosition
 	(verticalDistanceIsOne or: horizontalDistanceIsOne or: diagonalDistanceIsOne) ifFalse: 
 		[ self error: self class movementsLengthShouldBeOneErrorDescription .]! !
 
-!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:33:45'!
+!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 17:04:25'!
 assertThatMovementCanBeDoneFrom: aSourcePosition to: aTargetPosition using: aPositionCollection
 
 	self assertThatThereAreThreeTokensInto: aPositionCollection .
@@ -514,42 +519,38 @@ assertThatMovementCanBeDoneFrom: aSourcePosition to: aTargetPosition using: aPos
 	
 	self assertThat: aSourcePosition isInto: aPositionCollection .
 	
-	self assertThatPositionIsIntoTheBoard: aTargetPosition .! !
+	self assertThatPositionIsIntoTheBoard: aTargetPosition .
+	
+	self isOver ifTrue: [ self error: self class gameIsOverErrorDescription ].! !
 
-!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:42:23'!
+!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 17:01:53'!
 assertThatPlayerCanPutTokenInto: aPosition
 
 	self assertThatPositionIsIntoTheBoard: aPosition.
 	
 	self assertThatPositionIsInteger: aPosition.
 	
-	(self allTokens includes: aPosition) ifTrue: [self error: self class positionIsNotAvailableErrorDescription ]! !
+	self assertThatPositionIsAvailable: aPosition .! !
 
-!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:44:43'!
+!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 17:01:42'!
 assertThatPositionIsAvailable: aPosition
 
-	((XTokens includes: aPosition ) or: [ OTokens includes: aPosition ]) 
-		ifTrue: [self error: self class positionIsNotAvailableErrorDescription ].! !
+	(self allTokens includes: aPosition)  ifTrue: [self error: self class positionIsNotAvailableErrorDescription ].! !
 
-!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:39:33'!
+!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 17:02:24'!
 assertThatPositionIsInteger: aPosition
 
-	^ (aPosition isIntegerPoint) ifFalse: [self error: self class positionIsInvalidErrorDescription ]! !
+	(aPosition isIntegerPoint) ifFalse: [self error: self class positionIsInvalidErrorDescription ]! !
 
 !TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:45:03'!
 assertThatPositionIsIntoTheBoard: aPosition
 
 	(self board containsPoint: aPosition) ifFalse: [ self error: self class positionIsOutsideBoardErrorDescription ]! !
 
-!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:19:41'!
+!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 17:02:34'!
 assertThatThereAreThreeTokensInto: aPositionCollection
 
-	^ (aPositionCollection size < 3) ifTrue: [ self error: self class movementsCanOnlyBeDoneWithThreeTokens. ]! !
-
-!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:14:37'!
-isInSomeDiagonal: aPosition
-	
-	^ (self principalDiagonal includes: aPosition) or: [ self notPrincipalDiagonal includes: aPosition].! !
+	(aPositionCollection size < 3) ifTrue: [ self error: self class movementsCanOnlyBeDoneWithThreeTokens. ]! !
 
 
 !TerniLapilli methodsFor: 'playing' stamp: 'eb 11/2/2020 16:12:02'!
@@ -567,27 +568,23 @@ isOver
 	
 	^ self hasPlayerOWon or: [ self hasPlayerXWon ].! !
 
-!TerniLapilli methodsFor: 'playing' stamp: 'eb 11/2/2020 16:54:31'!
+!TerniLapilli methodsFor: 'playing' stamp: 'eb 11/2/2020 17:04:38'!
 moveOFrom: aSourcePosition to: aTargetPosition
 	
 	self assertThatMovementCanBeDoneFrom: aSourcePosition to: aTargetPosition using: OTokens.
 	
 	self isPlayingX ifTrue: [ self error: self class playerXShouldPlayErrorDescription ].
 	
-	self isOver ifTrue: [ self error: self class gameIsOverErrorDescription ].
-	
 	self moveFrom: aSourcePosition to: aTargetPosition using: OTokens .
 	
 	isPlayingX _ true .! !
 
-!TerniLapilli methodsFor: 'playing' stamp: 'eb 11/2/2020 16:54:16'!
+!TerniLapilli methodsFor: 'playing' stamp: 'eb 11/2/2020 17:04:16'!
 moveXFrom: aSourcePosition to: aTargetPosition
 
 	self assertThatMovementCanBeDoneFrom: aSourcePosition to:  aTargetPosition using: XTokens .
 	
 	self isPlayingO ifTrue: [ self error: self class playerOShouldPlayErrorDescription ].
-	
-	self isOver ifTrue: [ self error: self class gameIsOverErrorDescription ].
 		
 	self moveFrom: aSourcePosition to: aTargetPosition using: XTokens .
 	
