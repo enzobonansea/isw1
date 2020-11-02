@@ -40,30 +40,30 @@ test04XPlaysAfterO
 	
 	self deny: terniLapilli isPlayingO .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 15:55:05'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:48:14'!
 test05XShouldPutInAValidPosition
 	
-	self assertThatXPositionsAreInsideBoard.
+	self denyXPutOutsideBoard.
 		
-	self assertThatXPositionsAreInteger.! !
+	self denyXPutOnNotIntegerPosition.! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 15:55:23'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:49:30'!
 test06OShouldPutInAValidPosition
 	
-	self assertThatOPositionsAreInsideBoard.
+	self denyOPutOutsideBoard.
 		
-	self assertThatOPositionsAreInteger.! !
+	self denyOPutOnNotIntegerPosition.! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 15:55:57'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:57:41'!
 test07XShouldPutInAvailablePosition
 
 	terniLapilli putXAt: 0@0 .
 	
 	terniLapilli putOAt: 1@0.
 	
-	self denyPuttingXOnOccupiedPosition .! !
+	self denyXPutOnOccupiedPosition .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 15:56:11'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:50:51'!
 test08OShouldPutInAvailablePosition
 	
 	terniLapilli putXAt: 0@0 .
@@ -72,7 +72,7 @@ test08OShouldPutInAvailablePosition
 	
 	terniLapilli putXAt: 1@1 .
 	
-	self denyPuttingOOnOccupiedPosition.! !
+	self denyOPutOnOccupiedPosition.! !
 
 !TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 15:56:25'!
 test09XCannotPutMoreThanThreeTimes
@@ -113,33 +113,21 @@ test11OCanMoveOnlyWithThreeTokens
 		raise: Error
 		withMessageText: terniLapilli class movementsCanOnlyBeDoneWithThreeTokens .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 15:58:41'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:58:48'!
 test12XCannotMoveToOccupiedPositions
 
 	self fillBoard .
 	
-	self should: [ terniLapilli moveXFrom: 1@0 to: 1@1. self fail. ] 
-		raise: Error
-		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .
-		
-	self should: [ terniLapilli moveXFrom: 1@0 to: 0@0. self fail. ] 
-		raise: Error
-		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
+	self denyXMoveToOccupiedPosition .! !
 
-!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 15:59:28'!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:59:20'!
 test13OCannotMoveToOcuppiedPositions
 
 	self fillBoard .
 	
 	terniLapilli moveXFrom: 1@0 to: 2@0.
 	
-	self should: [ terniLapilli moveOFrom: 1@1 to: 1@2. self fail. ] 
-		raise: Error
-		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .
-	
-	self should: [ terniLapilli moveOFrom: 1@1 to: 2@0. self fail. ] 
-		raise: Error
-		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
+	self denyOMoveToOccupiedPosition .! !
 
 !TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 16:53:50'!
 test14XCannotMoveTwice
@@ -294,87 +282,115 @@ test27OCannotPutTwice
 		withMessageText: terniLapilli class playerXShouldPlayErrorDescription .! !
 
 
-!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 15:03:45'!
-assertThatOPositionsAreInsideBoard
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:01:45'!
+denyOMoveToOccupiedPosition
 
-	self should: [ terniLapilli putOAt: -1@0. self fail.]
+	self should: [ terniLapilli moveOFrom: 1@1 to: 1@2. self fail. ] 
 		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.
-		
-	self should: [ terniLapilli putOAt: 0@-1. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.
-		
-	self should: [ terniLapilli putOAt: 3@0. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.
-		
-	self should: [ terniLapilli putOAt: 0@3. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription! !
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
 
-!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 15:04:00'!
-assertThatOPositionsAreInteger
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:49:15'!
+denyOPutOnNotIntegerPosition
 
-	self should: [ terniLapilli putOAt: 0.5@1. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsInvalidErrorDescription.
+	self denyOPutOnNotIntegerPosition: 0.5@1.
 	
-	self should: [ terniLapilli putOAt: 1@0.5. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsInvalidErrorDescription! !
+	self denyOPutOnNotIntegerPosition: 1@0.5.! !
 
-!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 15:00:55'!
-assertThatXPositionsAreInsideBoard
-
-	self should: [ terniLapilli putXAt: -1@0. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.
-		
-	self should: [ terniLapilli putXAt: 0@-1. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.
-		
-	self should: [ terniLapilli putXAt: 3@0. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.
-		
-	self should: [ terniLapilli putXAt: 0@3. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription! !
-
-!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 15:01:04'!
-assertThatXPositionsAreInteger
-
-	self should: [ terniLapilli putXAt: 0.5@1. self fail.]
-		raise: Error
-		withMessageText: terniLapilli class positionIsInvalidErrorDescription.
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:24'!
+denyOPutOnNotIntegerPosition: aNotIntegerPosition
 	
-	self should: [ terniLapilli putXAt: 1@0.5. self fail.]
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
 		raise: Error
-		withMessageText: terniLapilli class positionIsInvalidErrorDescription! !
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription .! !
 
-!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 15:09:39'!
-denyPuttingOOnOccupiedPosition
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:51:56'!
+denyOPutOnOccupiedPosition
 
-	self should: [ terniLapilli putOAt: 0@0. self fail. ]
+	self denyOPutOnOccupiedPosition: 0@0.
+	
+	self denyOPutOnOccupiedPosition: 1@0.! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:51:38'!
+denyOPutOnOccupiedPosition: anOccupiedPosition
+
+	self should: [ terniLapilli putOAt: anOccupiedPosition. self fail. ]
 		raise: Error
 		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
-		
-	self should: [ terniLapilli putOAt: 1@0. self fail. ]
-		raise: Error
-		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription! !
 
-!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 15:08:43'!
-denyPuttingXOnOccupiedPosition
+	
+	! !
 
-	self should: [ terniLapilli putXAt: 0@0. self fail. ]
-		raise: Error
-		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:49:46'!
+denyOPutOutsideBoard
+	
+	self denyOPutOutsideBoard: -1@0.
+
+	self denyOPutOutsideBoard: 0@-1.
+	
+	self denyOPutOutsideBoard: 3@0.
 		
-	self should: [ terniLapilli putXAt: 1@0. self fail. ]
+	self denyOPutOutsideBoard: 0@3.! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:08'!
+denyOPutOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
 		raise: Error
-		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.! !
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:01:55'!
+denyXMoveToOccupiedPosition
+
+	self should: [ terniLapilli moveXFrom: 1@0 to: 1@1. self fail. ] 
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:48:41'!
+denyXPutOnNotIntegerPosition
+
+	self denyXPutOnNotIntegerPosition: 0.5@1.
+	
+	self denyXPutOnNotIntegerPosition: 1@0.5.
+! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:37'!
+denyXPutOnNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putXAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:55:09'!
+denyXPutOnOccupiedPosition
+
+	self denyXPutOnOccupiedPosition: 0@0.
+	
+	self denyXPutOnOccupiedPosition: 1@0.! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:52'!
+denyXPutOnOccupiedPosition: anOccupiedPosition
+
+	self should: [ terniLapilli putXAt: anOccupiedPosition. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:50:11'!
+denyXPutOutsideBoard
+
+	self denyXPutOutsideBoard: -1@0.
+
+	self denyXPutOutsideBoard: 0@-1.
+	
+	self denyXPutOutsideBoard: 3@0.
+		
+	self denyXPutOutsideBoard: 0@3.! !
+
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:04:40'!
+denyXPutOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putXAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription .! !
 
 !TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 15:27:22'!
 fillBoard

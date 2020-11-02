@@ -98670,3 +98670,1191 @@ PASSED!
 
 !testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 17:11:26'!
 PASSED!
+!TerniLapilliTest methodsFor: 'nil' stamp: 'eb 11/2/2020 17:31:25'!
+xxx: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:32:12'!
+raiseErrorWhenTryingToPutTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+
+!methodRemoval: TerniLapilliTest #xxx: stamp: 'eb 11/2/2020 17:32:14'!
+xxx: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:32:31'!
+assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+
+!methodRemoval: TerniLapilliTest #raiseErrorWhenTryingToPutTokenInPositionOutsideBoard: stamp: 'eb 11/2/2020 17:32:34'!
+raiseErrorWhenTryingToPutTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:34:54' prior: 50971441!
+assertThatOPositionsAreInsideBoard
+	
+	self assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: -1@0.
+
+	self assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: 0@-1.
+	
+	self assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: 3@0.
+		
+	self assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: 0@3.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:38:31'!
+assertRaisingErrorWhenTryingToPutTokenInNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:39:18' prior: 50977148!
+assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:39:56' prior: 50971479!
+assertThatOPositionsAreInteger
+
+	self assertRaisingErrorWhenTryingToPutTokenInNotIntegerPosition: 0.5@1.
+	
+	self assertRaisingErrorWhenTryingToPutTokenInNotIntegerPosition: 1@0.5.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:40:22'!
+assertRaisingErrorWhenTryingToPutOTokenInNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+
+!methodRemoval: TerniLapilliTest #assertRaisingErrorWhenTryingToPutTokenInNotIntegerPosition: stamp: 'eb 11/2/2020 17:40:34'!
+assertRaisingErrorWhenTryingToPutTokenInNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:40:40'!
+assertRaisingErrorWhenTryingToPutOTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+
+!methodRemoval: TerniLapilliTest #assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: stamp: 'eb 11/2/2020 17:40:45'!
+assertRaisingErrorWhenTryingToPutTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:40:54'!
+assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putXAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:41:11'!
+assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putXAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:41:43' prior: 50977171!
+assertThatOPositionsAreInsideBoard
+	
+	self assertRaisingErrorWhenTryingToPutOTokenInPositionOutsideBoard: -1@0.
+
+	self assertRaisingErrorWhenTryingToPutOTokenInPositionOutsideBoard: 0@-1.
+	
+	self assertRaisingErrorWhenTryingToPutOTokenInPositionOutsideBoard: 3@0.
+		
+	self assertRaisingErrorWhenTryingToPutOTokenInPositionOutsideBoard: 0@3.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:41:50' prior: 50977207!
+assertThatOPositionsAreInteger
+
+	self assertRaisingErrorWhenTryingToPutOTokenInNotIntegerPosition: 0.5@1.
+	
+	self assertRaisingErrorWhenTryingToPutOTokenInNotIntegerPosition: 1@0.5.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:42:21' prior: 50971320!
+assertThatXPositionsAreInsideBoard
+
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: -1@0.
+
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 0@-1.
+	
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 3@0.
+		
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 0@3.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:42:48' prior: 50971374!
+assertThatXPositionsAreInteger
+
+	self assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: 0.5@1.
+	
+	self assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: 1@0.5.
+! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:44:57'!
+denyOPlayOutsideBoardInPosition: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:44:57' prior: 50977284!
+assertThatOPositionsAreInsideBoard
+	
+	self denyOPlayOutsideBoardInPosition: -1@0.
+
+	self denyOPlayOutsideBoardInPosition: 0@-1.
+	
+	self denyOPlayOutsideBoardInPosition: 3@0.
+		
+	self denyOPlayOutsideBoardInPosition: 0@3.! !
+
+!methodRemoval: TerniLapilliTest #assertRaisingErrorWhenTryingToPutOTokenInPositionOutsideBoard: stamp: 'eb 11/2/2020 17:44:58'!
+assertRaisingErrorWhenTryingToPutOTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:45:20'!
+denyOPlayOutsideBoard
+	
+	self denyOPlayOutsideBoardInPosition: -1@0.
+
+	self denyOPlayOutsideBoardInPosition: 0@-1.
+	
+	self denyOPlayOutsideBoardInPosition: 3@0.
+		
+	self denyOPlayOutsideBoardInPosition: 0@3.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:45:20' prior: 50973543!
+test06OShouldPutInAValidPosition
+	
+	self denyOPlayOutsideBoard.
+		
+	self assertThatOPositionsAreInteger.! !
+
+!methodRemoval: TerniLapilliTest #assertThatOPositionsAreInsideBoard stamp: 'eb 11/2/2020 17:45:20'!
+assertThatOPositionsAreInsideBoard
+	
+	self denyOPlayOutsideBoardInPosition: -1@0.
+
+	self denyOPlayOutsideBoardInPosition: 0@-1.
+	
+	self denyOPlayOutsideBoardInPosition: 3@0.
+		
+	self denyOPlayOutsideBoardInPosition: 0@3.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:45:49'!
+denyOPlayOnNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:45:49' prior: 50977298!
+assertThatOPositionsAreInteger
+
+	self denyOPlayOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPlayOnNotIntegerPosition: 1@0.5.! !
+
+!methodRemoval: TerniLapilliTest #assertRaisingErrorWhenTryingToPutOTokenInNotIntegerPosition: stamp: 'eb 11/2/2020 17:45:49'!
+assertRaisingErrorWhenTryingToPutOTokenInNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:46:18'!
+denyOPlayOnNotIntegerPositions
+
+	self denyOPlayOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPlayOnNotIntegerPosition: 1@0.5.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:46:19' prior: 50977372!
+test06OShouldPutInAValidPosition
+	
+	self denyOPlayOutsideBoard.
+		
+	self denyOPlayOnNotIntegerPositions.! !
+
+!methodRemoval: TerniLapilliTest #assertThatOPositionsAreInteger stamp: 'eb 11/2/2020 17:46:19'!
+assertThatOPositionsAreInteger
+
+	self denyOPlayOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPlayOnNotIntegerPosition: 1@0.5.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:46:42'!
+denyOPlayOnNotIntegerPosition
+
+	self denyOPlayOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPlayOnNotIntegerPosition: 1@0.5.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:46:42' prior: 50977426!
+test06OShouldPutInAValidPosition
+	
+	self denyOPlayOutsideBoard.
+		
+	self denyOPlayOnNotIntegerPosition.! !
+
+!methodRemoval: TerniLapilliTest #denyOPlayOnNotIntegerPositions stamp: 'eb 11/2/2020 17:46:42'!
+denyOPlayOnNotIntegerPositions
+
+	self denyOPlayOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPlayOnNotIntegerPosition: 1@0.5.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:47:13'!
+denyXPlayOutsideBoard
+
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: -1@0.
+
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 0@-1.
+	
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 3@0.
+		
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 0@3.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:47:13' prior: 50973528!
+test05XShouldPutInAValidPosition
+	
+	self denyXPlayOutsideBoard.
+		
+	self assertThatXPositionsAreInteger.! !
+
+!methodRemoval: TerniLapilliTest #assertThatXPositionsAreInsideBoard stamp: 'eb 11/2/2020 17:47:13'!
+assertThatXPositionsAreInsideBoard
+
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: -1@0.
+
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 0@-1.
+	
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 3@0.
+		
+	self assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: 0@3.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:47:34'!
+denyXPutOutsideBoardInPosition: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putXAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:47:34' prior: 50977459!
+denyXPlayOutsideBoard
+
+	self denyXPutOutsideBoardInPosition: -1@0.
+
+	self denyXPutOutsideBoardInPosition: 0@-1.
+	
+	self denyXPutOutsideBoardInPosition: 3@0.
+		
+	self denyXPutOutsideBoardInPosition: 0@3.! !
+
+!methodRemoval: TerniLapilliTest #assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: stamp: 'eb 11/2/2020 17:47:34'!
+assertRaisingErrorWhenTryingToPutXTokenInPositionOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putXAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:47:44' prior: 50977503!
+denyXPlayOutsideBoard
+
+	self denyXPutOutsideBoardInPosition: -1@0.
+
+	self denyXPutOutsideBoardInPosition: 0@-1.
+	
+	self denyXPutOutsideBoardInPosition: 3@0.
+		
+	self denyXPutOutsideBoardInPosition: 0@3.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:47:52'!
+denyXPutOutsideBoard
+
+	self denyXPutOutsideBoardInPosition: -1@0.
+
+	self denyXPutOutsideBoardInPosition: 0@-1.
+	
+	self denyXPutOutsideBoardInPosition: 3@0.
+		
+	self denyXPutOutsideBoardInPosition: 0@3.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:47:52' prior: 50977473!
+test05XShouldPutInAValidPosition
+	
+	self denyXPutOutsideBoard.
+		
+	self assertThatXPositionsAreInteger.! !
+
+!methodRemoval: TerniLapilliTest #denyXPlayOutsideBoard stamp: 'eb 11/2/2020 17:47:52'!
+denyXPlayOutsideBoard
+
+	self denyXPutOutsideBoardInPosition: -1@0.
+
+	self denyXPutOutsideBoardInPosition: 0@-1.
+	
+	self denyXPutOutsideBoardInPosition: 3@0.
+		
+	self denyXPutOutsideBoardInPosition: 0@3.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:48:14'!
+denyXPutOnNotIntegerPosition
+
+	self assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: 0.5@1.
+	
+	self assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: 1@0.5.
+! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:48:14' prior: 50977544!
+test05XShouldPutInAValidPosition
+	
+	self denyXPutOutsideBoard.
+		
+	self denyXPutOnNotIntegerPosition.! !
+
+!methodRemoval: TerniLapilliTest #assertThatXPositionsAreInteger stamp: 'eb 11/2/2020 17:48:14'!
+assertThatXPositionsAreInteger
+
+	self assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: 0.5@1.
+	
+	self assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: 1@0.5.
+!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:48:41'!
+denyXPutOnNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putXAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:48:41' prior: 50977559!
+denyXPutOnNotIntegerPosition
+
+	self denyXPutOnNotIntegerPosition: 0.5@1.
+	
+	self denyXPutOnNotIntegerPosition: 1@0.5.
+! !
+
+!methodRemoval: TerniLapilliTest #assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: stamp: 'eb 11/2/2020 17:48:41'!
+assertRaisingErrorWhenTryingToPutXTokenInNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putXAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:49:04'!
+denyOPutOnNotIntegerPosition
+
+	self denyOPlayOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPlayOnNotIntegerPosition: 1@0.5.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:49:04' prior: 50977446!
+test06OShouldPutInAValidPosition
+	
+	self denyOPlayOutsideBoard.
+		
+	self denyOPutOnNotIntegerPosition.! !
+
+!methodRemoval: TerniLapilliTest #denyOPlayOnNotIntegerPosition stamp: 'eb 11/2/2020 17:49:04'!
+denyOPlayOnNotIntegerPosition
+
+	self denyOPlayOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPlayOnNotIntegerPosition: 1@0.5.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:49:15'!
+denyOPutOnNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:49:15' prior: 50977612!
+denyOPutOnNotIntegerPosition
+
+	self denyOPutOnNotIntegerPosition: 0.5@1.
+	
+	self denyOPutOnNotIntegerPosition: 1@0.5.! !
+
+!methodRemoval: TerniLapilliTest #denyOPlayOnNotIntegerPosition: stamp: 'eb 11/2/2020 17:49:15'!
+denyOPlayOnNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:49:30'!
+denyOPutOutsideBoard
+	
+	self denyOPlayOutsideBoardInPosition: -1@0.
+
+	self denyOPlayOutsideBoardInPosition: 0@-1.
+	
+	self denyOPlayOutsideBoardInPosition: 3@0.
+		
+	self denyOPlayOutsideBoardInPosition: 0@3.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:49:30' prior: 50977619!
+test06OShouldPutInAValidPosition
+	
+	self denyOPutOutsideBoard.
+		
+	self denyOPutOnNotIntegerPosition.! !
+
+!methodRemoval: TerniLapilliTest #denyOPlayOutsideBoard stamp: 'eb 11/2/2020 17:49:30'!
+denyOPlayOutsideBoard
+	
+	self denyOPlayOutsideBoardInPosition: -1@0.
+
+	self denyOPlayOutsideBoardInPosition: 0@-1.
+	
+	self denyOPlayOutsideBoardInPosition: 3@0.
+		
+	self denyOPlayOutsideBoardInPosition: 0@3.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:49:46'!
+denyOPutOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:49:46' prior: 50977659!
+denyOPutOutsideBoard
+	
+	self denyOPutOutsideBoard: -1@0.
+
+	self denyOPutOutsideBoard: 0@-1.
+	
+	self denyOPutOutsideBoard: 3@0.
+		
+	self denyOPutOutsideBoard: 0@3.! !
+
+!methodRemoval: TerniLapilliTest #denyOPlayOutsideBoardInPosition: stamp: 'eb 11/2/2020 17:49:46'!
+denyOPlayOutsideBoardInPosition: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.!
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:50:10'!
+denyXPutOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putXAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:50:11' prior: 50977534!
+denyXPutOutsideBoard
+
+	self denyXPutOutsideBoard: -1@0.
+
+	self denyXPutOutsideBoard: 0@-1.
+	
+	self denyXPutOutsideBoard: 3@0.
+		
+	self denyXPutOutsideBoard: 0@3.! !
+
+!methodRemoval: TerniLapilliTest #denyXPutOutsideBoardInPosition: stamp: 'eb 11/2/2020 17:50:11'!
+denyXPutOutsideBoardInPosition: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putXAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:50:51'!
+denyOPutOnOccupiedPosition
+
+	self should: [ terniLapilli putOAt: 0@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+		
+	self should: [ terniLapilli putOAt: 1@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:50:51' prior: 50973573!
+test08OShouldPutInAvailablePosition
+	
+	terniLapilli putXAt: 0@0 .
+	
+	terniLapilli putOAt: 1@0.
+	
+	terniLapilli putXAt: 1@1 .
+	
+	self denyOPutOnOccupiedPosition.! !
+
+!methodRemoval: TerniLapilliTest #denyPuttingOOnOccupiedPosition stamp: 'eb 11/2/2020 17:50:51'!
+denyPuttingOOnOccupiedPosition
+
+	self should: [ terniLapilli putOAt: 0@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+		
+	self should: [ terniLapilli putOAt: 1@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:51:12' prior: 50977741!
+denyOPutOnOccupiedPosition
+
+	self denyOPutOnOccupiedPosition: 0@0.
+	
+	self denyOPutOnOccupiedPosition: 1@0.
+
+	self should: [ terniLapilli putOAt: 0@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+		
+	self should: [ terniLapilli putOAt: 1@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:51:38'!
+denyOPutOnOccupiedPosition: anOccupiedPosition
+
+	self should: [ terniLapilli putOAt: anOccupiedPosition. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+
+	
+	! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:51:56' prior: 50977777!
+denyOPutOnOccupiedPosition
+
+	self denyOPutOnOccupiedPosition: 0@0.
+	
+	self denyOPutOnOccupiedPosition: 1@0.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:52:06'!
+denyXPutOnOccupiedPosition
+
+	self denyOPutOnOccupiedPosition: 0@0.
+	
+	self denyOPutOnOccupiedPosition: 1@0.! !
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 17:53:36'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 17:53:36'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 17:53:36'!
+PASSED!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:54:00'!
+denyPuttingXOnOccupiedPositionn
+
+	self should: [ terniLapilli putXAt: 0@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+		
+	self should: [ terniLapilli putXAt: 1@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.! !
+!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'eb 11/2/2020 17:54:00' prior: 50973558!
+test07XShouldPutInAvailablePosition
+
+	terniLapilli putXAt: 0@0 .
+	
+	terniLapilli putOAt: 1@0.
+	
+	self denyPuttingXOnOccupiedPositionn .! !
+
+!methodRemoval: TerniLapilliTest #denyPuttingXOnOccupiedPosition stamp: 'eb 11/2/2020 17:54:00'!
+denyPuttingXOnOccupiedPosition
+
+	self should: [ terniLapilli putXAt: 0@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+		
+	self should: [ terniLapilli putXAt: 1@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:54:59' prior: 50977809!
+denyXPutOnOccupiedPosition
+
+	self denyXPutOnOccupiedPosition: 0@0.
+	
+	self denyXPutOnOccupiedPosition: 1@0.
+
+	self should: [ terniLapilli putXAt: 0@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+		
+	self should: [ terniLapilli putXAt: 1@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:55:09' prior: 50977936!
+denyXPutOnOccupiedPosition
+
+	self denyXPutOnOccupiedPosition: 0@0.
+	
+	self denyXPutOnOccupiedPosition: 1@0.! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 17:55:23'!
+denyXPutOnOccupiedPosition: anOccupiedPosition
+
+	self should: [ terniLapilli putXAt: anOccupiedPosition. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.! !
+
+!methodRemoval: TerniLapilliTest #denyPuttingXOnOccupiedPositionn stamp: 'eb 11/2/2020 17:55:32'!
+denyPuttingXOnOccupiedPositionn
+
+	self should: [ terniLapilli putXAt: 0@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.
+		
+	self should: [ terniLapilli putXAt: 1@0. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription.!
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:57:41' prior: 50977915!
+test07XShouldPutInAvailablePosition
+
+	terniLapilli putXAt: 0@0 .
+	
+	terniLapilli putOAt: 1@0.
+	
+	self denyXPutOnOccupiedPosition .! !
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:58:48'!
+denyXMoveToOccupiedPosition
+
+	self should: [ terniLapilli moveXFrom: 1@0 to: 1@1. self fail. ] 
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .
+		
+	self should: [ terniLapilli moveXFrom: 1@0 to: 0@0. self fail. ] 
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription! !
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:58:48' prior: 50973728!
+test12XCannotMoveToOccupiedPositions
+
+	self fillBoard .
+	
+	self denyXMoveToOccupiedPosition .! !
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:59:20'!
+denyOMoveToOccupiedPosition
+
+	self should: [ terniLapilli moveOFrom: 1@1 to: 1@2. self fail. ] 
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .
+	
+	self should: [ terniLapilli moveOFrom: 1@1 to: 2@0. self fail. ] 
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription! !
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 17:59:20' prior: 50973785!
+test13OCannotMoveToOcuppiedPositions
+
+	self fillBoard .
+	
+	terniLapilli moveXFrom: 1@0 to: 2@0.
+	
+	self denyOMoveToOccupiedPosition .! !
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 18:01:45' prior: 50978008!
+denyOMoveToOccupiedPosition
+
+	self should: [ terniLapilli moveOFrom: 1@1 to: 1@2. self fail. ] 
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
+!TerniLapilliTest methodsFor: 'testing' stamp: 'eb 11/2/2020 18:01:55' prior: 50977988!
+denyXMoveToOccupiedPosition
+
+	self should: [ terniLapilli moveXFrom: 1@0 to: 1@1. self fail. ] 
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:02:00'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:02:00'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 18:02:00'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 18:02:01'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:02:02'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:02:54'!
+FAILURE!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:08' prior: 50977685!
+denyOPutOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putOAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription .! !
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:03:10'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:03:10'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 18:03:10'!
+PASSED!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:24' prior: 50977632!
+denyOPutOnNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putOAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription .! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:37' prior: 50977583!
+denyXPutOnNotIntegerPosition: aNotIntegerPosition
+	
+	self should: [ terniLapilli putXAt: aNotIntegerPosition. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsInvalidErrorDescription.! !
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:03:40'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 18:03:40'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:03:40'!
+FAILURE!
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:03:52' prior: 50977958!
+denyXPutOnOccupiedPosition: anOccupiedPosition
+
+	self should: [ terniLapilli putXAt: anOccupiedPosition. self fail. ]
+		raise: Error
+		withMessageText: terniLapilli class positionIsNotAvailableErrorDescription .! !
+!TerniLapilliTest methodsFor: 'testing-private' stamp: 'eb 11/2/2020 18:04:40' prior: 50977713!
+denyXPutOutsideBoard: aPositionOutsideBoard
+	
+	self should: [ terniLapilli putXAt: aPositionOutsideBoard. self fail.]
+		raise: Error
+		withMessageText: terniLapilli class positionIsOutsideBoardErrorDescription .! !
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:04:47'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:04:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 18:04:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 18:04:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test01AtTheBeginningBoardIsEmptyAndXShouldPlay stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02OCannotInitGame stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test03OPlaysAfterX stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04XPlaysAfterO stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06OShouldPutInAValidPosition stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07XShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08OShouldPutInAvailablePosition stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09XCannotPutMoreThanThreeTimes stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10XCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test11OCanMoveOnlyWithThreeTokens stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test12XCannotMoveToOccupiedPositions stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test13OCannotMoveToOcuppiedPositions stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test14XCannotMoveTwice stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test15OCannotMoveTwice stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test16XMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test17OMovementsLengthShouldBeOne stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test18XMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test19OMovesToAValidPositionInTheBoard stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test20XMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test21OMovesFromSomeOwnToken stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test22XWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test23OWinsWhenHasThreeTokensInLine stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test24XCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test25OCannotPlayWhenGameIsOver stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test26XCannotPutTwice stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test27OCannotPutTwice stamp: 'eb 11/2/2020 18:05:13'!
+PASSED!
