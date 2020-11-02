@@ -537,10 +537,10 @@ assertThatPositionIsAvailable: aPosition
 
 	(self allTokens includes: aPosition)  ifTrue: [self error: self class positionIsNotAvailableErrorDescription ].! !
 
-!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 17:02:24'!
+!TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 17:10:28'!
 assertThatPositionIsInteger: aPosition
 
-	(aPosition isIntegerPoint) ifFalse: [self error: self class positionIsInvalidErrorDescription ]! !
+	aPosition isIntegerPoint ifFalse: [self error: self class positionIsInvalidErrorDescription ]! !
 
 !TerniLapilli methodsFor: 'asserting' stamp: 'eb 11/2/2020 16:45:03'!
 assertThatPositionIsIntoTheBoard: aPosition
