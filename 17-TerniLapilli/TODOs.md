@@ -1,9 +1,0 @@
-- aTargetPoint debe estar dentro del tablero y la posicion debe ser entera
-- X solo puede mover X
-- O solo puede mover O
-- Refactorizar mensajes de movimientos
-- TDD con:
-    - isOver
-    - isTied
-    - hasPlayerXWon
-    - hasPlayerOWon
