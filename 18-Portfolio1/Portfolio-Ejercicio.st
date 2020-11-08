@@ -290,7 +290,7 @@ test11muchosPadresPuedenTenerMuchosHijos
 	self assert: 100 equals: portfolioRoot2 balance.	
 	self assert: 50 equals: portfolioRoot3 balance.		! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 01:27:43'!
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 10:45:50'!
 test12NoTePodesAgregarAVosMismo
 
 	| portfolioRoot |
@@ -299,7 +299,7 @@ test12NoTePodesAgregarAVosMismo
 	
 	self should: [ portfolioRoot register: portfolioRoot . self fail]  
 		raise: Error
-		withMessageText: Portfolio noSePuedeAgregarDosVecesElMismoElemErrorDescription .
+		withMessageText: Portfolio noTePodesAgregarAVosMismoErrorDescription .
 		
 	self assert: 0 equals: portfolioRoot amountOfAccounts.
 			
@@ -636,17 +636,83 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
-!classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
-Object subclass: #Portfolio
-	instanceVariableNames: 'accounts portfolios parent'
+!classDefinition: #FinancialInvestment category: #'Portfolio-Ejercicio'!
+Object subclass: #FinancialInvestment
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
+
+!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:11:17'!
+balance
+	
+	self subclassResponsibility ! !
+
+!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:12:15'!
+hasRegistered: aFinancialInvestment
+	
+	self subclassResponsibility ! !
+
+!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:34:10'!
+register: aFinancialObjectToRegister
+	
+	self subclassResponsibility ! !
+
+!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:17:21'!
+registerInPortfolio: aPortfolio
+
+	self subclassResponsibility .! !
+
+
+!classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
+FinancialInvestment subclass: #Portfolio
+	instanceVariableNames: 'accounts portfolios'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 10:35:59'!
+accountIsInHierarchy: aReceptiveAccount
+	
+	| down up |
+	"esta en la jerarquia de abajo"	
+	down _ self accountIsInHierarchyDown: aReceptiveAccount .
+		
+	"esta en la jerarquia de arriba"
+	up _ self accountIsInHierarchyUp: aReceptiveAccount. 
+	
+	^ down or: up.
+	! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 10:10:28'!
+accountIsInHierarchyDown: aReceptiveAccount
+	
+	(accounts includes: aReceptiveAccount) ifTrue: [^ true ] 
+		ifFalse: [ (self portfolios isEmpty) ifTrue:[ ^ false ] 
+			ifFalse:[ self portfolios do: [:x | x accountIsInHierarchyDown: aReceptiveAccount ]]].
+	! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 10:48:54'!
+accountIsInHierarchyUp: aReceptiveAccount
+
+	
+	| portfoliosRoot |
+	
+	(self parents do:[:y | (y accounts includes: aReceptiveAccount) ifTrue:[^ true]] ) 
+		ifFalse: [ portfoliosRoot _ self parents portfolios copy.
+			(portfoliosRoot isEmpty) ifTrue: [^ false].
+			portfoliosRoot do:[:x | (x accountIsInHierarchyDown: aReceptiveAccount) ifTrue: [^ true ] ]].
+	! !
 
 !Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 20:30:07'!
 accounts
 
 	^ accounts ! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 09:17:39'!
+addParent: aPortfolio 
+	
+	parents add: aPortfolio .! !
 
 !Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/2/2020 19:53:17'!
 amountOfAccounts
@@ -671,44 +737,26 @@ balance
 		
 		! !
 
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 01:27:04'!
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 09:13:42'!
 deepSearch: aPortfolioEntry 
+	
+	(aPortfolioEntry isKindOf: ReceptiveAccount) ifTrue: [	 ^ (self accountIsInHierarchy: aPortfolioEntry) ].
+	
+	(aPortfolioEntry isKindOf: Portfolio) ifTrue:[^ self portfolioIsInHierarchy: aPortfolioEntry].
+	! !
 
-	| isInPortfolio isInHierarchy |
-	
-	(aPortfolioEntry isKindOf: ReceptiveAccount) ifTrue: [	 
-				(self accounts includes: aPortfolioEntry) ifTrue: [^true ]
-				 ifFalse: [ ^ ((self parentRoot) searchAccountInHierarchy: aPortfolioEntry) ] ].
-	
-	isInPortfolio _ self portfolios includes: aPortfolioEntry.
-	isInHierarchy _ self isInHierarchy: aPortfolioEntry.
-	
-	^ ( isInPortfolio or: isInHierarchy )! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 22:15:02'!
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:46:06'!
 initialize
 
 	accounts _ OrderedCollection new.
 	
 	portfolios _ OrderedCollection new.
-	
-	parent _ self.! !
+	 ! !
 
 !Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/2/2020 20:22:02'!
 isEmpty
 	
 	^ (accounts size = 0) and: [ portfolios size = 0].! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 23:01:11'!
-isInHierarchy: aPortofolioEntry 
-	
-	| parentRootSelf  parentRootOther |
-	
-	parentRootSelf _ self parentRoot.
-	
-	parentRootOther _ aPortofolioEntry parentRoot.
-	
-	^ parentRootSelf matchElementsOf: parentRootOther .! !
 
 !Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 00:20:40'!
 matchElementsOf: aPortfolioRootToAdd
@@ -732,58 +780,62 @@ matchElementsOf: aPortfolioRootToAdd
 	
 		 ! !
 
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 22:18:49'!
-parentIs: aPortfolio 
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 10:45:27'!
+portfolioIsInHierarchy: aPortofolioEntry 
 	
-	parent _ aPortfolio .! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 01:13:25'!
-parentRoot
-
-	(self = parent) ifTrue: [ ^ self ].
 	
-	^ parent parentRoot.! !
+	
+	( self = aPortofolioEntry ) ifTrue: [ self error: self class noTePodesAgregarAVosMismoErrorDescription ].! !
 
 !Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 20:29:57'!
 portfolios
 
 	^ portfolios! !
 
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 00:30:26'!
-register: aPortfolioEntry 
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:56:46'!
+register: aFinancialInvestment 
 	
-	(self deepSearch: aPortfolioEntry) ifTrue: [ self error: self class noSePuedeAgregarDosVecesElMismoElemErrorDescription ].
 	
-	(aPortfolioEntry isKindOf: ReceptiveAccount) ifTrue:[ accounts add: aPortfolioEntry ].
-	
-	(aPortfolioEntry isKindOf: Portfolio ) ifTrue:[ 	
-		(self = aPortfolioEntry) ifTrue: [ self error: self class noTePodesAgregarAVosMismoErrorDescription ].
-		aPortfolioEntry parentIs: self. 
-		portfolios add: aPortfolioEntry ].
+	aFinancialInvestment registerInPortfolio: self.
 
-	
-	! !
+! !
 
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 01:24:26'!
-searchAccountInHierarchy: aReceptiveAccount
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:35:58'!
+registerAccount: aReceptiveAccount
 	
+	accounts add: aReceptiveAccount ! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:59:31'!
+registerInPortfolio: aPortfolio
 	
+	(self = aPortfolio ) ifTrue: [ self error: self class noTePodesAgregarAVosMismoErrorDescription ].
 	
-	(accounts includes: aReceptiveAccount) ifTrue: [^ true ] 
-		ifFalse: [		(self portfolios isEmpty) ifTrue: [^false].
-			 self portfolios do: [:x | x searchAccountInHierarchy: aReceptiveAccount ]].
-	! !
+	(aPortfolio portfolios includes: self) ifTrue:[self error: self class noSePuedeAgregarDosVecesElMismoElemErrorDescription ].
+		
+	aPortfolio registerPortfolio: self. ! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:47:38'!
+registerPortfolio: aPortfolio
+	
+	self class parents add: self -> aPortfolio .
+		
+	portfolios add: aPortfolio . ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Portfolio class' category: #'Portfolio-Ejercicio'!
 Portfolio class
-	instanceVariableNames: ''!
+	instanceVariableNames: 'parents'!
 
 !Portfolio class methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 20:43:56'!
 cicloNoSePuedeErrorDescription
 	
 	^ 'No se admiten ciclos rey'! !
+
+!Portfolio class methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:46:36'!
+initialize
+
+	parents _ Dictionary new.! !
 
 !Portfolio class methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 22:35:48'!
 noSePuedeAgregarDosVecesElMismoElemErrorDescription
@@ -795,9 +847,15 @@ noTePodesAgregarAVosMismoErrorDescription
 	
 	^ 'No te podes agregar a vos mismo'! !
 
+!Portfolio class methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:50:44'!
+parents
+
+	parents ifNil:[ parents _ Dictionary new].
+	^ parents.! !
+
 
 !classDefinition: #ReceptiveAccount category: #'Portfolio-Ejercicio'!
-Object subclass: #ReceptiveAccount
+FinancialInvestment subclass: #ReceptiveAccount
 	instanceVariableNames: 'transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -814,6 +872,11 @@ register: aTransaction
 
 	transactions add: aTransaction 
 ! !
+
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'ja 11/7/2020 20:35:20'!
+registerInPortfolio: aPortfolio
+
+	aPortfolio registerAccount: self.! !
 
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37'!
 transactions 
@@ -839,3 +902,5 @@ hasRegistered: aTransaction
 
 	^ transactions includes: aTransaction 
 ! !
+
+Portfolio initialize!
