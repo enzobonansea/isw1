@@ -332,9 +332,8 @@ test13PortfolioCantBeAddedTwiceToSameParent
 	self assert: 150 equals: portfolioRoot1 balance.
 	self assert: 0 equals: portfolioChild1 balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:24:41'!
-test14CyclesWithParentOnSingleParentNodeAreForbidden
-	| portfolioRoot1 portfolioChild1 portfolioChild2 account1 |
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 21:01:26'!
+test14CyclesWithParentOnSingleParentNodeAreForbidden| portfolioRoot1 portfolioChild1 portfolioChild2 account1 |
 	portfolioRoot1 _ Portfolio new.
 	portfolioChild1 _ Portfolio new.
 	portfolioChild2 _ Portfolio new.
@@ -347,9 +346,7 @@ test14CyclesWithParentOnSingleParentNodeAreForbidden
 	
 	self should: [ portfolioChild2 register: portfolioRoot1. self fail]  
 		raise: Error
-		withMessageText: Portfolio cantAddPortfolioErrorDescription. .
-		
-! !
+		withMessageText: Portfolio cantAddPortfolioErrorDescription. .! !
 
 !PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 20:23:37'!
 test15CyclesWithOtherNodeOnSingleParentNodeAreForbidden
@@ -818,9 +815,9 @@ initialize
 	state _ RootPortfolio new.! !
 
 
-!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 19:34:26'!
+!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 20:40:27'!
 register: aFinancialInvestment 	
-	^ aFinancialInvestment registerAsChildOf: self.
+	aFinancialInvestment registerAsChildOf: self.
 
 ! !
 
@@ -828,8 +825,9 @@ register: aFinancialInvestment
 registerAccount: aReceptiveAccount	
 	accounts add: aReceptiveAccount ! !
 
-!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 19:32:38'!
+!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 20:51:57'!
 registerAsChildOf: aParentPortfolio
+
 	(aParentPortfolio itsHierarchyHas: self) ifTrue: [ self error: self class cantAddPortfolioErrorDescription. ]. 
 	
 	aParentPortfolio registerChildPortfolio: self. 
@@ -843,13 +841,13 @@ registerChildPortfolio: aChildPortfolio
 	childrenPortfolios add: aChildPortfolio . ! !
 
 
-!Portfolio methodsFor: 'portfolios-hierarchies' stamp: 'eb 11/8/2020 19:37:07'!
+!Portfolio methodsFor: 'portfolios-hierarchies' stamp: 'eb 11/8/2020 20:59:43'!
 hasInAboveHierarchy: aPortfolio
-	parentsPortfolios detect: [ :portfolio | portfolio hasInHierarchy: aPortfolio ] ifNone: [^ false ] .
+	parentsPortfolios detect: [ :portfolio | portfolio itsHierarchyHas: aPortfolio ] ifNone: [^ false ] .
 	
 	^ true .! !
 
-!Portfolio methodsFor: 'portfolios-hierarchies' stamp: 'eb 11/8/2020 19:38:34'!
+!Portfolio methodsFor: 'portfolios-hierarchies' stamp: 'eb 11/8/2020 20:59:37'!
 hasInHierarchy: aPortfolio
 	(self = aPortfolio) ifFalse: [ 
 		childrenPortfolios detect:[ :children | children hasInHierarchy: aPortfolio ] ifNone:[^ false ]. 
@@ -958,6 +956,6 @@ PortfolioState subclass: #RootPortfolio
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!RootPortfolio methodsFor: 'hierarchy operations' stamp: 'eb 11/8/2020 19:39:16'!
+!RootPortfolio methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:39:16'!
 lookFor: aPotentialChildPortfolio intoHierarchyOf: aPotentialParentPortfolio
 	^ aPotentialParentPortfolio hasInHierarchy: aPotentialChildPortfolio .! !
