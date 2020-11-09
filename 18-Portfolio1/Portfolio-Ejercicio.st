@@ -5,7 +5,7 @@ TestCase subclass: #PortfolioTest
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:42:43'!
+!PortfolioTest methodsFor: 'creation' stamp: 'eb 11/8/2020 19:42:43'!
 test01PortfolioHasNotAccountsWhenCreated
 
 	| portfolio |
@@ -16,8 +16,9 @@ test01PortfolioHasNotAccountsWhenCreated
 	
 	self assert: 0 equals: portfolio balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 18:08:21'!
-test02AccountsCanBeAddedToPortfolio
+
+!PortfolioTest methodsFor: 'accounts-adding' stamp: 'eb 11/8/2020 21:48:58'!
+test02EmptyAccountCanBeAddedToPortfolio
 
 	| portfolio account |
 	
@@ -32,8 +33,8 @@ test02AccountsCanBeAddedToPortfolio
 	
 	self assert: 0 equals: portfolio balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 18:08:22'!
-test03AccountCanBeAddedToPortfolioWithMultipleDeposit
+!PortfolioTest methodsFor: 'accounts-adding' stamp: 'eb 11/8/2020 21:49:03'!
+test03DepositeOnlyAccountCanBeAddedToPortfolio
 
 	| portfolio account |
 	
@@ -51,8 +52,8 @@ test03AccountCanBeAddedToPortfolioWithMultipleDeposit
 	
 	self assert: 300 equals: portfolio balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 18:08:22'!
-test04AccountCanBeAddedToPortfolioWithMultipleWithdraw
+!PortfolioTest methodsFor: 'accounts-adding' stamp: 'eb 11/8/2020 21:49:07'!
+test04WithdrawOnlyAccountCanBeAddedToPortfolio
 
 	| portfolio account |
 	
@@ -71,8 +72,8 @@ test04AccountCanBeAddedToPortfolioWithMultipleWithdraw
 	
 	self assert: 850 equals: portfolio balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 18:08:21'!
-test05AccountCanBeAddedToPortfolioWithMultipleTransactions
+!PortfolioTest methodsFor: 'accounts-adding' stamp: 'eb 11/8/2020 21:49:11'!
+test05MultipleTransactionsAccountCanBeAddedToPortfolio
 
 	| portfolio account |
 	
@@ -93,8 +94,8 @@ test05AccountCanBeAddedToPortfolioWithMultipleTransactions
 	
 	self assert: 150 equals: portfolio balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 18:08:22'!
-test06MultipleAccountsCanBeAdedToPortfolio
+!PortfolioTest methodsFor: 'accounts-adding' stamp: 'eb 11/8/2020 21:51:40'!
+test06MultipleAccountsCanBeAddedToPortfolio
 
 	| portfolio account1 account2 account3 totalBalance |
 	
@@ -123,8 +124,9 @@ test06MultipleAccountsCanBeAdedToPortfolio
 	
 	self assert: totalBalance equals: portfolio balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 18:08:21'!
-test07EmptyPortfolioCanBeAdedToPortfolio
+
+!PortfolioTest methodsFor: 'portfolios-adding' stamp: 'eb 11/8/2020 21:51:49'!
+test07EmptyPortfolioCanBeAddedToPortfolio
 
 	| portfolio1 portfolio2 |
 	
@@ -138,42 +140,28 @@ test07EmptyPortfolioCanBeAdedToPortfolio
 	
 	self assert: 0 equals: portfolio1 balance .! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 19:37:20'!
-test08ANotEmptyPortfolioCanBeAdedToPortfolio
-
-	| portfolioRoot portfolio2 account1 account2 account3 |
+!PortfolioTest methodsFor: 'portfolios-adding' stamp: 'eb 11/8/2020 23:12:21'!
+test08NotEmptyPortfolioCanBeAddedToPortfolio
+	| rootPortfolio childPortfolio account1 account2 account3 |
 	
-	portfolioRoot _ Portfolio new.
-	portfolio2  _ Portfolio new.
+	rootPortfolio _ Portfolio new.
+	childPortfolio  _ Portfolio new.
+	account1  _ self accountWithBalanceOf50 .
+	account2  _ self accountWithBalanceOf50 .
+	account3  _ self accountWithBalanceOf50 .
 	
-	account1  _ ReceptiveAccount new.
-	Deposit register: 100 on: account1.
-	Withdraw register: 50 on: account1.
-	
-	account2  _ ReceptiveAccount new.
-	Deposit register: 100 on: account2.
-	Withdraw register: 50 on: account2.
-	
-	account3  _ ReceptiveAccount new.
-	Deposit register: 100 on: account3.
-	Withdraw register: 50 on: account3.
-	
-	portfolio2 register: account1.
-	portfolio2 register: account2.
-	portfolio2 register: account3.
-	
-	portfolioRoot register: portfolio2.
-	
-	self deny: portfolioRoot isEmpty.
-	
-	self assert: 1 equals: portfolioRoot amountOfPortfolios.
-	
-	self assert: 150 equals: portfolioRoot balance.
+	childPortfolio register: account1.
+	childPortfolio register: account2.
+	childPortfolio register: account3.
+	rootPortfolio register: childPortfolio.
+	self deny: rootPortfolio isEmpty.
+	self assert: 1 equals: rootPortfolio amountOfPortfolios.
+	self assert: 150 equals: rootPortfolio balance.
 	
 	! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 19:42:19'!
-test09ManyNotEmptyPortfoliosCaBeAdedToPortfolio
+!PortfolioTest methodsFor: 'portfolios-adding' stamp: 'eb 11/8/2020 21:52:06'!
+test09MultiplePortfoliosCanBeAddedToPortfolio
 
 	| portfolioRoot portfolioChild1 portfolioChild2 account1 account2|
 	
@@ -203,8 +191,9 @@ test09ManyNotEmptyPortfoliosCaBeAdedToPortfolio
 	
 	! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/8/2020 16:48:17'!
-test10SameChildrenDifferentParents
+
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 21:55:18'!
+test10ChildCouldHaveManyParents
 
 	| portfolioRoot1 portfolioRoot2 portfolioChild1 portfolioChild2 account1 account2 |
 	
@@ -240,8 +229,8 @@ test10SameChildrenDifferentParents
 	self assert: 100 equals: portfolioRoot2 balance.	
 	! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'ja 11/6/2020 20:06:58'!
-test11muchosPadresPuedenTenerMuchosHijos
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 21:55:32'!
+test11ChildrenCouldHaveManyParents
 
 	| portfolioRoot1 portfolioRoot2 portfolioRoot3 
 	 portfolioChild1 portfolioChild2  portfolioChild3 
@@ -290,7 +279,7 @@ test11muchosPadresPuedenTenerMuchosHijos
 	self assert: 100 equals: portfolioRoot2 balance.	
 	self assert: 50 equals: portfolioRoot3 balance.		! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:43:28'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 19:43:28'!
 test12PortofolioCantAddItself
 
 	| portfolioRoot |
@@ -305,7 +294,7 @@ test12PortofolioCantAddItself
 			
 	self assert: 0 equals: portfolioRoot balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:43:46'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 19:43:46'!
 test13PortfolioCantBeAddedTwiceToSameParent
 
 	| portfolioRoot1 portfolioChild1 account1 |
@@ -332,7 +321,7 @@ test13PortfolioCantBeAddedTwiceToSameParent
 	self assert: 150 equals: portfolioRoot1 balance.
 	self assert: 0 equals: portfolioChild1 balance.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 21:01:26'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 22:23:20'!
 test14CyclesWithParentOnSingleParentNodeAreForbidden| portfolioRoot1 portfolioChild1 portfolioChild2 account1 |
 	portfolioRoot1 _ Portfolio new.
 	portfolioChild1 _ Portfolio new.
@@ -348,7 +337,7 @@ test14CyclesWithParentOnSingleParentNodeAreForbidden| portfolioRoot1 portfolioC
 		raise: Error
 		withMessageText: Portfolio cantAddPortfolioErrorDescription. .! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 20:23:37'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 20:23:37'!
 test15CyclesWithOtherNodeOnSingleParentNodeAreForbidden
 
 	| portfolioRoot1 portfolioChild1 portfolioChild2 portfolioChild3 portfolioChild4 |
@@ -372,7 +361,7 @@ test15CyclesWithOtherNodeOnSingleParentNodeAreForbidden
 		withMessageText: Portfolio cantAddPortfolioErrorDescription .
 ! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 20:23:51'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 20:23:51'!
 test16CyclesWithParentOnMultipleParentNodeAreForbidden
 
 	| portfolioRoot1 portfolioRoot2 portfolioRoot3 portfolioChild1 portfolioChild2 portfolioChild3 portfolioChild4 |
@@ -398,7 +387,7 @@ test16CyclesWithParentOnMultipleParentNodeAreForbidden
 		raise: Error
 		withMessageText: Portfolio cantAddPortfolioErrorDescription .! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 20:24:01'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'eb 11/8/2020 20:24:01'!
 test17CyclesWithOtherNodeOnMultipleParentNodeAreForbidden
 
 	| portfolioRoot1 portfolioRoot2 portfolioRoot3 portfolioChild1 portfolioChild2 portfolioChild3 portfolioChild4 |
@@ -424,86 +413,143 @@ test17CyclesWithOtherNodeOnMultipleParentNodeAreForbidden
 		raise: Error
 		withMessageText: Portfolio cantAddPortfolioErrorDescription .! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 20:24:25'!
-test19
 
+!PortfolioTest methodsFor: 'accounts-adding policies' stamp: 'eb 11/8/2020 23:50:04'!
+test18AccountAlreadyInPortfolioCantBeAddedToAnotherPortfolioOfSameTree
 	| portfolioRoot1 portfolioChild1 account1 |
-	
 	portfolioRoot1 _ Portfolio new.
-	portfolioChild1 _ Portfolio new.
-			
+	portfolioChild1 _ Portfolio new.			
 	account1  _ ReceptiveAccount new.
 	Deposit register: 200 on: account1.
 	Withdraw register: 50 on: account1.
-	
 	portfolioRoot1 register: account1.
 	portfolioRoot1 register: portfolioChild1.
-	
 	self should: [ portfolioChild1 register: account1 . self fail]  
 		raise: Error
-		withMessageText: Portfolio cantAddPortfolioErrorDescription .
-		
-	self deny: portfolioRoot1 isEmpty.
-	
-	self assert: 1 equals: portfolioRoot1 amountOfPortfolios.
-	self assert: 1 equals: portfolioRoot1 amountOfAccounts.
-			
-	self assert: 150 equals: portfolioRoot1 balance.
-	self assert: 0 equals: portfolioChild1 balance.! !
+		withMessageText: ReceptiveAccount cantAddAccountErrorDescription .! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 20:24:33'!
-test20
 
-	| portfolioRoot1 portfolioRoot2 portfolioRoot3 
-	 portfolioChild1 portfolioChild2  portfolioChild3 
-	 account1 account2 account3 |
+!PortfolioTest methodsFor: 'portfolio-multilevel operations' stamp: 'eb 11/8/2020 23:50:16'!
+test19MultilevelBalance
+
+	| rootPortfolio childPortfolio1 childPortfolio2 account1 account2 |
 	
-	portfolioRoot1 _ Portfolio new.
-	portfolioRoot2 _ Portfolio new.
-	portfolioRoot3 _ Portfolio new.
-	portfolioChild1 _ Portfolio new.
-	portfolioChild2 _ Portfolio new.
-	portfolioChild3 _ Portfolio new.
-			
-	account1  _ ReceptiveAccount new.
-	Deposit register: 200 on: account1.
-	Withdraw register: 50 on: account1.
+	account1  _ self  accountWithBalanceOf50 .
 	
-	account2  _ ReceptiveAccount new.
-	Deposit register: 150 on: account2.
-	Withdraw register: 50 on: account2.
+	account2  _ self  accountWithBalanceOf50 .
 	
-	account3  _ ReceptiveAccount new.
-	Deposit register: 100 on: account3.
-	Withdraw register: 50 on: account3.
+	rootPortfolio _ Portfolio new .
 	
-	portfolioChild1 register: account1.
-	portfolioChild1  register: portfolioChild3. 
-	portfolioChild2  register: account2.
-	portfolioChild3 register: account3.
+	childPortfolio1 _ Portfolio new.
 	
-	portfolioRoot1 register: portfolioChild1.
-	portfolioRoot1 register: portfolioChild2.
+	childPortfolio2 _ Portfolio  new.
 	
-	portfolioRoot2 register: portfolioChild2.
+	childPortfolio1 register: account1.
 	
-	portfolioRoot3 register: portfolioChild3.
+	childPortfolio2 register: account2 .
 	
-	self should: [ portfolioChild3 register: portfolioRoot1 . self fail]  
-		raise: Error
-		withMessageText: Portfolio cantAddPortfolioErrorDescription .
+	rootPortfolio register: childPortfolio1 .
+	
+	rootPortfolio register:  childPortfolio2.
 		
-	self deny: portfolioRoot1 isEmpty.
-	self deny: portfolioRoot2 isEmpty.
-	self deny: portfolioRoot3 isEmpty.
-			
-	self assert: 2 equals: portfolioRoot1 amountOfPortfolios.
-	self assert: 1 equals: portfolioRoot2 amountOfPortfolios.
-	self assert: 1 equals: portfolioRoot3 amountOfPortfolios.
-		
-	self assert: 300 equals: portfolioRoot1 balance.
-	self assert: 100 equals: portfolioRoot2 balance.	
-	self assert: 50 equals: portfolioRoot3 balance.		! !
+	self assert: 100 equals: rootPortfolio balance.
+	
+	
+	
+	! !
+
+!PortfolioTest methodsFor: 'portfolio-multilevel operations' stamp: 'eb 11/8/2020 23:50:20'!
+test20MultilevelTransactions
+
+	| rootPortfolio childPortfolio1 childPortfolio2 account1 account2 deposit1 deposit2 withdraw1 withdraw2 |
+	
+	account1 _ ReceptiveAccount new.
+	
+	account2 _ ReceptiveAccount new.
+	
+	childPortfolio1 _ Portfolio new.
+	
+	childPortfolio2 _ Portfolio new.
+	
+	rootPortfolio _ Portfolio new.
+	
+	childPortfolio1 register: account1 .
+	
+	childPortfolio2 register: account2.
+	
+	rootPortfolio register: childPortfolio1.
+	
+	rootPortfolio register: childPortfolio2.
+	
+	deposit1 _ Deposit register: 100 on: account1 .
+	
+	deposit2 _ Deposit register: 200 on: account2 .
+	
+	withdraw1 _ Withdraw register: 50 on: account1 .
+	
+	withdraw2 _ Withdraw register: 100 on: account2 .
+	
+	self assert: (Set with: deposit1 with: deposit2 with: withdraw1 with: withdraw2)
+		equals: rootPortfolio transactions .
+	
+	! !
+
+!PortfolioTest methodsFor: 'portfolio-multilevel operations' stamp: 'eb 11/8/2020 23:50:25'!
+test21MultilevelHasRegistered
+
+	| rootPortfolio childPortfolio1 childPortfolio2 account1 account2 deposit1 deposit2 withdraw1 withdraw2 |
+	
+	account1 _ ReceptiveAccount new.
+	
+	account2 _ ReceptiveAccount new.
+	
+	childPortfolio1 _ Portfolio new.
+	
+	childPortfolio2 _ Portfolio new.
+	
+	rootPortfolio _ Portfolio new.
+	
+	childPortfolio1 register: account1 .
+	
+	childPortfolio2 register: account2.
+	
+	rootPortfolio register: childPortfolio1.
+	
+	rootPortfolio register: childPortfolio2.
+	
+	deposit1 _ Deposit register: 100 on: account1 .
+	
+	deposit2 _ Deposit register: 200 on: account2 .
+	
+	withdraw1 _ Withdraw register: 50 on: account1 .
+	
+	withdraw2 _ Withdraw register: 100 on: account2 .
+	
+	self assert: (rootPortfolio hasRegistered: deposit1).
+	
+	self assert: (childPortfolio1 hasRegistered: deposit1).
+	
+	self deny: (childPortfolio2 hasRegistered: deposit1).! !
+
+
+!PortfolioTest methodsFor: 'private' stamp: 'eb 11/8/2020 23:11:10'!
+accountWithBalanceOf50
+	
+	^ self accountWithSingleDepositOf: 100  andSingleWithdrawOf: 50.! !
+
+!PortfolioTest methodsFor: 'private' stamp: 'eb 11/8/2020 23:10:33'!
+accountWithSingleDepositOf: aDepositValue andSingleWithdrawOf: aWithdrawValue
+	
+	| account |
+	
+	account  _ ReceptiveAccount new.
+	
+	Deposit register: aDepositValue on: account.
+	
+	Withdraw register: aWithdrawValue on: account.
+	
+	^ account .
+	! !
 
 
 !classDefinition: #ReceptiveAccountTest category: #'Portfolio-Ejercicio'!
@@ -599,20 +645,26 @@ test07AccountKnowsItsTransactions
 
 !classDefinition: #AccountTransaction category: #'Portfolio-Ejercicio'!
 Object subclass: #AccountTransaction
-	instanceVariableNames: ''
+	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!AccountTransaction methodsFor: 'value' stamp: 'ja 11/2/2020 20:38:53'!
-addToBalance
-
-	self subclassResponsibility ! !
-
-!AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
+!AccountTransaction methodsFor: 'value' stamp: 'eb 11/8/2020 21:36:25'!
 value 
-
 	self subclassResponsibility ! !
+
+!AccountTransaction methodsFor: 'value' stamp: 'eb 11/8/2020 21:43:41'!
+valueInBalance
+	self subclassResponsibility ! !
+
+
+!AccountTransaction methodsFor: 'initialization' stamp: 'eb 11/8/2020 21:38:03'!
+initializeFor: aValue
+
+	value _ aValue .
+
+! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -633,25 +685,17 @@ register: aValue on: account
 
 !classDefinition: #Deposit category: #'Portfolio-Ejercicio'!
 AccountTransaction subclass: #Deposit
-	instanceVariableNames: 'value'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!Deposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:45'!
-initializeFor: aValue
-
-	value := aValue ! !
-
-
-!Deposit methodsFor: 'value' stamp: 'ja 11/2/2020 20:39:20'!
-addToBalance
-
+!Deposit methodsFor: 'value' stamp: 'eb 11/8/2020 21:36:45'!
+value
 	^ value! !
 
-!Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
-value
-
+!Deposit methodsFor: 'value' stamp: 'eb 11/8/2020 21:43:41'!
+valueInBalance
 	^ value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -668,26 +712,18 @@ for: aValue
 
 !classDefinition: #Withdraw category: #'Portfolio-Ejercicio'!
 AccountTransaction subclass: #Withdraw
-	instanceVariableNames: 'value'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!Withdraw methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:46'!
-initializeFor: aValue
-
-	value := aValue ! !
-
-
-!Withdraw methodsFor: 'value' stamp: 'ja 11/2/2020 20:39:49'!
-addToBalance
-
-	^ value * (-1)! !
-
-!Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:33'!
+!Withdraw methodsFor: 'value' stamp: 'eb 11/8/2020 21:36:58'!
 value
-
 	^ value! !
+
+!Withdraw methodsFor: 'value' stamp: 'eb 11/8/2020 21:43:41'!
+valueInBalance
+	^ value * (-1)! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -708,22 +744,27 @@ Object subclass: #FinancialInvestment
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:11:17'!
+!FinancialInvestment methodsFor: 'management' stamp: 'ja 11/7/2020 20:11:17'!
 balance
 	
 	self subclassResponsibility ! !
 
-!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'ja 11/7/2020 20:12:15'!
-hasRegistered: aFinancialInvestment
-	
+!FinancialInvestment methodsFor: 'management' stamp: 'eb 11/8/2020 23:47:22'!
+hasRegistered: aTransaction
 	self subclassResponsibility ! !
 
-!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 18:29:09'!
+!FinancialInvestment methodsFor: 'management' stamp: 'eb 11/8/2020 18:29:09'!
 register: aFinancialInvestment
 	
 	self subclassResponsibility ! !
 
-!FinancialInvestment methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:27:44'!
+!FinancialInvestment methodsFor: 'management' stamp: 'eb 11/8/2020 21:59:38'!
+transactions
+	
+	self subclassResponsibility .! !
+
+
+!FinancialInvestment methodsFor: 'register-private' stamp: 'eb 11/8/2020 19:27:44'!
 registerAsChildOf: aPortfolio
 
 	self subclassResponsibility .! !
@@ -736,131 +777,150 @@ FinancialInvestment subclass: #Portfolio
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!Portfolio methodsFor: 'testing' stamp: 'ja 11/8/2020 13:20:01'!
+!Portfolio methodsFor: 'testing' stamp: 'eb 11/8/2020 21:24:44'!
+amountOfAccounts
+	^ accounts size.! !
+
+!Portfolio methodsFor: 'testing' stamp: 'eb 11/8/2020 21:31:51'!
+amountOfPortfolios
+	^ childrenPortfolios size.! !
+
+!Portfolio methodsFor: 'testing' stamp: 'eb 11/8/2020 21:31:56'!
 isEmpty
-	
 	^ (accounts size = 0) and: [ childrenPortfolios size = 0].! !
 
 
-!Portfolio methodsFor: 'balance' stamp: 'ja 11/8/2020 13:20:01'!
+!Portfolio methodsFor: 'management' stamp: 'eb 11/8/2020 23:14:18'!
 balance
 	
-	| balanceAccounts balancePortfolio |
+	| childrenBalance |
 	
-	balanceAccounts _ accounts sum: [ :anAccount | anAccount balance] ifEmpty: [0] .
+	childrenBalance _ childrenPortfolios sum: [ :portfolio | portfolio balance ] ifEmpty: [0].
 	
-	balancePortfolio _ childrenPortfolios sum: [:x | x balance ] ifEmpty: [0].
-	
-	^ balancePortfolio + balanceAccounts .
+	^ childrenBalance + (self balanceOf: accounts)  .
 		
 		! !
 
-
-!Portfolio methodsFor: 'accounts' stamp: 'ja 11/7/2020 10:35:59'!
-accountIsInHierarchy: aReceptiveAccount
+!Portfolio methodsFor: 'management' stamp: 'eb 11/8/2020 23:49:22'!
+hasRegistered: aTransaction
 	
-	| down up |
-	"esta en la jerarquia de abajo"	
-	down _ self accountIsInHierarchyDown: aReceptiveAccount .
-		
-	"esta en la jerarquia de arriba"
-	up _ self accountIsInHierarchyUp: aReceptiveAccount. 
-	
-	^ down or: up.
+	^ self transactions includes: aTransaction .
 	! !
 
-!Portfolio methodsFor: 'accounts' stamp: 'ja 11/7/2020 10:10:28'!
-accountIsInHierarchyDown: aReceptiveAccount
-	
-	(accounts includes: aReceptiveAccount) ifTrue: [^ true ] 
-		ifFalse: [ (self portfolios isEmpty) ifTrue:[ ^ false ] 
-			ifFalse:[ self portfolios do: [:x | x accountIsInHierarchyDown: aReceptiveAccount ]]].
-	! !
-
-!Portfolio methodsFor: 'accounts' stamp: 'ja 11/6/2020 20:30:07'!
-accounts
-
-	^ accounts ! !
-
-!Portfolio methodsFor: 'accounts' stamp: 'ja 11/2/2020 19:53:17'!
-amountOfAccounts
-	
-	^ accounts size.! !
-
-
-!Portfolio methodsFor: 'portfolios' stamp: 'eb 11/8/2020 19:34:13'!
-addParentPortfolio: aParentPorfolio 
-	parentsPortfolios add: aParentPorfolio .! !
-
-!Portfolio methodsFor: 'portfolios' stamp: 'ja 11/8/2020 13:20:01'!
-amountOfPortfolios
-	
-	^ childrenPortfolios size.! !
-
-!Portfolio methodsFor: 'portfolios' stamp: 'ja 11/8/2020 13:20:01'!
-portfolios
-
-	^ childrenPortfolios! !
-
-
-!Portfolio methodsFor: 'initialization' stamp: 'ja 11/8/2020 17:10:08'!
-initialize
-
-	accounts _ OrderedCollection new.
-	
-	childrenPortfolios _ OrderedCollection new.
-	
-	parentsPortfolios _ OrderedCollection new.
-	 
-	state _ RootPortfolio new.! !
-
-
-!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 20:40:27'!
+!Portfolio methodsFor: 'management' stamp: 'eb 11/8/2020 20:40:27'!
 register: aFinancialInvestment 	
 	aFinancialInvestment registerAsChildOf: self.
 
 ! !
 
-!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 19:34:40'!
+!Portfolio methodsFor: 'management' stamp: 'eb 11/8/2020 23:39:59'!
+saveTransactionsInto: aTransactionCollection
+
+	accounts do: [ :account | aTransactionCollection addAll: account transactions ].
+	
+	childrenPortfolios do: [ :portfolio | portfolio saveTransactionsInto: aTransactionCollection].! !
+
+!Portfolio methodsFor: 'management' stamp: 'eb 11/8/2020 23:41:27'!
+transactions
+
+	| transactions |
+	
+	transactions _ Set new.
+	
+	self saveTransactionsInto: transactions .
+	
+	^ transactions.! !
+
+
+!Portfolio methodsFor: 'accesing' stamp: 'eb 11/8/2020 21:24:39'!
+accounts
+	^ accounts copy.! !
+
+!Portfolio methodsFor: 'accesing' stamp: 'eb 11/8/2020 21:25:11'!
+portfolios
+	^ childrenPortfolios copy.! !
+
+
+!Portfolio methodsFor: 'register-private' stamp: 'eb 11/8/2020 19:34:40'!
 registerAccount: aReceptiveAccount	
 	accounts add: aReceptiveAccount ! !
 
-!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 20:51:57'!
+!Portfolio methodsFor: 'register-private' stamp: 'eb 11/8/2020 22:43:08'!
 registerAsChildOf: aParentPortfolio
 
-	(aParentPortfolio itsHierarchyHas: self) ifTrue: [ self error: self class cantAddPortfolioErrorDescription. ]. 
+	(aParentPortfolio itsHierarchyHasPortfolio: self) ifTrue: [ self error: self class cantAddPortfolioErrorDescription. ]. 
 	
 	aParentPortfolio registerChildPortfolio: self. 
 	
 	state _ NotRootPortfolio new.
 	! !
 
-!Portfolio methodsFor: 'registering' stamp: 'eb 11/8/2020 19:34:13'!
+!Portfolio methodsFor: 'register-private' stamp: 'eb 11/8/2020 21:30:55'!
 registerChildPortfolio: aChildPortfolio
-	aChildPortfolio addParentPortfolio: self.
+	aChildPortfolio registerParentPortfolio: self.
 	childrenPortfolios add: aChildPortfolio . ! !
 
+!Portfolio methodsFor: 'register-private' stamp: 'eb 11/8/2020 21:30:55'!
+registerParentPortfolio: aParentPorfolio 
+	parentsPortfolios add: aParentPorfolio .! !
 
-!Portfolio methodsFor: 'portfolios-hierarchies' stamp: 'eb 11/8/2020 20:59:43'!
-hasInAboveHierarchy: aPortfolio
-	parentsPortfolios detect: [ :portfolio | portfolio itsHierarchyHas: aPortfolio ] ifNone: [^ false ] .
+
+!Portfolio methodsFor: 'initialization' stamp: 'eb 11/8/2020 21:27:18'!
+initialize
+	accounts _ OrderedCollection new.
+	childrenPortfolios _ OrderedCollection new.
+	parentsPortfolios _ OrderedCollection new. 
+	state _ RootPortfolio new.! !
+
+
+!Portfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:43:59'!
+itsHierarchyHasAccount: anAccount
+	^ state lookForAccount: anAccount intoHierarchyOf: self.
+! !
+
+!Portfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:44:15'!
+itsHierarchyHasPortfolio: aPortfolio
+	^ state lookForPortfolio: aPortfolio intoHierarchyOf: self.
+! !
+
+!Portfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:48:31'!
+searchAccountBelow: anAccount
+	
+	(accounts includes: anAccount) ifFalse: [
+		childrenPortfolios detect: [ :portfolio | portfolio searchAccountBelow: anAccount ] ifNone:[^ false ].
+	].
+
+	^ true .
+! !
+
+!Portfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:49:12'!
+searchAccountFromAbove: anAccount
+	parentsPortfolios detect: [ :portfolio | portfolio itsHierarchyHasAccount: anAccount ] ifNone: [^ false ] .
 	
 	^ true .! !
 
-!Portfolio methodsFor: 'portfolios-hierarchies' stamp: 'eb 11/8/2020 20:59:37'!
-hasInHierarchy: aPortfolio
+!Portfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:45:47'!
+searchPortfolioBelow: aPortfolio
 	(self = aPortfolio) ifFalse: [ 
-		childrenPortfolios detect:[ :children | children hasInHierarchy: aPortfolio ] ifNone:[^ false ]. 
+		childrenPortfolios detect:[ :children | children searchPortfolioBelow: aPortfolio ] ifNone:[^ false ]. 
 		^ true .
 	].
 	
 	^ true .
 ! !
 
-!Portfolio methodsFor: 'portfolios-hierarchies' stamp: 'eb 11/8/2020 19:39:00'!
-itsHierarchyHas: aPortfolio
-	^ state lookFor: aPortfolio intoHierarchyOf: self.
-! !
+!Portfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:45:59'!
+searchPortfolioFromAbove: aPortfolio
+	parentsPortfolios detect: [ :portfolio | portfolio itsHierarchyHasPortfolio: aPortfolio ] ifNone: [^ false ] .
+	
+	^ true .! !
+
+
+!Portfolio methodsFor: 'management-private' stamp: 'eb 11/8/2020 21:35:22'!
+balanceOf: aFinancialInvestmentCollection
+
+	^ aFinancialInvestmentCollection sum: [ :aFinancialInvestment | aFinancialInvestment balance] ifEmpty: [0].
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -868,8 +928,7 @@ itsHierarchyHas: aPortfolio
 Portfolio class
 	instanceVariableNames: ''!
 
-
-!Portfolio class methodsFor: 'initialize-release' stamp: 'eb 11/8/2020 19:10:45'!
+!Portfolio class methodsFor: 'error descriptions' stamp: 'eb 11/8/2020 19:10:45'!
 cantAddPortfolioErrorDescription
 	
 	^ 'Portfolio cant be added.'.! !
@@ -888,41 +947,43 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'ja 11/6/2020 17:14:05'!
+!ReceptiveAccount methodsFor: 'management' stamp: 'eb 11/8/2020 23:04:55'!
+balance
+	^ transactions sum: [ :transaction | transaction valueInBalance ] ifEmpty: [0].
+	! !
+
+!ReceptiveAccount methodsFor: 'management' stamp: 'eb 11/8/2020 21:40:16'!
+hasRegistered: aTransaction
+	^ transactions includes: aTransaction 
+! !
+
+!ReceptiveAccount methodsFor: 'management' stamp: 'eb 11/8/2020 21:40:11'!
 register: aTransaction
 
 	transactions add: aTransaction 
 ! !
 
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'eb 11/8/2020 19:27:44'!
-registerAsChildOf: aPortfolio
-
-	aPortfolio registerAccount: self.! !
-
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37'!
+!ReceptiveAccount methodsFor: 'management' stamp: 'eb 11/8/2020 21:39:40'!
 transactions 
-
 	^ transactions copy! !
 
 
-!ReceptiveAccount methodsFor: 'balance' stamp: 'ja 11/2/2020 20:42:20'!
-balance
-
-	| balance |
+!ReceptiveAccount methodsFor: 'register-private' stamp: 'eb 11/8/2020 22:42:51'!
+registerAsChildOf: aParentPortfolio
+	(aParentPortfolio itsHierarchyHasAccount: self) ifTrue: [ self error: self class cantAddAccountErrorDescription . ]. 
 	
-	balance _ 0.
+	aParentPortfolio registerAccount: self.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'ReceptiveAccount class' category: #'Portfolio-Ejercicio'!
+ReceptiveAccount class
+	instanceVariableNames: ''!
+
+!ReceptiveAccount class methodsFor: 'error descriptions' stamp: 'eb 11/8/2020 22:53:36'!
+cantAddAccountErrorDescription
 	
-	transactions do:[ :aTransactions | balance _ balance + aTransactions addToBalance].
-	
-	^ balance
-	! !
-
-
-!ReceptiveAccount methodsFor: 'testing' stamp: 'NR 10/17/2019 03:28:43'!
-hasRegistered: aTransaction
-
-	^ transactions includes: aTransaction 
-! !
+	^ 'Account cant be added'.! !
 
 
 !classDefinition: #PortfolioState category: #'Portfolio-Ejercicio'!
@@ -932,8 +993,12 @@ Object subclass: #PortfolioState
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!PortfolioState methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:39:10'!
-lookFor: aPotentialChildPortfolio intoHierarchyOf: aPotentialParentPortfolio
+!PortfolioState methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:44:51'!
+lookForAccount: anAccount intoHierarchyOf: aParentPortfolio
+	self subclassResponsibility .! !
+
+!PortfolioState methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:44:15'!
+lookForPortfolio: aPotentialChildPortfolio intoHierarchyOf: aPotentialParentPortfolio
 	self subclassResponsibility .! !
 
 
@@ -944,9 +1009,14 @@ PortfolioState subclass: #NotRootPortfolio
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!NotRootPortfolio methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:39:23'!
-lookFor: aPotentialChildPortfolio intoHierarchyOf: aPotentialParentPortfolio
-	^ aPotentialParentPortfolio hasInAboveHierarchy: aPotentialChildPortfolio .! !
+!NotRootPortfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:45:19'!
+lookForAccount: anAccount intoHierarchyOf: aParentPortfolio
+
+	^ aParentPortfolio searchAccountFromAbove: anAccount .! !
+
+!NotRootPortfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:45:59'!
+lookForPortfolio: aPotentialChildPortfolio intoHierarchyOf: aPotentialParentPortfolio
+	^ aPotentialParentPortfolio searchPortfolioFromAbove: aPotentialChildPortfolio .! !
 
 
 !classDefinition: #RootPortfolio category: #'Portfolio-Ejercicio'!
@@ -956,6 +1026,11 @@ PortfolioState subclass: #RootPortfolio
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!RootPortfolio methodsFor: 'as yet unclassified' stamp: 'eb 11/8/2020 19:39:16'!
-lookFor: aPotentialChildPortfolio intoHierarchyOf: aPotentialParentPortfolio
-	^ aPotentialParentPortfolio hasInHierarchy: aPotentialChildPortfolio .! !
+!RootPortfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:45:36'!
+lookForAccount: anAccount intoHierarchyOf: aParentPortfolio
+
+	^ aParentPortfolio searchAccountBelow: anAccount .! !
+
+!RootPortfolio methodsFor: 'moving into hierarchy' stamp: 'eb 11/8/2020 22:45:47'!
+lookForPortfolio: aPotentialChildPortfolio intoHierarchyOf: aPotentialParentPortfolio
+	^ aPotentialParentPortfolio searchPortfolioBelow: aPotentialChildPortfolio .! !
