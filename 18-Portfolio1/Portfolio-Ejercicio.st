@@ -142,7 +142,7 @@ test10ChildCouldHaveManyParents
 	self assert: 100 equals: portfolioRoot2 balance.	
 	! !
 
-!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'ja 11/9/2020 16:33:48'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'ja 11/9/2020 17:07:56'!
 test11ChildrenCouldHaveManyParents
 	| portfolioRoot1 portfolioRoot2 portfolioRoot3 
 	 portfolioChild1 portfolioChild2  portfolioChild3 
@@ -153,12 +153,8 @@ test11ChildrenCouldHaveManyParents
 	portfolioChild1 _ Portfolio new.
 	portfolioChild2 _ Portfolio new.
 	portfolioChild3 _ Portfolio new.
-	account1  _ ReceptiveAccount new.
-	Deposit register: 200 on: account1.
-	Withdraw register: 50 on: account1.
-	account2  _ ReceptiveAccount new.
-	Deposit register: 150 on: account2.
-	Withdraw register: 50 on: account2.
+	account1  _ self accountWithSingleDepositOf: 200 andSingleWithdrawOf: 50.
+	account2  _ self accountWithSingleDepositOf: 150 andSingleWithdrawOf: 50.
 	account3  _ self accountWithBalanceOf50 .
 	portfolioChild1 register: account1.
 	portfolioChild1  register: portfolioChild3. 
@@ -188,14 +184,12 @@ test12PortofolioCantAddItself
 	self assert: 0 equals: portfolioRoot amountOfAccounts.
 	self assert: 0 equals: portfolioRoot balance.! !
 
-!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'ja 11/9/2020 16:51:44'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'ja 11/9/2020 17:09:39'!
 test13PortfolioCantBeAddedTwiceToSameParent
 	| portfolioRoot1 portfolioChild1 account1 |
 	portfolioRoot1 _ Portfolio new.
 	portfolioChild1 _ Portfolio new.
-	account1  _ ReceptiveAccount new.
-	Deposit register: 200 on: account1.
-	Withdraw register: 50 on: account1.
+	account1  _ self accountWithSingleDepositOf: 200 andSingleWithdrawOf: 50.
 	portfolioRoot1 register: account1.
 	portfolioRoot1 register: portfolioChild1.
 	self should: [ portfolioRoot1 register: portfolioChild1 . self fail]  
@@ -207,7 +201,7 @@ test13PortfolioCantBeAddedTwiceToSameParent
 	self assert: 150 equals: portfolioRoot1 balance.
 	self assert: 0 equals: portfolioChild1 balance.! !
 
-!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'ja 11/9/2020 16:25:21'!
+!PortfolioTest methodsFor: 'portfolios-adding policies' stamp: 'ja 11/9/2020 17:09:03'!
 test14CyclesWithParentOnSingleParentNodeAreForbidden	
 	| portfolioRoot1 portfolioChild1 portfolioChild2 account1 |
 	
@@ -217,11 +211,7 @@ test14CyclesWithParentOnSingleParentNodeAreForbidden
 	
 	portfolioChild2 _ Portfolio new.
 	
-	account1  _ ReceptiveAccount new.
-	
-	Deposit register: 200 on: account1.
-	
-	Withdraw register: 50 on: account1.
+	account1  _ self accountWithSingleDepositOf: 200 andSingleWithdrawOf: 50.
 	
 	portfolioRoot1 register: account1 .
 	
@@ -291,14 +281,12 @@ test17CyclesWithOtherNodeOnMultipleParentNodeAreForbidden
 		withMessageText: Portfolio cantAddPortfolioErrorDescription .! !
 
 
-!PortfolioTest methodsFor: 'accounts-adding policies' stamp: 'eb 11/8/2020 23:50:04'!
+!PortfolioTest methodsFor: 'accounts-adding policies' stamp: 'ja 11/9/2020 17:06:09'!
 test18AccountAlreadyInPortfolioCantBeAddedToAnotherPortfolioOfSameTree
 	| portfolioRoot1 portfolioChild1 account1 |
 	portfolioRoot1 _ Portfolio new.
 	portfolioChild1 _ Portfolio new.			
-	account1  _ ReceptiveAccount new.
-	Deposit register: 200 on: account1.
-	Withdraw register: 50 on: account1.
+	account1  _ self accountWithSingleDepositOf: 200 andSingleWithdrawOf: 50.
 	portfolioRoot1 register: account1.
 	portfolioRoot1 register: portfolioChild1.
 	self should: [ portfolioChild1 register: account1 . self fail]  
