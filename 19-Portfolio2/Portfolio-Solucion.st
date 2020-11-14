@@ -312,27 +312,70 @@ TestCase subclass: #TransferTest
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'eb 11/9/2020 19:34:51'!
-test01TransferHasSourceDestinyAndValueWhenCreated
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:42:57'!
+test01TransferAffectsSourceAndDestinyBalance
 	
-	| transfer sourceAccount destinyAccount |
+	| sourceAccount destinyAccount |
 	
 	sourceAccount _ ReceptiveAccount new .
 	
 	destinyAccount _ ReceptiveAccount new .
 	
-	transfer  _ Transfer from: sourceAccount to: destinyAccount anAmountOf: 2.
+	self assert: 0 equals: sourceAccount balance.
+	self assert: 0 equals: destinyAccount balance.
 	
-	self assert: transfer hasSource.
+	Transfer from: sourceAccount to: destinyAccount anAmountOf: 100.
 	
-	self assert: transfer hasDestiny.
+	self assert: -100 equals: sourceAccount balance.
+	self assert: 100 equals: destinyAccount balance.
+! !
+
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:52:16'!
+test02CanNotTransferAnAmountOfZeroErrorDescription 
 	
-	self assert: transfer hasValue.
+	| sourceAccount destinyAccount |
+	
+	sourceAccount _ ReceptiveAccount new .
+	
+	destinyAccount _ ReceptiveAccount new .
+	
+	self should: [Transfer from: sourceAccount to: destinyAccount anAmountOf: 0. self fail] 
+		raise: Error
+		withMessageText: Transfer canNotTransferAnAmountOfZeroErrorDescription .! !
+
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:53:12'!
+test03CanNotTransferANegativeAmountErrorDescription
+	
+	| sourceAccount destinyAccount |
+	
+	sourceAccount _ ReceptiveAccount new .
+	
+	destinyAccount _ ReceptiveAccount new .
+	
+	self should: [Transfer from: sourceAccount to: destinyAccount anAmountOf: -100. self fail] 
+		raise: Error
+		withMessageText: Transfer canNotTransferANegativeAmountErrorDescription .! !
+
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:38:11'!
+test04TransferIsRegisteredIntoInvolvedAccounts
+	
+	| sourceAccount destinyAccount transfer |
+	
+	sourceAccount _ ReceptiveAccount new .
+	
+	destinyAccount _ ReceptiveAccount new .
+	
+	transfer _ Transfer from: sourceAccount to: destinyAccount anAmountOf: 100.
+	
+	self assert: sourceAccount transactions includes: transfer withdrawMade. 
+	
+	self assert: destinyAccount transactions includes: transfer depositMade.
+	
 	
 	! !
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'eb 11/9/2020 19:45:48'!
-test02IsPossibleGettingSourceAccountFromTransfer
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 18:14:14'!
+test05TransferValueIsNotReplicated
 	
 	| transfer sourceAccount destinyAccount |
 	
@@ -340,48 +383,16 @@ test02IsPossibleGettingSourceAccountFromTransfer
 	
 	destinyAccount _ ReceptiveAccount new .
 	
-	transfer  _ Transfer from: sourceAccount to: destinyAccount anAmountOf: 2.
+	transfer  _ Transfer from: sourceAccount to: destinyAccount anAmountOf: 100.
 	
-	self assert: sourceAccount equals: transfer source .! !
-
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'eb 11/9/2020 19:45:55'!
-test03IsPossibleGettingDestinyAccountFromTransfer
+	self assert: -100 equals: sourceAccount balance.
+	self assert: 100 equals: destinyAccount balance.
+		
+	transfer changeValueTo: 10.
 	
-	| transfer sourceAccount destinyAccount |
-	
-	sourceAccount _ ReceptiveAccount new .
-	
-	destinyAccount _ ReceptiveAccount new .
-	
-	transfer  _ Transfer from: sourceAccount to: destinyAccount anAmountOf: 2.
-	
-	self assert: destinyAccount equals: transfer destiny .! !
-
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'eb 11/9/2020 19:46:00'!
-test04IsPossibleGettingTransferFromSourceAccount
-	
-	| transfer sourceAccount destinyAccount |
-	
-	sourceAccount _ ReceptiveAccount new .
-	
-	destinyAccount _ ReceptiveAccount new .
-	
-	transfer  _ Transfer from: sourceAccount to: destinyAccount anAmountOf: 2.
-	
-	self assert: sourceAccount transfers includes: transfer . ! !
-
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'eb 11/9/2020 19:46:05'!
-test05IsPossibleGettingTransferFromDestinyAccount
-	
-	| transfer sourceAccount destinyAccount |
-	
-	sourceAccount _ ReceptiveAccount new .
-	
-	destinyAccount _ ReceptiveAccount new .
-	
-	transfer  _ Transfer from: sourceAccount to: destinyAccount anAmountOf: 2.
-	
-	self assert: destinyAccount transfers includes: transfer . ! !
+	self assert: -10 equals: sourceAccount balance.
+	self assert: 10 equals: destinyAccount balance.
+	! !
 
 
 !classDefinition: #Account category: #'Portfolio-Solucion'!
@@ -582,7 +593,7 @@ addTransactionsTo: aCollectionOfTransactions
 
 	aCollectionOfTransactions addAll: transactions copy! !
 
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37'!
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'ja 11/14/2020 15:30:39'!
 register: aTransaction
 
 	transactions add: aTransaction 
@@ -644,12 +655,12 @@ affectBalance: aBalance
 AccountTransaction class
 	instanceVariableNames: ''!
 
-!AccountTransaction class methodsFor: 'instance creation' stamp: 'NR 10/21/2019 18:54:27'!
-register: aValue on: account
+!AccountTransaction class methodsFor: 'instance creation' stamp: 'ja 11/14/2020 18:19:14'!
+register: aValueOrTransfer on: account
 
 	| transaction |
 	
-	transaction := self for: aValue.
+	transaction := self for: aValueOrTransfer.
 	account register: transaction.
 		
 	^ transaction! !
@@ -691,6 +702,66 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
+!classDefinition: #TransferType category: #'Portfolio-Solucion'!
+AccountTransaction subclass: #TransferType
+	instanceVariableNames: 'relatedTransfer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!TransferType methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:06:54'!
+affectBalance: aBalance
+
+	self subclassResponsibility ! !
+
+!TransferType methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:58:06'!
+initializeFor: aTransfer
+
+	relatedTransfer _ aTransfer ! !
+
+!TransferType methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:56:29'!
+value 
+
+	^ relatedTransfer value! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferType class' category: #'Portfolio-Solucion'!
+TransferType class
+	instanceVariableNames: ''!
+
+!TransferType class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 18:00:01'!
+for: aTransfer
+
+	^ self new initializeFor: aTransfer ! !
+
+
+!classDefinition: #TransferDeposit category: #'Portfolio-Solucion'!
+TransferType subclass: #TransferDeposit
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 19:45:00'!
+affectBalance: aBalance
+
+	^ aBalance + self value ! !
+
+
+!classDefinition: #TransferWithdraw category: #'Portfolio-Solucion'!
+TransferType subclass: #TransferWithdraw
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 19:45:11'!
+affectBalance: aBalance
+
+	^ aBalance - self value ! !
+
+
 !classDefinition: #Withdraw category: #'Portfolio-Solucion'!
 AccountTransaction subclass: #Withdraw
 	instanceVariableNames: 'value'
@@ -729,7 +800,65 @@ for: aValue
 
 !classDefinition: #Transfer category: #'Portfolio-Solucion'!
 Object subclass: #Transfer
-	instanceVariableNames: ''
+	instanceVariableNames: 'value depositMade withdrawMade'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 18:36:27'!
+changeValueTo: aNewValue
+	
+	" Ya que no existe un mapeo con la realidad entre este mensaje y una verdadera transferencia bancaria
+	afirmamos que éste no hace a la esencia de Transfer pero lo incorporamos para poder testear que el valor
+	de las transferencias no está replicado "
+	
+	value _ aNewValue 
+
+	! !
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:33:24'!
+depositMade
+	
+	^ depositMade ! !
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 19:46:48'!
+initializeFrom: aSourceAccount to: aDestinyAccount anAmountOf: aValueToTransfer 
+
+	depositMade _ TransferDeposit register: self on: aDestinyAccount .
+	withdrawMade _ TransferWithdraw register: self on: aSourceAccount .
+	
+	value _ aValueToTransfer .! !
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:36:58'!
+value 
+
+	^ value ! !
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:36:40'!
+withdrawMade
+	
+	^withdrawMade! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Transfer class' category: #'Portfolio-Solucion'!
+Transfer class
+	instanceVariableNames: ''!
+
+!Transfer class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:54:04'!
+canNotTransferANegativeAmountErrorDescription
+	
+	^ ' Can not transfer a negative amount '! !
+
+!Transfer class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:48:16'!
+canNotTransferAnAmountOfZeroErrorDescription
+	
+	^ 'Can not transfer an amount of zero'! !
+
+!Transfer class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:55:01'!
+from: aSourceAccount to: aDestinyAccount anAmountOf: valueToTransfer 
+
+	(valueToTransfer = 0) ifTrue: [ self error: self canNotTransferAnAmountOfZeroErrorDescription ].
+	(valueToTransfer  < 0) ifTrue: [ self error: self canNotTransferANegativeAmountErrorDescription ].
+		
+	^ Transfer new initializeFrom: aSourceAccount to: aDestinyAccount anAmountOf: valueToTransfer .! !
