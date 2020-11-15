@@ -1,3 +1,47 @@
+!classDefinition: #AccountSummaryGeneratorTest category: #'Portfolio-Solucion'!
+TestCase subclass: #AccountSummaryGeneratorTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!AccountSummaryGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:16:50'!
+test01AccountSummaryForEmptyReceptiveAccount
+
+	| aReceptiveAccount anAccountSummaryGenerator aSummary |
+	
+	aReceptiveAccount _ ReceptiveAccount new.
+	anAccountSummaryGenerator _ AccountSummaryGenerator for: aReceptiveAccount.
+	
+	aSummary _ OrderedCollection with: 'Balance = 0'.
+	
+	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
+
+!AccountSummaryGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:15:10'!
+test02AccountSummaryForReceptiveAccountWithADeposit
+
+	| aReceptiveAccount anAccountSummaryGenerator aSummary |
+	
+	aReceptiveAccount _ ReceptiveAccount new.
+	anAccountSummaryGenerator _ AccountSummaryGenerator for: aReceptiveAccount.
+	
+	Deposit register: 100 on: aReceptiveAccount .
+	
+	aSummary _ OrderedCollection with: 'Deposito por 100' with: 'Balance = 100'.
+	
+	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
+
+!AccountSummaryGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 20:28:08'!
+test200AccountSummaryForEmptyPortfolio
+
+	| aPortfolio anAccountSummaryGenerator |
+	
+	aPortfolio _ Portfolio new.
+	anAccountSummaryGenerator _ AccountSummaryGenerator for: aPortfolio.
+	
+	self assert: 'Balance = 0' equals: anAccountSummaryGenerator generate.! !
+
+
 !classDefinition: #PortfolioTest category: #'Portfolio-Solucion'!
 TestCase subclass: #PortfolioTest
 	instanceVariableNames: ''
@@ -424,6 +468,11 @@ addTransactionsTo: aCollectionOfTransactions
 
 	self subclassResponsibility ! !
 
+!Account methodsFor: 'transactions' stamp: 'ja 11/14/2020 20:44:25'!
+generateReportOn: aReportContainer using: aReportGenerator
+
+	self subclassResponsibility ! !
+
 !Account methodsFor: 'transactions' stamp: 'HAW 5/25/2019 12:23:15'!
 transactions
 
@@ -593,6 +642,15 @@ addTransactionsTo: aCollectionOfTransactions
 
 	aCollectionOfTransactions addAll: transactions copy! !
 
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'ja 11/14/2020 21:13:40'!
+generateReportOn: aReportContainer using: aReportGenerator	
+	
+	transactions do:[:transaction | transaction generateReportOn: aReportContainer using: aReportGenerator ].
+	
+	aReportContainer add: ('Balance = ', self balance asString).
+	
+	! !
+
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'ja 11/14/2020 15:30:39'!
 register: aTransaction
 
@@ -631,12 +689,82 @@ addedTo: aPortfolio
 	! !
 
 
+!classDefinition: #AccountReportGenerator category: #'Portfolio-Solucion'!
+Object subclass: #AccountReportGenerator
+	instanceVariableNames: 'account summary'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!AccountReportGenerator methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 20:42:46'!
+generate
+
+	account generateReportOn: summary using: self.
+	
+	^ summary ! !
+
+!AccountReportGenerator methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 20:48:45'!
+generateReportForReceptiveAccount: aReceptiveAccount on: aReportContainer
+
+	self subclassResponsibility ! !
+
+!AccountReportGenerator methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:10:46'!
+initializeFor: anAccount 
+	
+	account _ anAccount.
+	
+	summary _ OrderedCollection new! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AccountReportGenerator class' category: #'Portfolio-Solucion'!
+AccountReportGenerator class
+	instanceVariableNames: ''!
+
+!AccountReportGenerator class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:10:03'!
+for: anAccount 
+	
+	^ self new initializeFor: anAccount! !
+
+
+!classDefinition: #AccountSummaryGenerator category: #'Portfolio-Solucion'!
+AccountReportGenerator subclass: #AccountSummaryGenerator
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!AccountSummaryGenerator methodsFor: 'initialization' stamp: 'ja 11/14/2020 21:05:12'!
+generateForDeposit: aDeposit on: aReportContainer 
+
+	aReportContainer add: 'Deposito por ', aDeposit value asString.! !
+
+!AccountSummaryGenerator methodsFor: 'initialization' stamp: 'ja 11/14/2020 20:56:20'!
+generateReportForReceptiveAccount: aReceptiveAccount on: aReportContainer 
+
+	! !
+
+
+!classDefinition: #TransferNetGenerator category: #'Portfolio-Solucion'!
+AccountReportGenerator subclass: #TransferNetGenerator
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+
 !classDefinition: #AccountTransaction category: #'Portfolio-Solucion'!
 Object subclass: #AccountTransaction
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
+
+!AccountTransaction methodsFor: 'value' stamp: 'ja 11/14/2020 21:01:15'!
+generateReportOn: aReportContainer using: aReportGenerator 
+	
+	self subclassResponsibility 
+	! !
 
 !AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
 value 
@@ -678,6 +806,11 @@ initializeFor: aValue
 
 	value := aValue ! !
 
+
+!Deposit methodsFor: 'value' stamp: 'ja 11/14/2020 21:02:20'!
+generateReportOn: aReportContainer using: aReportGenerator 
+
+	aReportGenerator generateForDeposit: self on: aReportContainer ! !
 
 !Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
 value
