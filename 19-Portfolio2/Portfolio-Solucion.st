@@ -5,7 +5,7 @@ TestCase subclass: #AccountSummaryGeneratorTest
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!AccountSummaryGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:16:50'!
+!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/14/2020 21:16:50'!
 test01AccountSummaryForEmptyReceptiveAccount
 
 	| aReceptiveAccount anAccountSummaryGenerator aSummary |
@@ -17,7 +17,7 @@ test01AccountSummaryForEmptyReceptiveAccount
 	
 	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:15:10'!
+!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/14/2020 21:15:10'!
 test02AccountSummaryForReceptiveAccountWithADeposit
 
 	| aReceptiveAccount anAccountSummaryGenerator aSummary |
@@ -31,15 +31,112 @@ test02AccountSummaryForReceptiveAccountWithADeposit
 	
 	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 20:28:08'!
-test200AccountSummaryForEmptyPortfolio
+!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/15/2020 13:29:33'!
+test03AccountSummaryForReceptiveAccountWithADepositAndWithdraw
 
-	| aPortfolio anAccountSummaryGenerator |
+	| aReceptiveAccount anAccountSummaryGenerator aSummary |
+	
+	aReceptiveAccount _ ReceptiveAccount new.
+	anAccountSummaryGenerator _ AccountSummaryGenerator for: aReceptiveAccount.
+	
+	Deposit register: 100 on: aReceptiveAccount .
+	Withdraw register: 50 on: aReceptiveAccount .
+	
+	aSummary _ OrderedCollection with: 'Deposito por 100'  with: 'Extracción por 50' with: 'Balance = 50'.
+	
+	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
+
+!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/15/2020 13:37:10'!
+test04AccountSummaryForReceptiveAccountWithATransfer
+
+	| aSourceReceptiveAccount aDestinyReceptiveAccount anAccountSummaryGeneratorSource anAccountSummaryGeneratorDestiny aSummarySource aSummaryDestiny |
+	
+	aSourceReceptiveAccount _ ReceptiveAccount new.
+	aDestinyReceptiveAccount _ ReceptiveAccount new.
+	anAccountSummaryGeneratorSource _ AccountSummaryGenerator for: aSourceReceptiveAccount.
+	anAccountSummaryGeneratorDestiny _ AccountSummaryGenerator for: aDestinyReceptiveAccount .
+	
+	Transfer from: aSourceReceptiveAccount to: aDestinyReceptiveAccount anAmountOf: 100.
+	
+	aSummarySource _ OrderedCollection with: 'Salida por transferencia de 100'  with: 'Balance = -100'.
+	aSummaryDestiny _ OrderedCollection with: 'Entrada por transferencia de 100'  with: 'Balance = 100'.
+	
+	self assert: aSummarySource equals: anAccountSummaryGeneratorSource generate.
+	self assert: aSummaryDestiny equals: anAccountSummaryGeneratorDestiny generate.! !
+
+!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/15/2020 13:49:05'!
+test05AccountSummaryForReceptiveAccountWithMultipleTransactions
+
+	| aSourceReceptiveAccount aDestinyReceptiveAccount anAccountSummaryGeneratorSource anAccountSummaryGeneratorDestiny aSummarySource aSummaryDestiny |
+	
+	aSourceReceptiveAccount _ ReceptiveAccount new.
+	aDestinyReceptiveAccount _ ReceptiveAccount new.
+	anAccountSummaryGeneratorSource _ AccountSummaryGenerator for: aSourceReceptiveAccount.
+	anAccountSummaryGeneratorDestiny _ AccountSummaryGenerator for: aDestinyReceptiveAccount .
+	
+	Deposit register: 100 on: aSourceReceptiveAccount .
+	Withdraw register: 50 on: aSourceReceptiveAccount .
+	
+	Deposit register: 100 on: aDestinyReceptiveAccount .
+	Withdraw register: 50 on: aDestinyReceptiveAccount .
+	
+	Transfer from: aSourceReceptiveAccount to: aDestinyReceptiveAccount anAmountOf: 50.
+	
+	aSummarySource _ OrderedCollection with: 'Deposito por 100'  with: 'Extracción por 50'  with: 'Salida por transferencia de 50'  with: 'Balance = 0'.
+	aSummaryDestiny _ OrderedCollection with: 'Deposito por 100'  with: 'Extracción por 50'  with: 'Entrada por transferencia de 50'  with: 'Balance = 100'.
+	
+	self assert: aSummarySource equals: anAccountSummaryGeneratorSource generate.
+	self assert: aSummaryDestiny equals: anAccountSummaryGeneratorDestiny generate.
+	
+	! !
+
+
+!AccountSummaryGeneratorTest methodsFor: 'summary-portfolio' stamp: 'ja 11/15/2020 14:34:42'!
+test06AccountSummaryForEmptyPortfolio
+
+	| aPortfolio anAccountSummaryGenerator aSummary|
 	
 	aPortfolio _ Portfolio new.
 	anAccountSummaryGenerator _ AccountSummaryGenerator for: aPortfolio.
 	
-	self assert: 'Balance = 0' equals: anAccountSummaryGenerator generate.! !
+	aSummary _ OrderedCollection with: 'Balance = 0'.
+	
+	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
+
+!AccountSummaryGeneratorTest methodsFor: 'summary-portfolio' stamp: 'ja 11/15/2020 16:06:01'!
+test07AccountSummaryForPorfolioWithALevel
+
+	| anAccountSummaryGenerator aSummary account simplePortfolio otherAccount |
+
+	account _ ReceptiveAccount new.
+	Deposit register: 100 on: account.
+	otherAccount _ ReceptiveAccount new.
+	Deposit register: 200 on: otherAccount .
+	simplePortfolio _ Portfolio with: account with: otherAccount .
+	
+	anAccountSummaryGenerator _ AccountSummaryGenerator for: simplePortfolio .
+	
+	aSummary _ OrderedCollection with: 'Deposito por 100' with: 'Balance = 100' with: 'Deposito por 200' with: 'Balance = 200' with: 'Balance = 300'.
+	
+	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
+
+!AccountSummaryGeneratorTest methodsFor: 'summary-portfolio' stamp: 'ja 11/15/2020 16:18:29'!
+test08AccountSummaryForPorfolioWithMoreThanOneLevel
+
+	| anAccountSummaryGenerator aSummary account portfolioRoot portfolioChild otherAccount |
+
+	account _ ReceptiveAccount new.
+	Deposit register: 100 on: account.
+	otherAccount _ ReceptiveAccount new.
+	Deposit register: 200 on: otherAccount .
+	portfolioChild _ Portfolio with: otherAccount .
+	portfolioRoot _ Portfolio with: account with: portfolioChild .
+	
+	anAccountSummaryGenerator _ AccountSummaryGenerator for: portfolioRoot .
+	
+	aSummary _ OrderedCollection with: 'Deposito por 100' with: 'Balance = 100' with: 'Deposito por 200' with: 'Balance = 200' with: 'Balance = 200' with: 'Balance = 300'.
+	
+	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
 
 !classDefinition: #PortfolioTest category: #'Portfolio-Solucion'!
@@ -349,6 +446,41 @@ test07AccountKnowsItsTransactions
 ! !
 
 
+!classDefinition: #TransferNetGeneratorTest category: #'Portfolio-Solucion'!
+TestCase subclass: #TransferNetGeneratorTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!TransferNetGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:55:19'!
+test01TransferNetForReceptiveAccountWithoutTransfer
+
+
+	| aReceptiveAccount aTransferNetGenerator |
+	
+	aReceptiveAccount _ ReceptiveAccount new.
+	aTransferNetGenerator _ TransferNetGenerator for: aReceptiveAccount.
+	
+	self assert: 0 equals: aTransferNetGenerator generate.
+	! !
+
+!TransferNetGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:55:40'!
+test02TransferNetForReceptiveAccountWithSimpleTransfers
+
+	| aSourceReceptiveAccount aDestinyReceptiveAccount aTransferNetSource aTransferNetDestiny |
+	
+	aSourceReceptiveAccount _ ReceptiveAccount new.
+	aDestinyReceptiveAccount _ ReceptiveAccount new.
+	aTransferNetSource _ TransferNetGenerator for: aSourceReceptiveAccount.
+	aTransferNetDestiny _ TransferNetGenerator for: aDestinyReceptiveAccount .
+	
+	Transfer from: aSourceReceptiveAccount to: aDestinyReceptiveAccount anAmountOf: 100.
+	
+	self assert: -100 equals: aTransferNetSource generate .
+	self assert: 100 equals: aTransferNetDestiny generate .	! !
+
+
 !classDefinition: #TransferTest category: #'Portfolio-Solucion'!
 TestCase subclass: #TransferTest
 	instanceVariableNames: ''
@@ -468,11 +600,6 @@ addTransactionsTo: aCollectionOfTransactions
 
 	self subclassResponsibility ! !
 
-!Account methodsFor: 'transactions' stamp: 'ja 11/14/2020 20:44:25'!
-generateReportOn: aReportContainer using: aReportGenerator
-
-	self subclassResponsibility ! !
-
 !Account methodsFor: 'transactions' stamp: 'HAW 5/25/2019 12:23:15'!
 transactions
 
@@ -481,6 +608,12 @@ transactions
 
 !Account methodsFor: 'composition' stamp: 'HAW 5/25/2019 12:24:04'!
 addedTo: aPortfolio
+
+	self subclassResponsibility ! !
+
+
+!Account methodsFor: 'report' stamp: 'ja 11/15/2020 18:41:31'!
+generateReportUsing: aReportGenerator
 
 	self subclassResponsibility ! !
 
@@ -578,6 +711,14 @@ isComposedBy: anAccount
 	^ self = anAccount or: [ accounts anySatisfy: [ :composedAccount | (composedAccount isComposedBy: anAccount) or: [ anAccount isComposedBy: composedAccount ]]]! !
 
 
+!Portfolio methodsFor: 'report' stamp: 'ja 11/15/2020 18:42:27'!
+generateReportUsing: aReportGenerator
+
+	accounts do:[:account | account generateReportUsing: aReportGenerator ].
+	
+	aReportGenerator generateForPortfolio: self .! !
+
+
 !Portfolio methodsFor: 'account management - private' stamp: 'HAW 5/25/2019 12:17:31'!
 addRootParentsTo: rootParents
 
@@ -637,19 +778,20 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
+!ReceptiveAccount methodsFor: 'report' stamp: 'ja 11/15/2020 18:43:06'!
+generateReportUsing: aReportGenerator
+	
+	transactions do:[:transaction | transaction generateReportUsing: aReportGenerator ].
+	
+	aReportGenerator generateForReceptiveAccount: self .
+	
+	! !
+
+
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'NR 11/9/2020 05:56:36'!
 addTransactionsTo: aCollectionOfTransactions
 
 	aCollectionOfTransactions addAll: transactions copy! !
-
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'ja 11/14/2020 21:13:40'!
-generateReportOn: aReportContainer using: aReportGenerator	
-	
-	transactions do:[:transaction | transaction generateReportOn: aReportContainer using: aReportGenerator ].
-	
-	aReportContainer add: ('Balance = ', self balance asString).
-	
-	! !
 
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'ja 11/14/2020 15:30:39'!
 register: aTransaction
@@ -691,29 +833,55 @@ addedTo: aPortfolio
 
 !classDefinition: #AccountReportGenerator category: #'Portfolio-Solucion'!
 Object subclass: #AccountReportGenerator
-	instanceVariableNames: 'account summary'
+	instanceVariableNames: 'account report'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!AccountReportGenerator methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 20:42:46'!
-generate
-
-	account generateReportOn: summary using: self.
-	
-	^ summary ! !
-
-!AccountReportGenerator methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 20:48:45'!
-generateReportForReceptiveAccount: aReceptiveAccount on: aReportContainer
-
-	self subclassResponsibility ! !
-
-!AccountReportGenerator methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:10:46'!
+!AccountReportGenerator methodsFor: 'initialization' stamp: 'ja 11/15/2020 19:18:26'!
 initializeFor: anAccount 
 	
 	account _ anAccount.
 	
-	summary _ OrderedCollection new! !
+! !
+
+
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:53:08'!
+generate
+
+	account generateReportUsing: self.
+
+	^ report ! !
+
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:44:30'!
+generateForDeposit: aDeposit 
+	
+	self subclassResponsibility ! !
+
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:44:36'!
+generateForPortfolio: aPortfolio
+
+	self subclassResponsibility ! !
+
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:44:43'!
+generateForReceptiveAccount: aReceptiveAccount 
+
+	self subclassResponsibility ! !
+
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:44:51'!
+generateForTransferDeposit: aWithdraw
+
+	self subclassResponsibility ! !
+
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:45:02'!
+generateForTransferWithdraw: aWithdraw 
+
+	self subclassResponsibility ! !
+
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:45:08'!
+generateForWithdraw: aWithdraw 
+
+	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -734,15 +902,43 @@ AccountReportGenerator subclass: #AccountSummaryGenerator
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!AccountSummaryGenerator methodsFor: 'initialization' stamp: 'ja 11/14/2020 21:05:12'!
-generateForDeposit: aDeposit on: aReportContainer 
+!AccountSummaryGenerator methodsFor: 'initialization' stamp: 'ja 11/15/2020 19:20:31'!
+initializeFor: anAccount 
 
-	aReportContainer add: 'Deposito por ', aDeposit value asString.! !
-
-!AccountSummaryGenerator methodsFor: 'initialization' stamp: 'ja 11/14/2020 20:56:20'!
-generateReportForReceptiveAccount: aReceptiveAccount on: aReportContainer 
-
+	super initializeFor: anAccount.	
+	report _ OrderedCollection new.
 	! !
+
+
+!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:46:03'!
+generateForDeposit: aDeposit  
+
+	report add: 'Deposito por ', aDeposit value asString.! !
+
+!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:46:13'!
+generateForPortfolio: aPortfolio 
+
+	report  add: ('Balance = ', aPortfolio balance asString).! !
+
+!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:46:23'!
+generateForReceptiveAccount: aReceptiveAccount 
+
+	report  add: ('Balance = ', aReceptiveAccount balance asString).! !
+
+!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:46:35'!
+generateForTransferDeposit: aWithdraw 
+
+	report add: 'Entrada por transferencia de ', aWithdraw value asString.! !
+
+!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:46:42'!
+generateForTransferWithdraw: aWithdraw 
+
+	report add: 'Salida por transferencia de ', aWithdraw value asString.! !
+
+!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:46:50'!
+generateForWithdraw: aWithdraw
+
+	report add: 'Extracción por ', aWithdraw value asString.! !
 
 
 !classDefinition: #TransferNetGenerator category: #'Portfolio-Solucion'!
@@ -751,6 +947,17 @@ AccountReportGenerator subclass: #TransferNetGenerator
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferNetGenerator class' category: #'Portfolio-Solucion'!
+TransferNetGenerator class
+	instanceVariableNames: ''!
+
+!TransferNetGenerator class methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 16:40:31'!
+for: anAccount 
+	
+	^ self new initializeFor: anAccount! !
 
 
 !classDefinition: #AccountTransaction category: #'Portfolio-Solucion'!
@@ -807,10 +1014,10 @@ initializeFor: aValue
 	value := aValue ! !
 
 
-!Deposit methodsFor: 'value' stamp: 'ja 11/14/2020 21:02:20'!
-generateReportOn: aReportContainer using: aReportGenerator 
+!Deposit methodsFor: 'value' stamp: 'ja 11/15/2020 18:49:04'!
+generateReportUsing: aReportGenerator
 
-	aReportGenerator generateForDeposit: self on: aReportContainer ! !
+	aReportGenerator generateForDeposit: self.! !
 
 !Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
 value
@@ -881,6 +1088,18 @@ affectBalance: aBalance
 
 	^ aBalance + self value ! !
 
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:49:33'!
+generateReportUsing: aReportGenerator 
+
+	aReportGenerator generateForTransferDeposit: self ! !
+
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:03:40'!
+generateTransferNetOn: aReportContainer
+
+	aReportContainer add: relatedTransfer value.
+	
+	! !
+
 
 !classDefinition: #TransferWithdraw category: #'Portfolio-Solucion'!
 TransferType subclass: #TransferWithdraw
@@ -893,6 +1112,16 @@ TransferType subclass: #TransferWithdraw
 affectBalance: aBalance
 
 	^ aBalance - self value ! !
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:49:59'!
+generateReportUsing: aReportGenerator 
+
+	aReportGenerator generateForTransferWithdraw: self.! !
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:04:05'!
+generateTransferNetOn: aReportContainer
+
+	aReportContainer add: relatedTransfer value * -1.! !
 
 
 !classDefinition: #Withdraw category: #'Portfolio-Solucion'!
@@ -907,6 +1136,11 @@ initializeFor: aValue
 
 	value := aValue ! !
 
+
+!Withdraw methodsFor: 'value' stamp: 'ja 11/15/2020 18:50:44'!
+generateReportUsing: aReportGenerator 
+
+	aReportGenerator generateForWithdraw: self .! !
 
 !Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:33'!
 value
