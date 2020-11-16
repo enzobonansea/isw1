@@ -5,7 +5,7 @@ TestCase subclass: #AccountSummaryGeneratorTest
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/14/2020 21:16:50'!
+!AccountSummaryGeneratorTest methodsFor: 'receptive account' stamp: 'ja 11/14/2020 21:16:50'!
 test01AccountSummaryForEmptyReceptiveAccount
 
 	| aReceptiveAccount anAccountSummaryGenerator aSummary |
@@ -17,7 +17,7 @@ test01AccountSummaryForEmptyReceptiveAccount
 	
 	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/14/2020 21:15:10'!
+!AccountSummaryGeneratorTest methodsFor: 'receptive account' stamp: 'ja 11/14/2020 21:15:10'!
 test02AccountSummaryForReceptiveAccountWithADeposit
 
 	| aReceptiveAccount anAccountSummaryGenerator aSummary |
@@ -31,7 +31,7 @@ test02AccountSummaryForReceptiveAccountWithADeposit
 	
 	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/15/2020 13:29:33'!
+!AccountSummaryGeneratorTest methodsFor: 'receptive account' stamp: 'ja 11/15/2020 13:29:33'!
 test03AccountSummaryForReceptiveAccountWithADepositAndWithdraw
 
 	| aReceptiveAccount anAccountSummaryGenerator aSummary |
@@ -46,7 +46,7 @@ test03AccountSummaryForReceptiveAccountWithADepositAndWithdraw
 	
 	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/15/2020 13:37:10'!
+!AccountSummaryGeneratorTest methodsFor: 'receptive account' stamp: 'ja 11/15/2020 13:37:10'!
 test04AccountSummaryForReceptiveAccountWithATransfer
 
 	| aSourceReceptiveAccount aDestinyReceptiveAccount anAccountSummaryGeneratorSource anAccountSummaryGeneratorDestiny aSummarySource aSummaryDestiny |
@@ -64,7 +64,7 @@ test04AccountSummaryForReceptiveAccountWithATransfer
 	self assert: aSummarySource equals: anAccountSummaryGeneratorSource generate.
 	self assert: aSummaryDestiny equals: anAccountSummaryGeneratorDestiny generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-receptive-account' stamp: 'ja 11/15/2020 13:49:05'!
+!AccountSummaryGeneratorTest methodsFor: 'receptive account' stamp: 'ja 11/15/2020 13:49:05'!
 test05AccountSummaryForReceptiveAccountWithMultipleTransactions
 
 	| aSourceReceptiveAccount aDestinyReceptiveAccount anAccountSummaryGeneratorSource anAccountSummaryGeneratorDestiny aSummarySource aSummaryDestiny |
@@ -91,7 +91,7 @@ test05AccountSummaryForReceptiveAccountWithMultipleTransactions
 	! !
 
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-portfolio' stamp: 'ja 11/15/2020 14:34:42'!
+!AccountSummaryGeneratorTest methodsFor: 'portfolio' stamp: 'ja 11/15/2020 14:34:42'!
 test06AccountSummaryForEmptyPortfolio
 
 	| aPortfolio anAccountSummaryGenerator aSummary|
@@ -103,7 +103,7 @@ test06AccountSummaryForEmptyPortfolio
 	
 	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-portfolio' stamp: 'ja 11/15/2020 16:06:01'!
+!AccountSummaryGeneratorTest methodsFor: 'portfolio' stamp: 'ja 11/15/2020 16:06:01'!
 test07AccountSummaryForPorfolioWithALevel
 
 	| anAccountSummaryGenerator aSummary account simplePortfolio otherAccount |
@@ -120,7 +120,7 @@ test07AccountSummaryForPorfolioWithALevel
 	
 	self assert: aSummary equals: anAccountSummaryGenerator generate.! !
 
-!AccountSummaryGeneratorTest methodsFor: 'summary-portfolio' stamp: 'ja 11/15/2020 16:18:29'!
+!AccountSummaryGeneratorTest methodsFor: 'portfolio' stamp: 'ja 11/15/2020 16:18:29'!
 test08AccountSummaryForPorfolioWithMoreThanOneLevel
 
 	| anAccountSummaryGenerator aSummary account portfolioRoot portfolioChild otherAccount |
@@ -453,32 +453,121 @@ TestCase subclass: #TransferNetGeneratorTest
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferNetGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:55:19'!
-test01TransferNetForReceptiveAccountWithoutTransfer
+!TransferNetGeneratorTest methodsFor: 'receptive account' stamp: 'eb 11/15/2020 20:09:40'!
+test01TransferNetForEmptyReceptiveAccountIsZero
+	| aReceptiveAccount aTransferNetGenerator |
+	aReceptiveAccount _ ReceptiveAccount new.
+	aTransferNetGenerator _ TransferNetGenerator for: aReceptiveAccount.
+	self assert: 0 equals: aTransferNetGenerator generate.
+	! !
 
+!TransferNetGeneratorTest methodsFor: 'receptive account' stamp: 'eb 11/15/2020 20:12:13'!
+test02TransferNetForReceptiveAccountWithOnlyDepositsIsZero
 
 	| aReceptiveAccount aTransferNetGenerator |
 	
 	aReceptiveAccount _ ReceptiveAccount new.
+	
+	Deposit register: 100 on: aReceptiveAccount.
+	
 	aTransferNetGenerator _ TransferNetGenerator for: aReceptiveAccount.
 	
 	self assert: 0 equals: aTransferNetGenerator generate.
 	! !
 
-!TransferNetGeneratorTest methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:55:40'!
-test02TransferNetForReceptiveAccountWithSimpleTransfers
+!TransferNetGeneratorTest methodsFor: 'receptive account' stamp: 'eb 11/15/2020 20:13:37'!
+test03TransferNetForReceptiveAccountWithOnlyWithdrawsIsZero
 
-	| aSourceReceptiveAccount aDestinyReceptiveAccount aTransferNetSource aTransferNetDestiny |
+	| aReceptiveAccount aTransferNetGenerator |
 	
-	aSourceReceptiveAccount _ ReceptiveAccount new.
-	aDestinyReceptiveAccount _ ReceptiveAccount new.
-	aTransferNetSource _ TransferNetGenerator for: aSourceReceptiveAccount.
-	aTransferNetDestiny _ TransferNetGenerator for: aDestinyReceptiveAccount .
+	aReceptiveAccount _ ReceptiveAccount new.
 	
-	Transfer from: aSourceReceptiveAccount to: aDestinyReceptiveAccount anAmountOf: 100.
+	Withdraw register: 100 on: aReceptiveAccount.
 	
-	self assert: -100 equals: aTransferNetSource generate .
-	self assert: 100 equals: aTransferNetDestiny generate .	! !
+	aTransferNetGenerator _ TransferNetGenerator for: aReceptiveAccount.
+	
+	self assert: 0 equals: aTransferNetGenerator generate.
+	! !
+
+!TransferNetGeneratorTest methodsFor: 'receptive account' stamp: 'eb 11/15/2020 20:28:07'!
+test04OneTransferAffectsTransferNet
+
+	| aSourceAccount aDestinyAccount |
+	
+	aSourceAccount _ ReceptiveAccount new.
+	
+	aDestinyAccount _ ReceptiveAccount new.
+	
+	Transfer from: aSourceAccount to: aDestinyAccount anAmountOf: 100.
+		
+	self assert: -100 equals: (TransferNetGenerator for: aSourceAccount) generate.
+	
+	self assert: 100 equals: (TransferNetGenerator for: aDestinyAccount) generate.! !
+
+!TransferNetGeneratorTest methodsFor: 'receptive account' stamp: 'eb 11/15/2020 20:28:55'!
+test05MultipleTransfersAffectsTransferNet
+
+	| aSourceAccount aDestinyAccount |
+	
+	aSourceAccount _ ReceptiveAccount new.
+	
+	aDestinyAccount _ ReceptiveAccount new.
+	
+	Transfer from: aSourceAccount to: aDestinyAccount anAmountOf: 100.
+		
+	Transfer from: aSourceAccount to: aDestinyAccount anAmountOf: 100.
+	
+	self assert: -200 equals: (TransferNetGenerator for: aSourceAccount) generate.
+	
+	self assert: 200 equals: (TransferNetGenerator for: aDestinyAccount) generate.! !
+
+
+!TransferNetGeneratorTest methodsFor: 'portfolio' stamp: 'eb 11/15/2020 21:18:48'!
+test06TransferNetForEmptyPortfolioIsZero
+	self assert: 0 equals: (TransferNetGenerator for: Portfolio new) generate.
+	! !
+
+!TransferNetGeneratorTest methodsFor: 'portfolio' stamp: 'eb 11/15/2020 21:22:24'!
+test07PortolioWithOneReceptiveAccountHasItsAccountTransferNet
+	| aReceptiveAccount aPortfolio |
+	
+	aReceptiveAccount _ ReceptiveAccount new.
+	
+	TransferDeposit register: 100 on: aReceptiveAccount .
+	aPortfolio _ Portfolio with: aReceptiveAccount.
+	self assert: (TransferNetGenerator for: aReceptiveAccount) generate 
+		equals: (TransferNetGenerator for: aPortfolio) generate .
+	! !
+
+!TransferNetGeneratorTest methodsFor: 'portfolio' stamp: 'eb 11/15/2020 21:21:55'!
+test08PortolioWithOnePortfolioHasItsPortfolioTransferNet
+	| aReceptiveAccount aChildPortfolio aParentPortfolio |
+	
+	aReceptiveAccount _ ReceptiveAccount new.
+	
+	TransferDeposit register: 100 on: aReceptiveAccount .
+	aChildPortfolio _ Portfolio with: aReceptiveAccount.
+	
+	aParentPortfolio _ Portfolio with: aChildPortfolio .
+	self assert: (TransferNetGenerator for: aChildPortfolio) generate 
+		equals: (TransferNetGenerator for: aParentPortfolio) generate .
+	! !
+
+!TransferNetGeneratorTest methodsFor: 'portfolio' stamp: 'eb 11/15/2020 21:22:38'!
+test09PortfolioWithManyTransferTransactionsTransferNet
+	| aReceptiveAccountForChildPortfolio aReceptiveAccountForParentPortfolio aChildPortfolio aParentPortfolio |
+	
+	aReceptiveAccountForChildPortfolio _ ReceptiveAccount new.
+	aReceptiveAccountForParentPortfolio _ ReceptiveAccount new .
+	
+	TransferDeposit register: 100 on: aReceptiveAccountForChildPortfolio .
+	TransferDeposit register: 100 on: aReceptiveAccountForParentPortfolio .
+	
+	aChildPortfolio _ Portfolio with: aReceptiveAccountForChildPortfolio.
+	aParentPortfolio _ Portfolio with: aChildPortfolio with: aReceptiveAccountForParentPortfolio.
+	
+	self assert: 200 equals: (TransferNetGenerator for: aParentPortfolio) generate .
+	! !
 
 
 !classDefinition: #TransferTest category: #'Portfolio-Solucion'!
@@ -488,7 +577,7 @@ TestCase subclass: #TransferTest
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:42:57'!
+!TransferTest methodsFor: 'tests' stamp: 'ja 11/14/2020 16:42:57'!
 test01TransferAffectsSourceAndDestinyBalance
 	
 	| sourceAccount destinyAccount |
@@ -506,8 +595,8 @@ test01TransferAffectsSourceAndDestinyBalance
 	self assert: 100 equals: destinyAccount balance.
 ! !
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:52:16'!
-test02CanNotTransferAnAmountOfZeroErrorDescription 
+!TransferTest methodsFor: 'tests' stamp: 'eb 11/15/2020 21:36:55'!
+test02CanNotTransferAnAmountOfZero 
 	
 	| sourceAccount destinyAccount |
 	
@@ -519,8 +608,8 @@ test02CanNotTransferAnAmountOfZeroErrorDescription
 		raise: Error
 		withMessageText: Transfer canNotTransferAnAmountOfZeroErrorDescription .! !
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:53:12'!
-test03CanNotTransferANegativeAmountErrorDescription
+!TransferTest methodsFor: 'tests' stamp: 'eb 11/15/2020 21:37:02'!
+test03CanNotTransferANegativeAmount
 	
 	| sourceAccount destinyAccount |
 	
@@ -532,7 +621,7 @@ test03CanNotTransferANegativeAmountErrorDescription
 		raise: Error
 		withMessageText: Transfer canNotTransferANegativeAmountErrorDescription .! !
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:38:11'!
+!TransferTest methodsFor: 'tests' stamp: 'ja 11/14/2020 17:38:11'!
 test04TransferIsRegisteredIntoInvolvedAccounts
 	
 	| sourceAccount destinyAccount transfer |
@@ -550,7 +639,7 @@ test04TransferIsRegisteredIntoInvolvedAccounts
 	
 	! !
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 18:14:14'!
+!TransferTest methodsFor: 'tests' stamp: 'ja 11/14/2020 18:14:14'!
 test05TransferValueIsNotReplicated
 	
 	| transfer sourceAccount destinyAccount |
@@ -868,13 +957,13 @@ generateForReceptiveAccount: aReceptiveAccount
 
 	self subclassResponsibility ! !
 
-!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:44:51'!
-generateForTransferDeposit: aWithdraw
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 21:24:32'!
+generateForTransferDeposit: aTransferDeposit
 
 	self subclassResponsibility ! !
 
-!AccountReportGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:45:02'!
-generateForTransferWithdraw: aWithdraw 
+!AccountReportGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 21:24:37'!
+generateForTransferWithdraw: aTransferWithdraw 
 
 	self subclassResponsibility ! !
 
@@ -889,9 +978,9 @@ generateForWithdraw: aWithdraw
 AccountReportGenerator class
 	instanceVariableNames: ''!
 
-!AccountReportGenerator class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 21:10:03'!
+!AccountReportGenerator class methodsFor: 'instance creation' stamp: 'eb 11/15/2020 21:31:14'!
 for: anAccount 
-	
+
 	^ self new initializeFor: anAccount! !
 
 
@@ -902,15 +991,14 @@ AccountReportGenerator subclass: #AccountSummaryGenerator
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!AccountSummaryGenerator methodsFor: 'initialization' stamp: 'ja 11/15/2020 19:20:31'!
+!AccountSummaryGenerator methodsFor: 'initialization' stamp: 'eb 11/15/2020 19:52:58'!
 initializeFor: anAccount 
-
 	super initializeFor: anAccount.	
 	report _ OrderedCollection new.
 	! !
 
 
-!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'ja 11/15/2020 18:46:03'!
+!AccountSummaryGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 19:54:04'!
 generateForDeposit: aDeposit  
 
 	report add: 'Deposito por ', aDeposit value asString.! !
@@ -948,16 +1036,44 @@ AccountReportGenerator subclass: #TransferNetGenerator
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+!TransferNetGenerator methodsFor: 'initialization' stamp: 'eb 11/15/2020 19:53:46'!
+initializeFor: anAccount 
 
-!classDefinition: 'TransferNetGenerator class' category: #'Portfolio-Solucion'!
-TransferNetGenerator class
-	instanceVariableNames: ''!
-
-!TransferNetGenerator class methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 16:40:31'!
-for: anAccount 
+	super initializeFor: anAccount.	
 	
-	^ self new initializeFor: anAccount! !
+	report _ 0.
+! !
+
+
+!TransferNetGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 20:14:44'!
+generateForDeposit: aDeposit  
+
+	report _ report + 0 .! !
+
+!TransferNetGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 20:30:47'!
+generateForPortfolio: aPortfolio 
+
+	report _ report + 0 .! !
+
+!TransferNetGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 20:25:53'!
+generateForReceptiveAccount: aReceptiveAccount 
+
+	report _ report + 0 .! !
+
+!TransferNetGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 20:25:02'!
+generateForTransferDeposit: aTransferDeposit
+
+	report _ report + aTransferDeposit value.! !
+
+!TransferNetGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 20:24:47'!
+generateForTransferWithdraw: aTransferWithdraw
+
+	report _ report - aTransferWithdraw value.! !
+
+!TransferNetGenerator methodsFor: 'report generation' stamp: 'eb 11/15/2020 20:26:27'!
+generateForWithdraw: aWithdraw
+
+	report _ report - 0 .! !
 
 
 !classDefinition: #AccountTransaction category: #'Portfolio-Solucion'!
@@ -966,12 +1082,6 @@ Object subclass: #AccountTransaction
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
-
-!AccountTransaction methodsFor: 'value' stamp: 'ja 11/14/2020 21:01:15'!
-generateReportOn: aReportContainer using: aReportGenerator 
-	
-	self subclassResponsibility 
-	! !
 
 !AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
 value 
@@ -983,6 +1093,12 @@ value
 affectBalance: aBalance
 
 	self subclassResponsibility ! !
+
+
+!AccountTransaction methodsFor: 'report' stamp: 'eb 11/15/2020 21:26:37'!
+generateReportUsing: aReportGenerator
+	 
+	self subclassResponsibility .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1014,15 +1130,16 @@ initializeFor: aValue
 	value := aValue ! !
 
 
-!Deposit methodsFor: 'value' stamp: 'ja 11/15/2020 18:49:04'!
-generateReportUsing: aReportGenerator
-
-	aReportGenerator generateForDeposit: self.! !
-
 !Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
 value
 
 	^ value! !
+
+
+!Deposit methodsFor: 'report' stamp: 'ja 11/15/2020 18:49:04'!
+generateReportUsing: aReportGenerator
+
+	aReportGenerator generateForDeposit: self.! !
 
 
 !Deposit methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:25:02'!
@@ -1042,86 +1159,78 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
-!classDefinition: #TransferType category: #'Portfolio-Solucion'!
-AccountTransaction subclass: #TransferType
+!classDefinition: #TransferTransaction category: #'Portfolio-Solucion'!
+AccountTransaction subclass: #TransferTransaction
 	instanceVariableNames: 'relatedTransfer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferType methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:06:54'!
-affectBalance: aBalance
-
-	self subclassResponsibility ! !
-
-!TransferType methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:58:06'!
-initializeFor: aTransfer
-
-	relatedTransfer _ aTransfer ! !
-
-!TransferType methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:56:29'!
+!TransferTransaction methodsFor: 'value' stamp: 'ja 11/14/2020 17:56:29'!
 value 
 
 	^ relatedTransfer value! !
 
+
+!TransferTransaction methodsFor: 'balance' stamp: 'ja 11/14/2020 17:06:54'!
+affectBalance: aBalance
+
+	self subclassResponsibility ! !
+
+
+!TransferTransaction methodsFor: 'initialization' stamp: 'ja 11/14/2020 17:58:06'!
+initializeFor: aTransfer
+
+	relatedTransfer _ aTransfer ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TransferType class' category: #'Portfolio-Solucion'!
-TransferType class
+!classDefinition: 'TransferTransaction class' category: #'Portfolio-Solucion'!
+TransferTransaction class
 	instanceVariableNames: ''!
 
-!TransferType class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 18:00:01'!
+!TransferTransaction class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 18:00:01'!
 for: aTransfer
 
 	^ self new initializeFor: aTransfer ! !
 
 
 !classDefinition: #TransferDeposit category: #'Portfolio-Solucion'!
-TransferType subclass: #TransferDeposit
+TransferTransaction subclass: #TransferDeposit
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 19:45:00'!
-affectBalance: aBalance
-
-	^ aBalance + self value ! !
-
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:49:33'!
+!TransferDeposit methodsFor: 'report' stamp: 'ja 11/15/2020 18:49:33'!
 generateReportUsing: aReportGenerator 
 
 	aReportGenerator generateForTransferDeposit: self ! !
 
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:03:40'!
-generateTransferNetOn: aReportContainer
 
-	aReportContainer add: relatedTransfer value.
-	
-	! !
+!TransferDeposit methodsFor: 'balance' stamp: 'ja 11/14/2020 19:45:00'!
+affectBalance: aBalance
+
+	^ aBalance + self value ! !
 
 
 !classDefinition: #TransferWithdraw category: #'Portfolio-Solucion'!
-TransferType subclass: #TransferWithdraw
+TransferTransaction subclass: #TransferWithdraw
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 19:45:11'!
-affectBalance: aBalance
-
-	^ aBalance - self value ! !
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:49:59'!
+!TransferWithdraw methodsFor: 'report' stamp: 'ja 11/15/2020 18:49:59'!
 generateReportUsing: aReportGenerator 
 
 	aReportGenerator generateForTransferWithdraw: self.! !
 
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'ja 11/15/2020 18:04:05'!
-generateTransferNetOn: aReportContainer
 
-	aReportContainer add: relatedTransfer value * -1.! !
+!TransferWithdraw methodsFor: 'balance' stamp: 'ja 11/14/2020 19:45:11'!
+affectBalance: aBalance
+
+	^ aBalance - self value ! !
 
 
 !classDefinition: #Withdraw category: #'Portfolio-Solucion'!
@@ -1137,11 +1246,6 @@ initializeFor: aValue
 	value := aValue ! !
 
 
-!Withdraw methodsFor: 'value' stamp: 'ja 11/15/2020 18:50:44'!
-generateReportUsing: aReportGenerator 
-
-	aReportGenerator generateForWithdraw: self .! !
-
 !Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:33'!
 value
 
@@ -1152,6 +1256,12 @@ value
 affectBalance: aBalance
 
 	^aBalance - value! !
+
+
+!Withdraw methodsFor: 'report' stamp: 'ja 11/15/2020 18:50:44'!
+generateReportUsing: aReportGenerator 
+
+	aReportGenerator generateForWithdraw: self .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1172,39 +1282,34 @@ Object subclass: #Transfer
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 18:36:27'!
-changeValueTo: aNewValue
-	
+!Transfer methodsFor: 'initialization' stamp: 'eb 11/15/2020 21:30:25'!
+initializeFrom: aSourceAccount to: aDestinyAccount anAmountOf: aValueToTransfer 
+	depositMade _ TransferDeposit register: self on: aDestinyAccount .
+	withdrawMade _ TransferWithdraw register: self on: aSourceAccount .
+	value _ aValueToTransfer .! !
+
+
+!Transfer methodsFor: 'testing' stamp: 'eb 11/15/2020 21:39:07'!
+changeValueTo: aNewValue
 	" Ya que no existe un mapeo con la realidad entre este mensaje y una verdadera transferencia bancaria
 	afirmamos que éste no hace a la esencia de Transfer pero lo incorporamos para poder testear que el valor
-	de las transferencias no está replicado "
-	
+	de las transferencias no está replicado "
 	value _ aNewValue 
 
 	! !
 
-!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:33:24'!
+
+!Transfer methodsFor: 'accesing' stamp: 'eb 11/15/2020 21:39:38'!
 depositMade
-	
-	^ depositMade ! !
+	^ depositMade .! !
 
-!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 19:46:48'!
-initializeFrom: aSourceAccount to: aDestinyAccount anAmountOf: aValueToTransfer 
-
-	depositMade _ TransferDeposit register: self on: aDestinyAccount .
-	withdrawMade _ TransferWithdraw register: self on: aSourceAccount .
-	
-	value _ aValueToTransfer .! !
-
-!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:36:58'!
+!Transfer methodsFor: 'accesing' stamp: 'eb 11/15/2020 21:39:49'!
 value 
+	^ value .! !
 
-	^ value ! !
-
-!Transfer methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 17:36:40'!
+!Transfer methodsFor: 'accesing' stamp: 'eb 11/15/2020 21:39:43'!
 withdrawMade
-	
-	^withdrawMade! !
+	^withdrawMade .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1212,17 +1317,18 @@ withdrawMade
 Transfer class
 	instanceVariableNames: ''!
 
-!Transfer class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:54:04'!
+!Transfer class methodsFor: 'error descriptions' stamp: 'ja 11/14/2020 16:54:04'!
 canNotTransferANegativeAmountErrorDescription
 	
 	^ ' Can not transfer a negative amount '! !
 
-!Transfer class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:48:16'!
+!Transfer class methodsFor: 'error descriptions' stamp: 'ja 11/14/2020 16:48:16'!
 canNotTransferAnAmountOfZeroErrorDescription
 	
 	^ 'Can not transfer an amount of zero'! !
 
-!Transfer class methodsFor: 'as yet unclassified' stamp: 'ja 11/14/2020 16:55:01'!
+
+!Transfer class methodsFor: 'instance creation' stamp: 'ja 11/14/2020 16:55:01'!
 from: aSourceAccount to: aDestinyAccount anAmountOf: valueToTransfer 
 
 	(valueToTransfer = 0) ifTrue: [ self error: self canNotTransferAnAmountOfZeroErrorDescription ].
