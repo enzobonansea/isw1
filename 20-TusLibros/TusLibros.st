@@ -5,18 +5,7 @@ TestCase subclass: #CartTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'eb 11/16/2020 19:31:28'!
-test00
-	
-	| cart |
-	
-	cart _ Cart new.
-	
-	cart add: 'loquesea' .
-	
-	self deny: (cart has: 'loquesea').! !
-
-!CartTest methodsFor: 'as yet unclassified' stamp: 'eb 11/16/2020 18:55:33'!
+!CartTest methodsFor: 'empty cart' stamp: 'eb 11/16/2020 18:55:33'!
 test01CartIsEmptyAtTheBeginning
 	
 	| cart |
@@ -25,85 +14,50 @@ test01CartIsEmptyAtTheBeginning
 	
 	self assert: cart isEmpty .! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'eb 11/16/2020 19:17:23'!
+
+!CartTest methodsFor: 'single book cart' stamp: 'ja 11/17/2020 18:24:59'!
 test02CanAddToCartABookInCatalogue
 	
 	| cart catalogue |
 	
 	cart _ Cart new .
+	catalogue _ Set with: 'book1' with: 'book2'.
 	
-	catalogue _ Catalogue with: 'book1' with: 'book2'.
-	
-	cart add: 'book1' from: catalogue .
+	cart add: 'book1' withOccurrences: 1 from: catalogue .
 	
 	self deny: cart isEmpty .
-	
-	self assert: (cart has: 'book1').! !
+	self assert: (cart has: 'book1' times: 1).! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'eb 11/16/2020 19:25:14'!
+
+!CartTest methodsFor: 'multiple books cart' stamp: 'ja 11/17/2020 18:25:05'!
 test03CanNotAddToCartABookThatIsNotPresentInCatalogue
 	
 	| cart catalogue |
 	
 	cart _ Cart new .
+	catalogue _ Set with: 'book1' with: 'book2'.
 	
-	catalogue _ Catalogue with: 'book1' with: 'book2'.
-	
-	self should: [ cart add: 'book3' from: catalogue . self fail.]
+	self should: [ cart add: 'book3' withOccurrences: 1 from: catalogue . self fail.]
 		raise: Error
-		withMessageText: Catalogue bookIsNotInCatalogueErrorDescription.
+		withMessageText: Cart bookIsNotInCatalogueErrorDescription.
 	
 	self assert: cart isEmpty .
-	
-	self deny: (cart has: 'book3').! !
+	self deny: (cart has: 'book3' times: 1).! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'eb 11/16/2020 19:32:41'!
+!CartTest methodsFor: 'multiple books cart' stamp: 'ja 11/17/2020 18:25:12'!
 test04MultipleBooksInCatalogueCanBeAddedToCart
 
 	| cart catalogue |
 	
 	cart _ Cart new .
+	catalogue _ Set with: 'book1' with: 'book2'.
 	
-	catalogue _ Catalogue with: 'book1' with: 'book2'.
-	
-	cart add: 'book1' from: catalogue .
-	
-	cart add: 'book2' from: catalogue .
+	cart add: 'book1' withOccurrences: 1 from: catalogue .
+	cart add: 'book2' withOccurrences: 2 from: catalogue .
 	
 	self deny: cart isEmpty .
-	
-	self assert: (cart has: 'book1').
-	
-	self assert: (cart has: 'book2').
-	! !
-
-
-!classDefinition: #TusLibrosAPITest category: #TusLibros!
-TestCase subclass: #TusLibrosAPITest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!TusLibrosAPITest methodsFor: 'create cart endpoint' stamp: 'eb 11/16/2020 17:53:40'!
-test01Gets400OnCreateCartAttempWithInvalidRequestSyntax
-
-	| api |
-	
-	api _ TusLibrosAPI new.
-	
-	self should: [ api post: 'createCart' with: '']
-		raise: Error
-		withMessageText: api class badRequest.
-	! !
-
-!TusLibrosAPITest methodsFor: 'create cart endpoint' stamp: 'eb 11/16/2020 17:49:10'!
-test02Gets200OnCreateCartAttempWithValidRequestSyntax
-	! !
-
-!TusLibrosAPITest methodsFor: 'create cart endpoint' stamp: 'eb 11/16/2020 17:49:25'!
-test03CreatesCartOnCreateCartAttempWithValidRequestSyntax
-	! !
+	self assert: (cart has: 'book1' times: 1).
+	self assert: (cart has: 'book2' times: 2).	! !
 
 
 !classDefinition: #Cart category: #TusLibros!
@@ -113,10 +67,12 @@ Object subclass: #Cart
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cart methodsFor: 'testing' stamp: 'eb 11/16/2020 19:15:32'!
-has: aBook
+!Cart methodsFor: 'testing' stamp: 'ja 11/17/2020 17:55:05'!
+has: aBook times: aQuantity
+
+	^ (books occurrencesOf: aBook) = aQuantity 
 	
-	^ books includes: aBook.! !
+	! !
 
 !Cart methodsFor: 'testing' stamp: 'eb 11/16/2020 19:14:54'!
 isEmpty
@@ -124,82 +80,34 @@ isEmpty
 	^ books isEmpty .! !
 
 
-!Cart methodsFor: 'adding' stamp: 'eb 11/16/2020 19:34:14'!
-add: aBook
+!Cart methodsFor: 'adding' stamp: 'ja 11/17/2020 17:46:57'!
+add: aBook withOccurrences: amount from: aCatalogue
+
+	(aCatalogue includes: aBook) ifFalse: [self error: self class bookIsNotInCatalogueErrorDescription].
 	
-	self halt.
-	
-	(thisContext sender isKindOf: Catalogue) ifTrue: [books add: aBook .].
+	books add: aBook withOccurrences: amount.
 	
 	! !
 
-!Cart methodsFor: 'adding' stamp: 'eb 11/16/2020 19:18:31'!
-add: aBook from: aCatalogue
-	
-	aCatalogue add: aBook to: self. ! !
 
-
-!Cart methodsFor: 'initialization' stamp: 'eb 11/16/2020 19:12:36'!
+!Cart methodsFor: 'initialization' stamp: 'ja 11/17/2020 17:30:45'!
 initialize
 	
-	books _ OrderedCollection new.! !
+	books _ Bag new.! !
 
-
-!classDefinition: #Catalogue category: #TusLibros!
-Object subclass: #Catalogue
-	instanceVariableNames: 'books'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
 
-!Catalogue methodsFor: 'adding' stamp: 'eb 11/16/2020 19:13:25'!
-add: aBook
+!Cart methodsFor: 'accesings' stamp: 'ja 11/17/2020 18:09:24'!
+books
 	
-	books add: aBook .! !
-
-!Catalogue methodsFor: 'adding' stamp: 'eb 11/16/2020 19:24:08'!
-add: aBook to: aCart
-	
-	(books includes: aBook) ifFalse: [self error: self class bookIsNotInCatalogueErrorDescription ].
-	
-	aCart add: aBook.! !
-
-
-!Catalogue methodsFor: 'initialization' stamp: 'eb 11/16/2020 19:13:10'!
-initialize
-
-	books  _ OrderedCollection new .! !
+	^books copy! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Catalogue class' category: #TusLibros!
-Catalogue class
+!classDefinition: 'Cart class' category: #TusLibros!
+Cart class
 	instanceVariableNames: ''!
 
-!Catalogue class methodsFor: 'as yet unclassified' stamp: 'eb 11/16/2020 19:13:59'!
-with: aBook
-	
-	^ self new add: aBook yourself .! !
-
-!Catalogue class methodsFor: 'as yet unclassified' stamp: 'eb 11/16/2020 19:14:21'!
-with: aBook with: anotherBook
-	
-	| catalogue |
-	
-	catalogue _ self with: aBook.
-	
-	^ catalogue add: anotherBook yourself .! !
-
-
-!Catalogue class methodsFor: 'error descriptions' stamp: 'eb 11/16/2020 19:21:56'!
+!Cart class methodsFor: 'error description' stamp: 'ja 11/17/2020 17:45:49'!
 bookIsNotInCatalogueErrorDescription
 	
 	^ 'Book is not in catalogue'.! !
-
-
-!classDefinition: #TusLibrosAPI category: #TusLibros!
-Object subclass: #TusLibrosAPI
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
