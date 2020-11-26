@@ -1,3 +1,19 @@
+!classDefinition: #NotEnoughCreditError category: #TusLibros!
+Error subclass: #NotEnoughCreditError
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+
+!classDefinition: #StolenCreditCardError category: #TusLibros!
+Error subclass: #StolenCreditCardError
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+
 !classDefinition: #CartTest category: #TusLibros!
 TestCase subclass: #CartTest
 	instanceVariableNames: ''
@@ -97,10 +113,14 @@ createCart
 	
 	^Cart acceptingItemsOf: self defaultCatalog! !
 
-!CartTest methodsFor: 'support' stamp: 'HernanWilkinson 6/17/2013 17:43'!
+!CartTest methodsFor: 'support' stamp: 'eb 11/26/2020 17:31:00'!
 defaultCatalog
+	| catalog |
 	
-	^ Array with: self itemSellByTheStore! !
+	catalog _ Dictionary new .
+	
+	catalog at: self itemSellByTheStore put: 10.
+	^ catalog .! !
 
 !CartTest methodsFor: 'support' stamp: 'HernanWilkinson 6/17/2013 17:44'!
 itemNotSellByTheStore
@@ -126,7 +146,7 @@ setUp
 	merchantProcessor _ MerchantProcessorSimulator new.! !
 
 
-!CashierTest methodsFor: 'empty cashier' stamp: 'eb 11/26/2020 16:52:56'!
+!CashierTest methodsFor: 'test' stamp: 'eb 11/26/2020 16:52:56'!
 test01CashierCanNotCheckoutWithEmptyCart
 	| cashier cart aCatalog creditCard previousTransactionId |
 	
@@ -143,8 +163,7 @@ test01CashierCanNotCheckoutWithEmptyCart
 	self assert: cashier lastTransactionId equals: previousTransactionId .
 ! !
 
-
-!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:49:02'!
+!CashierTest methodsFor: 'test' stamp: 'eb 11/26/2020 16:49:02'!
 test02CashierCheckoutWithCartWithAnElement
 
 	| cashier cart aCatalog creditCard ticket |
@@ -160,7 +179,7 @@ test02CashierCheckoutWithCartWithAnElement
 	self assert: cart price equals: ticket amount.
 	self assert: cashier lastTransactionId equals: ticket transactionId.! !
 
-!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:49:30'!
+!CashierTest methodsFor: 'test' stamp: 'eb 11/26/2020 16:49:30'!
 test03CashierCheckoutWithCartWithManyElements
 	| cashier cart aCatalog creditCard ticket |
 	cashier _ Cashier new.
@@ -176,8 +195,8 @@ test03CashierCheckoutWithCartWithManyElements
 	
 	self assert: cashier lastTransactionId equals: ticket transactionId.! !
 
-!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:53:51'!
-test04CanNotBuyOnMerchantProcessorError
+!CashierTest methodsFor: 'test' stamp: 'eb 11/26/2020 17:10:13'!
+test04CanNotBuyWithStolenCreditCard
 	| cashier cart aCatalog creditCard previousTransactionId |
 	cashier _ Cashier new.
 	aCatalog _ Dictionary new.
@@ -187,10 +206,26 @@ test04CanNotBuyOnMerchantProcessorError
 	cart add: 'book1'.
 	
 	previousTransactionId _ cashier lastTransactionId .
-	merchantProcessor invalidate.
-	self should: [cashier checkout: cart with: creditCard using: merchantProcessor. self fail]
+	self should: [cashier checkout: cart with: creditCard using: merchantProcessor withStolenCreditCard . self fail]
 		raise: Error  
-		withMessageText: Cashier errorInMerchantProcessorErrorDescription.
+		withMessageText: Cashier canNotCheckoutWithStolenCreditCardErrorDescription .
+	self assert: cashier lastTransactionId equals: previousTransactionId .	
+! !
+
+!CashierTest methodsFor: 'test' stamp: 'eb 11/26/2020 17:10:25'!
+test05CanNotBuyWithNotEnoughCredit
+	| cashier cart aCatalog creditCard previousTransactionId |
+	cashier _ Cashier new.
+	aCatalog _ Dictionary new.
+	aCatalog add: 'book1' -> 2; add: 'book2' -> 3; add: 'book3' -> 4.
+	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current.
+	cart _ Cart acceptingItemsOf: aCatalog.
+	cart add: 'book1'.
+	
+	previousTransactionId _ cashier lastTransactionId .
+	self should: [cashier checkout: cart with: creditCard using: merchantProcessor withNotEnoughCredit . self fail]
+		raise: Error  
+		withMessageText: Cashier canNotCheckoutWithNotEnoughCreditErrorDescription .
 	self assert: cashier lastTransactionId equals: previousTransactionId .	
 ! !
 
@@ -253,14 +288,14 @@ assertIsValidQuantity: aQuantity
 	aQuantity strictlyPositive ifFalse: [ self error: self invalidQuantityErrorMessage ]! !
 
 
-!Cart methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 17:48'!
+!Cart methodsFor: 'initialization' stamp: 'eb 11/26/2020 17:26:51'!
 initializeAcceptingItemsOf: aCatalog
 
 	catalog := aCatalog.
 	items := OrderedCollection new.! !
 
 
-!Cart methodsFor: 'queries' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+!Cart methodsFor: 'queries' stamp: 'eb 11/26/2020 17:26:40'!
 occurrencesOf: anItem
 
 	^items occurrencesOf: anItem  ! !
@@ -271,7 +306,7 @@ price
 	^ items sum:[ :item| catalog at: item ] ifEmpty: [0].! !
 
 
-!Cart methodsFor: 'testing' stamp: 'HernanWilkinson 6/17/2013 17:44'!
+!Cart methodsFor: 'testing' stamp: 'eb 11/26/2020 17:26:56'!
 includes: anItem
 
 	^items includes: anItem ! !
@@ -287,13 +322,13 @@ add: anItem
 
 	^ self add: 1 of: anItem ! !
 
-!Cart methodsFor: 'adding' stamp: 'HernanWilkinson 6/17/2013 17:51'!
+!Cart methodsFor: 'adding' stamp: 'eb 11/26/2020 17:27:52'!
 add: aQuantity of: anItem
 
 	self assertIsValidQuantity: aQuantity.
 	self assertIsValidItem: anItem.
 
-	1 to: aQuantity do: [ :aNumber | items add: anItem ]! !
+	1 to: aQuantity do: [ :aNumber | items add: anItem ] .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -314,14 +349,16 @@ Object subclass: #Cashier
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cashier methodsFor: 'checkout' stamp: 'eb 11/26/2020 16:48:12'!
+!Cashier methodsFor: 'checkout' stamp: 'eb 11/26/2020 17:15:48'!
 checkout: aCart with: aCreditCard using: aMerchantProcessor
 	| price |
 	(aCart isEmpty) ifTrue: [ self error: self class canNotCheckoutForEmptyCartErrorDescription ].
 	price _ aCart price.
 	[ aMerchantProcessor pay: price with: aCreditCard ] 
-		on: Error 
-		do: [ self error: self class errorInMerchantProcessorErrorDescription ].
+		on: StolenCreditCardError 
+		do: [ self error: self class canNotCheckoutWithStolenCreditCardErrorDescription ]
+		on: NotEnoughCreditError 
+		do: [ self error: self class canNotCheckoutWithNotEnoughCreditErrorDescription ].
 		
 	lastTransactionId _ lastTransactionId + 1.
 		
@@ -352,10 +389,15 @@ canNotCheckoutForEmptyCartErrorDescription
 	
 	^ 'Can not checkout for empty cart'! !
 
-!Cashier class methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 18:33:07'!
-errorInMerchantProcessorErrorDescription
+!Cashier class methodsFor: 'as yet unclassified' stamp: 'eb 11/26/2020 17:09:38'!
+canNotCheckoutWithNotEnoughCreditErrorDescription
 	
-	^ 'Error in merchant processor'! !
+	^ 'Can not checkout with not enough credit'.! !
+
+!Cashier class methodsFor: 'as yet unclassified' stamp: 'eb 11/26/2020 17:09:43'!
+canNotCheckoutWithStolenCreditCardErrorDescription
+	
+	^ 'Can not checkout with stolen credit card'.! !
 
 
 !classDefinition: #CreditCard category: #TusLibros!
@@ -406,51 +448,38 @@ ownerNameCanNotBeEmptyErrorDescription
 
 !classDefinition: #MerchantProcessorSimulator category: #TusLibros!
 Object subclass: #MerchantProcessorSimulator
-	instanceVariableNames: 'lastTransactionId valid'
+	instanceVariableNames: 'state'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MerchantProcessorSimulator methodsFor: 'state' stamp: 'ja 11/21/2020 18:29:13'!
-invalidate
-
-	valid _ false.! !
-
-
-!MerchantProcessorSimulator methodsFor: 'operations' stamp: 'ja 11/21/2020 18:30:11'!
+!MerchantProcessorSimulator methodsFor: 'operations' stamp: 'eb 11/26/2020 17:21:35'!
 pay: aPrice with: aCreditCard 
+	(state = #StolenCreditCard) ifTrue: [ StolenCreditCardError signal ] .
 	
-	valid ifFalse: [self error: self class errorDoingTransactionErrorDescription].
-	
-	lastTransactionId _ lastTransactionId + 1.
-	
-	^ lastTransactionId .
+	(state = #NotEnoughCredit) ifTrue: [ NotEnoughCreditError signal ] .
+	^ self .
 ! !
 
 
-!MerchantProcessorSimulator methodsFor: 'accessing' stamp: 'ja 11/21/2020 17:59:45'!
-lastTransactionId
-
-	^ lastTransactionId! !
-
-
-!MerchantProcessorSimulator methodsFor: 'initialization' stamp: 'ja 11/21/2020 18:29:02'!
+!MerchantProcessorSimulator methodsFor: 'initialization' stamp: 'eb 11/26/2020 16:58:51'!
 initialize
+	state _ #WorkingNormal. ! !
 
-	lastTransactionId _ 0.
+
+!MerchantProcessorSimulator methodsFor: 'state' stamp: 'eb 11/26/2020 17:08:13'!
+withNotEnoughCredit
 	
-	valid _ true.! !
+	state _ #NotEnoughCredit.
+	
+	^ self .! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'MerchantProcessorSimulator class' category: #TusLibros!
-MerchantProcessorSimulator class
-	instanceVariableNames: ''!
-
-!MerchantProcessorSimulator class methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 18:30:50'!
-errorDoingTransactionErrorDescription
-
-	^ 'Error doing transaction error description'! !
+!MerchantProcessorSimulator methodsFor: 'state' stamp: 'eb 11/26/2020 17:06:53'!
+withStolenCreditCard
+	
+	state _ #StolenCreditCard.
+	
+	^ self .! !
 
 
 !classDefinition: #Ticket category: #TusLibros!
