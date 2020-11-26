@@ -126,14 +126,14 @@ setUp
 	merchantProcessor _ MerchantProcessorSimulator new.! !
 
 
-!CashierTest methodsFor: 'empty cashier' stamp: 'ja 11/21/2020 18:35:55'!
+!CashierTest methodsFor: 'empty cashier' stamp: 'eb 11/26/2020 16:29:00'!
 test01CashierCanNotCheckoutWithEmptyCart
 
 	| cashier cart aCatalog creditCard |
 	
 	cashier _ Cashier new.
 	aCatalog _ Dictionary new.
-	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: FixedGregorianDate today.
+	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current.
 	cart _ Cart acceptingItemsOf: aCatalog.
 	
 	self should: [ cashier checkout: cart with: creditCard using: merchantProcessor . self fail] 
@@ -142,39 +142,39 @@ test01CashierCanNotCheckoutWithEmptyCart
 ! !
 
 
-!CashierTest methodsFor: 'not empty cashier' stamp: 'ja 11/21/2020 18:36:21'!
+!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:49:02'!
 test02CashierCheckoutWithCartWithAnElement
 
-	| cashier cart aCatalog creditCard transactionId |
+	| cashier cart aCatalog creditCard ticket |
 	
 	cashier _ Cashier new.
 	aCatalog _ Dictionary new.
 	aCatalog add: 'book1' -> 2.
-	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: FixedGregorianDate today.
+	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current.
 	cart _ Cart acceptingItemsOf: aCatalog.
 	cart add: 'book1' .
+	ticket _ cashier checkout: cart with: creditCard using: merchantProcessor.
 	
-	transactionId _ cashier checkout: cart with: creditCard using: merchantProcessor.
-	self assert: merchantProcessor lastTransactionId equals: transactionId.! !
+	self assert: cart price equals: ticket amount.
+	self assert: cashier lastTransactionId equals: ticket transactionId.! !
 
-!CashierTest methodsFor: 'not empty cashier' stamp: 'ja 11/21/2020 18:36:31'!
-test03CashierCheckoutWithCartWithManyElements
-
-	| cashier cart aCatalog creditCard transactionId |
-	
+!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:49:30'!
+test03CashierCheckoutWithCartWithManyElements
+	| cashier cart aCatalog creditCard ticket |
 	cashier _ Cashier new.
 	aCatalog _ Dictionary new.
 	aCatalog add: 'book1' -> 2; add: 'book2' -> 3; add: 'book3' -> 4.
-	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: FixedGregorianDate today.
+	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current.
 	cart _ Cart acceptingItemsOf: aCatalog.
-	
 	cart add: 'book1'.
 	cart add: 2 of: 'book2'. 
+	ticket _ cashier checkout: cart with: creditCard using: merchantProcessor.
 	
-	transactionId _ cashier checkout: cart with: creditCard using: merchantProcessor.
-	self assert: merchantProcessor lastTransactionId equals: transactionId.! !
+	self assert: cart price equals: ticket amount.
+	
+	self assert: cashier lastTransactionId equals: ticket transactionId.! !
 
-!CashierTest methodsFor: 'not empty cashier' stamp: 'ja 11/21/2020 18:33:30'!
+!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:50:06'!
 test04CanNotBuyOnMerchantProcessorError
 
 	| cashier cart aCatalog creditCard |
@@ -182,7 +182,7 @@ test04CanNotBuyOnMerchantProcessorError
 	cashier _ Cashier new.
 	aCatalog _ Dictionary new.
 	aCatalog add: 'book1' -> 2; add: 'book2' -> 3; add: 'book3' -> 4.
-	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: FixedGregorianDate today.
+	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current.
 	cart _ Cart acceptingItemsOf: aCatalog.
 	
 	cart add: 'book1'.
@@ -202,26 +202,26 @@ TestCase subclass: #CreditCardTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:21:34'!
-test01CreditCardOwnerNameCanNotEmpty
+!CreditCardTest methodsFor: 'test' stamp: 'eb 11/26/2020 16:23:53'!
+test01CreditCardOwnerNameCanNotBeEmpty
 
-	self should:[ CreditCard of: '' withNumber: 1234567891011121 andExpiration: FixedGregorianDate today. self fail]
+	self should:[ CreditCard of: '' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current. self fail]
 		raise: Error
-		withMessageText: CreditCard ownerNameCanNotEmptyErrorDescription.! !
+		withMessageText: CreditCard ownerNameCanNotBeEmptyErrorDescription.! !
 
-!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:08:03'!
+!CreditCardTest methodsFor: 'test' stamp: 'eb 11/26/2020 16:24:02'!
 test02CreditCardNumberMustHaveSixteenDigits
 
-	self should:[ CreditCard of: 'Alan Key' withNumber: 0 andExpiration: FixedGregorianDate today. self fail]
+	self should:[ CreditCard of: 'Alan Kay' withNumber: 0 andExpiration: GregorianMonthOfYear current. self fail]
 		raise: Error
 		withMessageText: CreditCard numberMustHaveSixteenDigitsErrorDescription.! !
 
-!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:21:04'!
-test03CreditCardDateCanNotLessThanToday
+!CreditCardTest methodsFor: 'test' stamp: 'eb 11/26/2020 16:26:19'!
+test03CreditCardExpirationMonthCanNotBeLessThanCurrent
 
-	self should:[ CreditCard of: 'Alan Key' withNumber: 1234567891011121 andExpiration: FixedGregorianDate yesterday. self fail]
+	self should:[ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: (GregorianMonthOfYear yearNumber: 2020 monthNumber: 1). self fail]
 		raise: Error
-		withMessageText: CreditCard dateCanNotLessThanTodayErrorDescription.! !
+		withMessageText: CreditCard monthCanNotBeLessThanCurrentErrorDescription.! !
 
 
 !classDefinition: #Cart category: #TusLibros!
@@ -309,26 +309,37 @@ acceptingItemsOf: aCatalog
 
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
-	instanceVariableNames: ''
+	instanceVariableNames: 'lastTransactionId'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cashier methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 18:35:13'!
+!Cashier methodsFor: 'checkout' stamp: 'eb 11/26/2020 16:48:12'!
 checkout: aCart with: aCreditCard using: aMerchantProcessor
-
 	| price |
-	
-	price _ self priceOf: aCart.
-	
-	(price = 0) ifTrue: [ self error: self class canNotCheckoutForEmptyCartErrorDescription ].
-	
-	^ [ aMerchantProcessor pay: price with: aCreditCard ] on:Error do:[ self error: self class errorInMerchantProcessorErrorDescription ].! !
+	(aCart isEmpty) ifTrue: [ self error: self class canNotCheckoutForEmptyCartErrorDescription ].
+	price _ aCart price.
+	[ aMerchantProcessor pay: price with: aCreditCard ] 
+		on: Error 
+		do: [ self error: self class errorInMerchantProcessorErrorDescription ].
+		
+	lastTransactionId _ lastTransactionId + 1.
+		
+	^ Ticket with: lastTransactionId of: price .! !
 
-!Cashier methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 18:14:11'!
-priceOf: aCart
 
-	 ^ aCart price.! !
+!Cashier methodsFor: 'initialization' stamp: 'eb 11/26/2020 16:46:05'!
+initialize
+	
+	super initialize .
+	
+	lastTransactionId _ 0.! !
+
+
+!Cashier methodsFor: 'accessing' stamp: 'eb 11/26/2020 16:46:34'!
+lastTransactionId
+	
+	^ lastTransactionId .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -354,7 +365,7 @@ Object subclass: #CreditCard
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CreditCard methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:04:35'!
+!CreditCard methodsFor: 'initialization' stamp: 'ja 11/21/2020 17:04:35'!
 of: anOwner withNumber: aNumber andExpiration: anExpiration 
 
 	number _ aNumber .
@@ -367,29 +378,30 @@ of: anOwner withNumber: aNumber andExpiration: anExpiration
 CreditCard class
 	instanceVariableNames: ''!
 
-!CreditCard class methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:19:26'!
-dateCanNotLessThanTodayErrorDescription
-	
-	^ 'Date can not less than today'! !
+!CreditCard class methodsFor: 'instance creation' stamp: 'eb 11/26/2020 16:21:51'!
+of: anOwner withNumber: aNumber andExpiration: anExpiration
 
-!CreditCard class methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:08:56'!
+	(anOwner isEmpty) ifTrue: [ self error: self ownerNameCanNotBeEmptyErrorDescription ].
+	(aNumber asString size ~= 16) ifTrue: [ self error: self numberMustHaveSixteenDigitsErrorDescription ].
+	(anExpiration < GregorianMonthOfYear current) ifTrue: [ self error: self monthCanNotBeLessThanCurrentErrorDescription ].
+
+	^ self new of: anOwner withNumber: aNumber andExpiration: anExpiration .! !
+
+
+!CreditCard class methodsFor: 'error descriptions' stamp: 'eb 11/26/2020 16:21:51'!
+monthCanNotBeLessThanCurrentErrorDescription
+	
+	^ 'Date can not be less than today'! !
+
+!CreditCard class methodsFor: 'error descriptions' stamp: 'ja 11/21/2020 17:08:56'!
 numberMustHaveSixteenDigitsErrorDescription
 	
 	^ ' Number must have sixteen digits '! !
 
-!CreditCard class methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:20:33'!
-of: anOwner withNumber: aNumber andExpiration: anExpiration
-
-	( anOwner isEmpty ) ifTrue: [ self error: self ownerNameCanNotEmptyErrorDescription ].
-	(aNumber asString size ~= 16) ifTrue: [ self error: self numberMustHaveSixteenDigitsErrorDescription ].
-	(anExpiration < FixedGregorianDate today) ifTrue: [ self error: self dateCanNotLessThanTodayErrorDescription ].
-
-	^ self new of: anOwner withNumber: aNumber andExpiration: anExpiration .! !
-
-!CreditCard class methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:09:30'!
-ownerNameCanNotEmptyErrorDescription
+!CreditCard class methodsFor: 'error descriptions' stamp: 'eb 11/26/2020 16:19:01'!
+ownerNameCanNotBeEmptyErrorDescription
 	
-	^ 'Owner name can not empty'! !
+	^ 'Owner name can not be empty'! !
 
 
 !classDefinition: #MerchantProcessorSimulator category: #TusLibros!
@@ -399,24 +411,13 @@ Object subclass: #MerchantProcessorSimulator
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 18:29:02'!
-initialize
-
-	lastTransactionId _ 0.
-	
-	valid _ true.! !
-
-!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 18:29:13'!
+!MerchantProcessorSimulator methodsFor: 'state' stamp: 'ja 11/21/2020 18:29:13'!
 invalidate
 
 	valid _ false.! !
 
-!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 17:59:45'!
-lastTransactionId
 
-	^ lastTransactionId! !
-
-!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'ja 11/21/2020 18:30:11'!
+!MerchantProcessorSimulator methodsFor: 'operations' stamp: 'ja 11/21/2020 18:30:11'!
 pay: aPrice with: aCreditCard 
 	
 	valid ifFalse: [self error: self class errorDoingTransactionErrorDescription].
@@ -425,6 +426,20 @@ pay: aPrice with: aCreditCard
 	
 	^ lastTransactionId .
 ! !
+
+
+!MerchantProcessorSimulator methodsFor: 'accessing' stamp: 'ja 11/21/2020 17:59:45'!
+lastTransactionId
+
+	^ lastTransactionId! !
+
+
+!MerchantProcessorSimulator methodsFor: 'initialization' stamp: 'ja 11/21/2020 18:29:02'!
+initialize
+
+	lastTransactionId _ 0.
+	
+	valid _ true.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -436,3 +451,40 @@ MerchantProcessorSimulator class
 errorDoingTransactionErrorDescription
 
 	^ 'Error doing transaction error description'! !
+
+
+!classDefinition: #Ticket category: #TusLibros!
+Object subclass: #Ticket
+	instanceVariableNames: 'transactionId amount'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!Ticket methodsFor: 'initialization' stamp: 'eb 11/26/2020 16:41:29'!
+initializeWith: aTransactionId of: anAmount
+
+	transactionId _ aTransactionId .
+	
+	amount _ anAmount .! !
+
+
+!Ticket methodsFor: 'accessing' stamp: 'eb 11/26/2020 16:40:44'!
+amount
+
+	^ amount .! !
+
+!Ticket methodsFor: 'accessing' stamp: 'eb 11/26/2020 16:40:32'!
+transactionId
+
+	^ transactionId .! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Ticket class' category: #TusLibros!
+Ticket class
+	instanceVariableNames: ''!
+
+!Ticket class methodsFor: 'instance creation' stamp: 'eb 11/26/2020 16:42:17'!
+with: aTransactionId of: anAmount
+
+	^ self new initializeWith: aTransactionId of: anAmount .! !
