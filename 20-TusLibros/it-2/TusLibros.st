@@ -126,19 +126,21 @@ setUp
 	merchantProcessor _ MerchantProcessorSimulator new.! !
 
 
-!CashierTest methodsFor: 'empty cashier' stamp: 'eb 11/26/2020 16:29:00'!
+!CashierTest methodsFor: 'empty cashier' stamp: 'eb 11/26/2020 16:52:56'!
 test01CashierCanNotCheckoutWithEmptyCart
-
-	| cashier cart aCatalog creditCard |
+	| cashier cart aCatalog creditCard previousTransactionId |
 	
 	cashier _ Cashier new.
 	aCatalog _ Dictionary new.
 	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current.
 	cart _ Cart acceptingItemsOf: aCatalog.
+	previousTransactionId _ cashier lastTransactionId .
 	
 	self should: [ cashier checkout: cart with: creditCard using: merchantProcessor . self fail] 
 		raise: Error
 		withMessageText: Cashier canNotCheckoutForEmptyCartErrorDescription.
+		
+	self assert: cashier lastTransactionId equals: previousTransactionId .
 ! !
 
 
@@ -174,24 +176,22 @@ test03CashierCheckoutWithCartWithManyElements
 	
 	self assert: cashier lastTransactionId equals: ticket transactionId.! !
 
-!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:50:06'!
+!CashierTest methodsFor: 'not empty cashier' stamp: 'eb 11/26/2020 16:53:51'!
 test04CanNotBuyOnMerchantProcessorError
-
-	| cashier cart aCatalog creditCard |
-	
+	| cashier cart aCatalog creditCard previousTransactionId |
 	cashier _ Cashier new.
 	aCatalog _ Dictionary new.
 	aCatalog add: 'book1' -> 2; add: 'book2' -> 3; add: 'book3' -> 4.
 	creditCard  _ CreditCard of: 'Alan Kay' withNumber: 1234567891011121 andExpiration: GregorianMonthOfYear current.
 	cart _ Cart acceptingItemsOf: aCatalog.
-	
 	cart add: 'book1'.
 	
+	previousTransactionId _ cashier lastTransactionId .
 	merchantProcessor invalidate.
-	
 	self should: [cashier checkout: cart with: creditCard using: merchantProcessor. self fail]
 		raise: Error  
 		withMessageText: Cashier errorInMerchantProcessorErrorDescription.
+	self assert: cashier lastTransactionId equals: previousTransactionId .	
 ! !
 
 
