@@ -311,24 +311,14 @@ test05UsersCouldHaveMultipleCarts
 	! !
 
 
-!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/3/2020 14:37:16'!
-test05AddToCartIsSuccessfullyWithValidCartId
+!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/3/2020 16:49:57'!
+test06AddToCartIsSuccessfullyWithValidCartId
 	| addResponse |	
 	addResponse _ self successfullyAddResponseFor: self validCartId. 
 
 	self assertSuccessfullyResponse: addResponse .
 	self assert: addResponse data equals: 'OK'.
 	! !
-
-!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/2/2020 21:11:01'!
-test06AddToCartSuccessfullyEffectivlyAddsToCart
-	| cartId |
-	
-	cartId _ self validCartId.
-	
-	self successfullyAddResponseFor: cartId. 
-	self assertSuccessfullyAddResponseAddsItemsCorrectlyFor: cartId.
-! !
 
 !InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/3/2020 14:37:16'!
 test07AddToCartIsUnsuccessfullyWithInvalidCartId
@@ -359,9 +349,19 @@ test08AddToCartIsUnsuccessfullyWithIvalidISBN
 	
 	! !
 
+!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/3/2020 16:50:13'!
+test09AddToCartSuccessfullyEffectivlyAddsToCart
+	| cartId |
+	
+	cartId _ self validCartId.
+	
+	self successfullyAddResponseFor: cartId. 
+	self assertSuccessfullyAddResponseAddsItemsCorrectlyFor: cartId.
+! !
 
-!InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/3/2020 14:37:16'!
-test09ListCartWithEmptyCart
+
+!InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/3/2020 16:50:17'!
+test10ListCartWithEmptyCart
 	| cartId listCartResponse |
 	cartId _ self validCartId .	
 	
@@ -373,7 +373,18 @@ test09ListCartWithEmptyCart
 	! !
 
 !InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/3/2020 14:37:16'!
-test10ListCartWithNotEmptyCart
+test11ListCartWithInvalidCart
+	| cartId listCartResponse |
+	cartId _ self invalidCartId .	
+	
+	listCartResponse _ internalApi listCart: cartId.
+	self assertUnsuccesfullyResponse: listCartResponse.
+
+	self assert: internalApi class cartNotRegisteredErrorDescription equals: listCartResponse data .
+	! !
+
+!InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/3/2020 16:50:26'!
+test12ListCartWithNotEmptyCart
 	| cartId listCartResponse targetElements |
 	cartId _ self validCartId .	
 	
@@ -389,20 +400,9 @@ test10ListCartWithNotEmptyCart
 	self assert: targetElements equals: listCartResponse data .
 	! !
 
-!InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/3/2020 14:37:16'!
-test11ListCartWithInvalidCart
-	| cartId listCartResponse |
-	cartId _ self invalidCartId .	
-	
-	listCartResponse _ internalApi listCart: cartId.
-	self assertUnsuccesfullyResponse: listCartResponse.
 
-	self assert: internalApi class cartNotRegisteredErrorDescription equals: listCartResponse data .
-	! !
-
-
-!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 14:37:16'!
-test12CheckOutIsSuccessfullyWithValidNotEmptyCartAndNotExpiredCreditCardAndValidUser
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 16:50:42'!
+test13CheckOutIsSuccessfullyWithValidNotEmptyCartAndNotExpiredCreditCardAndValidUser
 	| cartId checkoutResponse | 		
 	cartId _ self validCartId .
 	
@@ -419,8 +419,8 @@ test12CheckOutIsSuccessfullyWithValidNotEmptyCartAndNotExpiredCreditCardAndValid
 	self assert: 1 equals: checkoutResponse data .
 ! !
 
-!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 14:37:16'!
-test13CheckOutIsUnsuccessfullyWithEmptyCart
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 16:50:46'!
+test14CheckOutIsUnsuccessfullyWithEmptyCart
 	| cartId checkoutResponse |
  		
 	cartId _ self validCartId .
@@ -434,22 +434,6 @@ test13CheckOutIsUnsuccessfullyWithEmptyCart
 	self assertUnsuccesfullyResponse: checkoutResponse.
 	
 	self assert: Cashier cartCanNotBeEmptyErrorMessage equals: checkoutResponse data .! !
-
-!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 14:37:16'!
-test14CheckOutIsUnsuccessfullyWithInvalidCart
-	| cartId checkoutResponse |
- 		
-	cartId _ self invalidCartId .
-			
-	checkoutResponse _ internalApi 
-		checkOutCart: cartId  
-		withCreditCard: testObjectFactory notExpiredCreditCard 
-		ofOwner:  'Alan Kay'
-		on: testObjectFactory today.
-		
-	self assertUnsuccesfullyResponse: checkoutResponse.
-	
-	self assert: InternalAPI cartNotRegisteredErrorDescription equals: checkoutResponse data .! !
 
 !InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 14:37:16'!
 test15CheckOutIsUnsuccessfullyWithExpiredCreditCard
@@ -469,23 +453,21 @@ test15CheckOutIsUnsuccessfullyWithExpiredCreditCard
 	
 	self assert: Cashier canNotChargeAnExpiredCreditCardErrorMessage  equals: checkoutResponse data .! !
 
-!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 14:37:16'!
-test16CheckOutIsUnsuccessfullyWithInvalidUser
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 16:50:56'!
+test16CheckOutIsUnsuccessfullyWithInvalidCart
 	| cartId checkoutResponse |
  		
-	cartId _ self validCartId .
-	
-	self successfullyAddResponseFor: cartId.
+	cartId _ self invalidCartId .
 			
 	checkoutResponse _ internalApi 
 		checkOutCart: cartId  
 		withCreditCard: testObjectFactory notExpiredCreditCard 
-		ofOwner:  'Steve Jobs'
+		ofOwner:  'Alan Kay'
 		on: testObjectFactory today.
 		
 	self assertUnsuccesfullyResponse: checkoutResponse.
 	
-	self assert: InternalAPI userHasNotCartsErrorDescription equals: checkoutResponse data .! !
+	self assert: InternalAPI cartNotRegisteredErrorDescription equals: checkoutResponse data .! !
 
 !InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 14:37:16'!
 test17CheckOutIsUnsuccessfullyWithAlienCart
@@ -509,9 +491,27 @@ test17CheckOutIsUnsuccessfullyWithAlienCart
 	
 	self assert: InternalAPI cartDoesNotBelongToUserErrorDescription equals: checkoutResponse data .! !
 
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 16:51:02'!
+test18CheckOutIsUnsuccessfullyWithInvalidUser
+	| cartId checkoutResponse |
+ 		
+	cartId _ self validCartId .
+	
+	self successfullyAddResponseFor: cartId.
+			
+	checkoutResponse _ internalApi 
+		checkOutCart: cartId  
+		withCreditCard: testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Steve Jobs'
+		on: testObjectFactory today.
+		
+	self assertUnsuccesfullyResponse: checkoutResponse.
+	
+	self assert: InternalAPI userHasNotCartsErrorDescription equals: checkoutResponse data .! !
 
-!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 14:37:16'!
-test18CannotQueryListPurchasesWithoutUserCheckout
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 16:51:08'!
+test19CannotQueryListPurchasesWithoutUserCheckout
 
 	| listPurchasesResponse |
 	
@@ -522,38 +522,6 @@ test18CannotQueryListPurchasesWithoutUserCheckout
 	self assertUnsuccesfullyResponse: listPurchasesResponse .
 	
 	self assert: InternalAPI canNotQueryListPurchasesWithoutUserCheckoutErrorDescription equals: listPurchasesResponse data .
-	! !
-
-!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 14:37:16'!
-test19SuccesfullyListPurchasesOfCartWithOnlyOneItem
-
-	| cartId listPurchasesResponse expectedDetail expectedResponsePayload |
-	
-	cartId _ self validCartId .
-	
-	internalApi
-		add: testObjectFactory itemSellByTheStore 
-		toCart: cartId
-		withQuantity: 1
-		on: testObjectFactory today.
-		
-	internalApi
-		checkOutCart: cartId
-		withCreditCard:  testObjectFactory notExpiredCreditCard 
-		ofOwner:  'Alan Kay'
-		on: testObjectFactory today.
-	
-	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
-	
-	expectedDetail _ Dictionary new.
-	
-	expectedDetail add: testObjectFactory itemSellByTheStore -> testObjectFactory itemSellByTheStorePrice.
-	
-	expectedResponsePayload _ DetailedSale of: testObjectFactory itemSellByTheStorePrice  with: expectedDetail.
-	
-	self assertSuccessfullyResponse: listPurchasesResponse .
-	
-	self  assert: expectedResponsePayload equals: listPurchasesResponse data .
 	! !
 
 !InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 14:37:16'!
@@ -622,8 +590,40 @@ test21SuccesfullyListPurchasesOfCartWithManyItemsOfManyTypes
 	self  assert: expectedResponsePayload equals: listPurchasesResponse data .
 	! !
 
-!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 14:37:16'!
-test23CannotQueryListPurchasesWithInvalidCredentials
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 16:51:19'!
+test22SuccesfullyListPurchasesOfCartWithOnlyOneItem
+
+	| cartId listPurchasesResponse expectedDetail expectedResponsePayload |
+	
+	cartId _ self validCartId .
+	
+	internalApi
+		add: testObjectFactory itemSellByTheStore 
+		toCart: cartId
+		withQuantity: 1
+		on: testObjectFactory today.
+		
+	internalApi
+		checkOutCart: cartId
+		withCreditCard:  testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+	
+	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
+	
+	expectedDetail _ Dictionary new.
+	
+	expectedDetail add: testObjectFactory itemSellByTheStore -> testObjectFactory itemSellByTheStorePrice.
+	
+	expectedResponsePayload _ DetailedSale of: testObjectFactory itemSellByTheStorePrice  with: expectedDetail.
+	
+	self assertSuccessfullyResponse: listPurchasesResponse .
+	
+	self  assert: expectedResponsePayload equals: listPurchasesResponse data .
+	! !
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 16:51:25'!
+test24CannotQueryListPurchasesWithInvalidCredentials
 
 	| listPurchasesResponse |
 	
@@ -637,8 +637,8 @@ test23CannotQueryListPurchasesWithInvalidCredentials
 		equals: listPurchasesResponse data .
 	! !
 
-!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 16:13:50'!
-test24SuccessfullyListPurchasesOfUserWithMultipleCarts
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 16:51:28'!
+test25SuccessfullyListPurchasesOfUserWithMultipleCarts
 
 	| firstCartId secondCartId listPurchasesResponse expectedDetail expectedResponseData |
 	
@@ -687,23 +687,6 @@ test24SuccessfullyListPurchasesOfUserWithMultipleCarts
 	self  assert: expectedResponseData equals: listPurchasesResponse data .! !
 
 
-!InternalAPITest methodsFor: 'expiration' stamp: 'eb 12/3/2020 14:39:27'!
-test24CannotAddToExpiredCart
-
-	| cartId addResponse |
-	
-	cartId _ self validCartId .
-	
-	addResponse _ internalApi 
-		add:  testObjectFactory itemSellByTheStore
-		toCart:  cartId
-		withQuantity:  3
-		on: testObjectFactory cartExpiredDateFromToday.
-		
-	self assertUnsuccesfullyResponse: addResponse .
-	
-	self assertResponseDataIsExpiredCartErrorDescription: addResponse .! !
-
 !InternalAPITest methodsFor: 'expiration' stamp: 'eb 12/3/2020 14:51:01'!
 test25CannotListExpiredCart
 
@@ -745,6 +728,23 @@ test26CannotCheckoutExpiredCart
 	self assertUnsuccesfullyResponse: listCartResponse .
 	
 	self assertResponseDataIsExpiredCartErrorDescription: listCartResponse .! !
+
+!InternalAPITest methodsFor: 'expiration' stamp: 'eb 12/3/2020 16:51:37'!
+test27CannotAddToExpiredCart
+
+	| cartId addResponse |
+	
+	cartId _ self validCartId .
+	
+	addResponse _ internalApi 
+		add:  testObjectFactory itemSellByTheStore
+		toCart:  cartId
+		withQuantity:  3
+		on: testObjectFactory cartExpiredDateFromToday.
+		
+	self assertUnsuccesfullyResponse: addResponse .
+	
+	self assertResponseDataIsExpiredCartErrorDescription: addResponse .! !
 
 
 !InternalAPITest methodsFor: 'assertions' stamp: 'eb 12/3/2020 14:49:47'!
@@ -1304,10 +1304,10 @@ data
 	^ data copy.! !
 
 
-!InternalAPIResponse methodsFor: 'initialization' stamp: 'eb 12/3/2020 14:37:29'!
-initializeWith: aPayload
+!InternalAPIResponse methodsFor: 'initialization' stamp: 'eb 12/3/2020 16:49:36'!
+initializeWith: aData
 
-	data _ aPayload! !
+	data _ aData! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
