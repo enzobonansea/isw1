@@ -294,15 +294,10 @@ test04CreateCartSuccessfullyEffectivlyCreatesCart
 		
 	! !
 
-!InternalAPITest methodsFor: 'create cart' stamp: 'eb 12/3/2020 15:24:01'!
+!InternalAPITest methodsFor: 'create cart' stamp: 'eb 12/3/2020 17:04:44'!
 test05UsersCouldHaveMultipleCarts
-	| createResponse1 createResponse2|
-	createResponse1 _ internalApi createCartFor: 'Alan Kay' with: 'objetos' on: testObjectFactory today.
-	self assertSuccessfullyResponse: createResponse1.
-	self assert: (internalApi hasCartsOf: 'Alan Kay').
-	createResponse2 _ internalApi createCartFor: 'Alan Kay' with: 'objetos' on: testObjectFactory today.
-	self assertSuccessfullyResponse: createResponse2.
-	self assert: (internalApi hasCartsOf: 'Alan Kay').
+	self assertSuccessfullyCreateResponse.
+	self assertSuccessfullyCreateResponse.
 	
 	self assert: 2 equals: (internalApi numberOfCartsOf: 'Alan Kay').
 
@@ -759,6 +754,17 @@ assertSuccessfullyAddResponseAddsItemsCorrectlyFor: aCartId
 		cart: aCartId
 		has: testObjectFactory itemSellByTheStore 
 		withQuantity: 3).! !
+
+!InternalAPITest methodsFor: 'assertions' stamp: 'eb 12/3/2020 17:04:55'!
+assertSuccessfullyCreateResponse
+	
+	| createResponse |
+	
+	createResponse _ internalApi createCartFor: 'Alan Kay' with: 'objetos' on: testObjectFactory today.
+	
+	self assertSuccessfullyResponse: createResponse.
+	
+	self assert: (internalApi hasCartsOf: 'Alan Kay').! !
 
 !InternalAPITest methodsFor: 'assertions' stamp: 'eb 12/2/2020 20:43:49'!
 assertSuccessfullyResponse: aResponse
