@@ -6,22 +6,6 @@ Error subclass: #InvalidBookQuantity
 	category: 'TusLibros'!
 
 
-!classDefinition: #InvalidISBN category: #TusLibros!
-Error subclass: #InvalidISBN
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-
-!classDefinition: #KeyNotFound category: #TusLibros!
-Error subclass: #KeyNotFound
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-
 !classDefinition: #CartTest category: #TusLibros!
 TestCase subclass: #CartTest
 	instanceVariableNames: 'testObjectsFactory'
@@ -272,388 +256,438 @@ debit: anAmount from: aCreditCard
 
 !classDefinition: #InternalAPITest category: #TusLibros!
 TestCase subclass: #InternalAPITest
-	instanceVariableNames: 'debitBehavior testObjectFactory'
+	instanceVariableNames: 'debitBehavior testObjectFactory internalApi'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!InternalAPITest methodsFor: 'create test' stamp: 'ja 12/2/2020 19:21:49'!
-test01CreateCartSuccessfulWithCorrectClientIdAndPassword
+!InternalAPITest methodsFor: 'create cart' stamp: 'eb 12/2/2020 23:30:31'!
+test01CreateCartIsSuccessfullyWithCorrectClientIdAndPassword
+	self assertSuccessfullyResponse: (internalApi createCartFor: 'Dan Ingalls' with: 'smalltalk').! !
 
-	| response internalApi |
-	
-	internalApi _ testObjectFactory internalApi.
-	response _ internalApi createCartFor: 'Dan Ingalls' with: 'smalltalk'.
-		
-	self assert: response code = 0.
-		
+!InternalAPITest methodsFor: 'create cart' stamp: 'eb 12/2/2020 23:30:31'!
+test02CreateCartReturnsDifferentIdsPerCustomer
+	| firstCustomerCartId secondCustomerCartId |
+	firstCustomerCartId _ (internalApi createCartFor: 'Alan Kay' with: 'objetos') payload .
+	secondCustomerCartId _ (internalApi createCartFor: 'Dan Ingalls' with: 'smalltalk') payload.	
+	self deny: firstCustomerCartId = secondCustomerCartId
 	! !
 
-!InternalAPITest methodsFor: 'create test' stamp: 'ja 12/2/2020 19:21:54'!
-test02CreateCartReturnsDifferentIdPerCustomer
-
-	| internalApi response1 response2|
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	response1 _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	response2 _ internalApi createCartFor: 'Dan Ingalls' with: 'smalltalk'.	
-	
-	self deny: response1 payload = response2 payload.
-		
-	! !
-
-!InternalAPITest methodsFor: 'create test' stamp: 'ja 12/2/2020 19:21:58'!
-test03CreateCartReturnsOneWithUnregisteredClientId
-
-	| internalApi response |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
+!InternalAPITest methodsFor: 'create cart' stamp: 'eb 12/2/2020 23:30:31'!
+test03CreateCartIsUnsuccessfullyWithUnregisteredClientId
+	| response |
 	response _ internalApi createCartFor: 'Edsger Dijkstra' with: 'nanoDijkstra'.
-	
-	self assert: response code = 1.
-	
+	self assertUnsuccesfullyResponse: response.
 	self assert: response payload equals: InternalAPI userNotRegisteredErrorDescription. 
 		
 	
 		
 	! !
 
-!InternalAPITest methodsFor: 'create test' stamp: 'ja 12/2/2020 19:22:01'!
-test04CreateCartSuccessfulEffectivlyCreatesCart
-
-	| internalApi response |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
+!InternalAPITest methodsFor: 'create cart' stamp: 'eb 12/2/2020 23:30:31'!
+test04CreateCartSuccessfullyEffectivlyCreatesCart
+	| response |
 	response _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	self assert: response code = 0.
-	
+	self assertSuccessfullyResponse: response.
 	self assert: (internalApi hasCartsOf: 'Alan Kay').
 	
 		
 	! !
 
 
-!InternalAPITest methodsFor: 'suport' stamp: 'ja 12/2/2020 16:54:01'!
+!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/2/2020 20:38:11'!
+test05AddToCartIsSuccessfullyWithValidCartId
+	| addResponse |	
+	addResponse _ self successfullyAddResponseFor: self validCartId. 
+
+	self assertSuccessfullyResponse: addResponse .
+	self assert: addResponse payload equals: 'OK'.
+	! !
+
+!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/2/2020 21:11:01'!
+test06AddToCartSuccessfullyEffectivlyAddsToCart
+	| cartId |
+	
+	cartId _ self validCartId.
+	
+	self successfullyAddResponseFor: cartId. 
+	self assertSuccessfullyAddResponseAddsItemsCorrectlyFor: cartId.
+! !
+
+!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/2/2020 23:30:31'!
+test07AddToCartIsUnsuccessfullyWithInvalidCartId
+
+	| addResponse |	
+	addResponse _ internalApi 
+		add: testObjectFactory itemSellByTheStore 
+		toCart: self invalidCartId
+		withQuantity: 3 
+		on: testObjectFactory today.
+	self assertUnsuccesfullyResponse: addResponse .
+	self assert: addResponse payload equals: InternalAPI cartNotRegisteredErrorDescription.
+	! !
+
+!InternalAPITest methodsFor: 'add to cart' stamp: 'eb 12/2/2020 23:30:31'!
+test08AddToCartIsUnsuccessfullyWithIvalidISBN
+	| cartId addResponse |		
+	cartId _ self validCartId .
+	addResponse _ internalApi
+		add: self invalidCartId 
+		toCart: cartId
+		withQuantity: 3
+		on: testObjectFactory today.	
+	self assertUnsuccesfullyResponse: addResponse .
+	
+	self assert: addResponse payload = Cart invalidItemErrorMessage.
+	
+	
+	! !
+
+
+!InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/2/2020 23:30:31'!
+test09ListCartWithEmptyCart
+	| cartId listCartResponse |
+	cartId _ self validCartId .	
+	
+	listCartResponse _ internalApi listCart: cartId.
+	
+	self assertSuccessfullyResponse: listCartResponse.
+	self assert: listCartResponse payload isEmpty.
+
+	! !
+
+!InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/2/2020 23:30:31'!
+test10ListCartWithNotEmptyCart
+	| cartId listCartResponse targetElements |
+	cartId _ self validCartId .	
+	
+	self successfullyAddResponseFor: cartId.
+		
+	targetElements _ Bag new.
+	
+	targetElements  add: testObjectFactory itemSellByTheStore withOccurrences: 3. 
+	
+	listCartResponse _ internalApi listCart: cartId.
+	
+	self assertSuccessfullyResponse: listCartResponse .
+	self assert: targetElements equals: listCartResponse payload .
+	! !
+
+!InternalAPITest methodsFor: 'list cart' stamp: 'eb 12/2/2020 23:30:31'!
+test11ListCartWithInvalidCart
+	| cartId listCartResponse |
+	cartId _ self invalidCartId .	
+	
+	listCartResponse _ internalApi listCart: cartId.
+	self assertUnsuccesfullyResponse: listCartResponse.
+
+	self assert: internalApi class cartNotRegisteredErrorDescription equals: listCartResponse payload .
+	! !
+
+
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/2/2020 23:30:31'!
+test12CheckOutIsSuccessfullyWithValidNotEmptyCartAndNotExpiredCreditCardAndValidUser
+	| cartId checkoutResponse | 		
+	cartId _ self validCartId .
+	
+	self successfullyAddResponseFor: cartId.
+		
+	checkoutResponse _ internalApi 
+		checkOutCart: cartId  
+		withCreditCard: testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+		
+	self assertSuccessfullyResponse: checkoutResponse.
+	
+	self assert: 1 equals: checkoutResponse payload .
+! !
+
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/2/2020 23:30:31'!
+test13CheckOutIsUnsuccessfullyWithEmptyCart
+	| cartId checkoutResponse |
+ 		
+	cartId _ self validCartId .
+			
+	checkoutResponse _ internalApi 
+		checkOutCart: cartId  
+		withCreditCard: testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+		
+	self assertUnsuccesfullyResponse: checkoutResponse.
+	
+	self assert: Cashier cartCanNotBeEmptyErrorMessage equals: checkoutResponse payload .! !
+
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/2/2020 23:30:31'!
+test14CheckOutIsUnsuccessfullyWithInvalidCart
+	| cartId checkoutResponse |
+ 		
+	cartId _ self invalidCartId .
+			
+	checkoutResponse _ internalApi 
+		checkOutCart: cartId  
+		withCreditCard: testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+		
+	self assertUnsuccesfullyResponse: checkoutResponse.
+	
+	self assert: InternalAPI cartNotRegisteredErrorDescription equals: checkoutResponse payload .! !
+
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/2/2020 23:30:31'!
+test15CheckOutIsUnsuccessfullyWithExpiredCreditCard
+	| cartId checkoutResponse |
+ 		
+	cartId _ self validCartId .
+	
+	self successfullyAddResponseFor: cartId .
+			
+	checkoutResponse _ internalApi 
+		checkOutCart: cartId  
+		withCreditCard: testObjectFactory expiredCreditCard
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+		
+	self assertUnsuccesfullyResponse: checkoutResponse.
+	
+	self assert: Cashier canNotChargeAnExpiredCreditCardErrorMessage  equals: checkoutResponse payload .! !
+
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/2/2020 23:30:31'!
+test16CheckOutIsUnsuccessfullyWithInvalidUser
+	| cartId checkoutResponse |
+ 		
+	cartId _ self validCartId .
+	
+	self successfullyAddResponseFor: cartId.
+			
+	checkoutResponse _ internalApi 
+		checkOutCart: cartId  
+		withCreditCard: testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Steve Jobs'
+		on: testObjectFactory today.
+		
+	self assertUnsuccesfullyResponse: checkoutResponse.
+	
+	self assert: InternalAPI userHasNotCartsErrorDescription equals: checkoutResponse payload .! !
+
+!InternalAPITest methodsFor: 'checkout cart' stamp: 'eb 12/2/2020 23:30:31'!
+test17CheckOutIsUnsuccessfullyWithAlienCart
+	| alanKayCartId  danIngallsCartId checkoutResponse |
+ 		
+	alanKayCartId _ self validCartId .
+	
+	danIngallsCartId  _ internalApi createCartFor: 'Dan Ingalls' with: 'smalltalk'.
+	
+	self successfullyAddResponseFor: alanKayCartId.
+			
+	self successfullyAddResponseFor: danIngallsCartId.
+
+	checkoutResponse _ internalApi 
+		checkOutCart: alanKayCartId  
+		withCreditCard: testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Dan Ingalls'
+		on: testObjectFactory today.
+		
+	self assertUnsuccesfullyResponse: checkoutResponse.
+	
+	self assert: InternalAPI cartDoesNotBelongToUserErrorDescription equals: checkoutResponse payload .! !
+
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 00:35:37'!
+test18CannotQueryListPurchasesOfEmptyCart
+
+	| listPurchasesResponse |
+	
+	self validCartId .
+	
+	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
+	
+	self assertUnsuccesfullyResponse: listPurchasesResponse .
+	
+	self assert: InternalAPI canNotQueryListPurchsesOfEmptyCartErrorDescription equals: listPurchasesResponse payload .
+	! !
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 00:10:54'!
+test19SuccesfullyListPurchasesOfCartWithOnlyOneItem
+
+	| cartId listPurchasesResponse expectedDetail expectedResponsePayload |
+	
+	cartId _ self validCartId .
+	
+	internalApi
+		add: testObjectFactory itemSellByTheStore 
+		toCart: cartId
+		withQuantity: 1
+		on: testObjectFactory today.
+		
+	internalApi
+		checkOutCart: cartId
+		withCreditCard:  testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+	
+	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
+	
+	expectedDetail _ Dictionary new.
+	
+	expectedDetail add: testObjectFactory itemSellByTheStore -> testObjectFactory itemSellByTheStorePrice.
+	
+	expectedResponsePayload _ DetailedSale of: testObjectFactory itemSellByTheStorePrice  with: expectedDetail.
+	
+	self assertSuccessfullyResponse: listPurchasesResponse .
+	
+	self  assert: expectedResponsePayload equals: listPurchasesResponse payload .
+	! !
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 00:15:50'!
+test20SuccesfullyListPurchasesOfCartWithManyItemsOfSameType
+
+	| cartId listPurchasesResponse expectedDetail expectedResponsePayload |
+	
+	cartId _ self validCartId .
+	
+	self successfullyAddResponseFor: cartId.
+		
+	internalApi
+		checkOutCart: cartId
+		withCreditCard:  testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+	
+	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
+	
+	expectedDetail _ Dictionary new.
+	
+	expectedDetail add: testObjectFactory itemSellByTheStore -> (testObjectFactory itemSellByTheStorePrice * 3).
+	
+	expectedResponsePayload _ DetailedSale of: (testObjectFactory itemSellByTheStorePrice * 3) with: expectedDetail.
+	
+	self assertSuccessfullyResponse: listPurchasesResponse .
+	
+	self  assert: expectedResponsePayload equals: listPurchasesResponse payload .
+	! !
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 00:27:30'!
+test21SuccesfullyListPurchasesOfCartWithManyItemsOfManyTypes
+
+	| cartId listPurchasesResponse expectedDetail expectedResponsePayload |
+	
+	cartId _ self validCartId .
+	
+	self successfullyAddResponseFor: cartId.
+	
+	internalApi 
+		add: testObjectFactory anotherItemSellByTheStore 
+		toCart:  cartId 
+		withQuantity: 4
+		on: testObjectFactory today.
+		
+	internalApi
+		checkOutCart: cartId
+		withCreditCard:  testObjectFactory notExpiredCreditCard 
+		ofOwner:  'Alan Kay'
+		on: testObjectFactory today.
+	
+	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
+	
+	expectedDetail _ Dictionary new.
+	
+	expectedDetail add: testObjectFactory itemSellByTheStore -> (testObjectFactory itemSellByTheStorePrice * 3).
+	
+	expectedDetail add: testObjectFactory anotherItemSellByTheStore -> (testObjectFactory anotherItemSellByTheStorePrice * 4).
+	
+	expectedResponsePayload _ DetailedSale 
+		of: (testObjectFactory itemSellByTheStorePrice * 3) + (testObjectFactory anotherItemSellByTheStorePrice * 4) 
+		with: expectedDetail.
+	
+	self assertSuccessfullyResponse: listPurchasesResponse .
+	
+	self  assert: expectedResponsePayload equals: listPurchasesResponse payload .
+	! !
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 00:31:47'!
+test22CannotQueryListPurchasesOfInvalidCart
+
+	| listPurchasesResponse |
+	
+	self validCartId .
+	
+	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
+	
+	self assertSuccessfullyResponse: listPurchasesResponse .
+	
+	self assert: (DetailedSale of: 0 with: Bag new) equals: listPurchasesResponse payload .
+	! !
+
+!InternalAPITest methodsFor: 'list purchases' stamp: 'eb 12/3/2020 00:31:53'!
+test23CannotQueryListPurchasesOfAlienCart
+
+	| listPurchasesResponse |
+	
+	self validCartId .
+	
+	listPurchasesResponse _ internalApi listPurchasesOf: 'Alan Kay' with: 'objetos'.
+	
+	self assertSuccessfullyResponse: listPurchasesResponse .
+	
+	self assert: (DetailedSale of: 0 with: Bag new) equals: listPurchasesResponse payload .
+	! !
+
+
+
+!InternalAPITest methodsFor: 'assertions' stamp: 'eb 12/2/2020 23:30:31'!
+assertSuccessfullyAddResponseAddsItemsCorrectlyFor: aCartId
+
+	self assert: (internalApi 
+		cart: aCartId
+		has: testObjectFactory itemSellByTheStore 
+		withQuantity: 3).! !
+
+!InternalAPITest methodsFor: 'assertions' stamp: 'eb 12/2/2020 20:43:49'!
+assertSuccessfullyResponse: aResponse
+
+	^ self assert: aResponse code = 0! !
+
+!InternalAPITest methodsFor: 'assertions' stamp: 'eb 12/2/2020 20:43:55'!
+assertUnsuccesfullyResponse: aResponse
+
+	^ self assert: aResponse code = 1! !
+
+
+!InternalAPITest methodsFor: 'carts' stamp: 'eb 12/2/2020 20:55:38'!
+invalidCartId
+
+	^ 'Invalid cart id'.! !
+
+!InternalAPITest methodsFor: 'carts' stamp: 'eb 12/2/2020 23:30:31'!
+validCartId
+
+	^ (internalApi createCartFor: 'Alan Kay' with: 'objetos') payload! !
+
+
+!InternalAPITest methodsFor: 'merchant processor simulation' stamp: 'ja 12/2/2020 16:54:01'!
 debit: anAmount from: aCreditCard 
 
 	^debitBehavior value: anAmount value: aCreditCard ! !
 
-!InternalAPITest methodsFor: 'suport' stamp: 'ja 12/2/2020 17:30:08'!
-invalidCreditCard
 
-	^ 'Invalid credit card'! !
+!InternalAPITest methodsFor: 'responses' stamp: 'eb 12/2/2020 23:30:31'!
+successfullyAddResponseFor: aCartId
 
-!InternalAPITest methodsFor: 'suport' stamp: 'ja 12/1/2020 18:56:06'!
-invalidISBN
-
-	^ 'Invalid ISBN'! !
-
-!InternalAPITest methodsFor: 'suport' stamp: 'ja 12/1/2020 18:37:14'!
-invalidIdCart
-
-	^ 'Invalid id cart'! !
+	^ internalApi 
+		add: testObjectFactory itemSellByTheStore
+		toCart: aCartId 
+		withQuantity: 3 
+		on: testObjectFactory today! !
 
 
-!InternalAPITest methodsFor: 'list cart' stamp: 'ja 12/2/2020 19:22:39'!
-test10ListCartWithEmptyCart
-
-	| internalApi responseCreate responseList |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	responseList _ internalApi listCart: responseCreate payload.
-	
-	self assert: responseList payload isEmpty.
-
-	! !
-
-!InternalAPITest methodsFor: 'list cart' stamp: 'ja 12/2/2020 19:22:43'!
-test11ListCartWithOnlyItemIntoCart
-
-	| internalApi responseCreate responseList ISBN idCart listItems |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload.
-	
-	ISBN _ 'book'.
-	
-	internalApi addToCart: idCart withISBN: ISBN withQuantity: 3 on: (DateAndTime now). 
-	
-	responseList _ internalApi listCart: idCart.
-	
-	listItems _ Bag new.
-	
-	listItems add: ISBN withOccurrences: 3.
-	
-	self assert: responseList payload = listItems.
-
-	! !
-
-!InternalAPITest methodsFor: 'list cart' stamp: 'ja 12/2/2020 19:22:47'!
-test12ListCartWithManyItemsIntoCart
-
-	| internalApi responseCreate responseList ISBN1 ISBN2 idCart listItems |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload.
-	
-	ISBN1 _ 'book1'.
-	
-	ISBN2 _ 'book2'.
-	
-	internalApi addToCart: idCart withISBN: ISBN1 withQuantity: 3 on: (DateAndTime now). 
-	
-	internalApi addToCart: idCart withISBN: ISBN2 withQuantity: 5 on: (DateAndTime now).
-	
-	responseList _ internalApi listCart: idCart.
-	
-	listItems _ Bag new.
-	
-	listItems add: ISBN1 withOccurrences: 3.
-	listItems add: ISBN2 withOccurrences: 5.
-	
-	self assert: responseList payload = listItems.
-
-	! !
-
-
-!InternalAPITest methodsFor: 'addToCart' stamp: 'ja 12/2/2020 19:22:08'!
-test05AddToCartSuccessfulWithCartId
-
-	| internalApi responseCreate responseAdd |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	responseAdd _ internalApi addToCart: responseCreate payload withISBN: 'book' withQuantity: 3 on: (DateAndTime now). 
-
-	self assert: responseAdd code = 0.
-	
-	self assert: responseAdd payload equals: 'OK'.
-	! !
-
-!InternalAPITest methodsFor: 'addToCart' stamp: 'ja 12/2/2020 19:22:12'!
-test06AddToCartSuccessfulEffectivlyAddedToCart
-
-	| internalApi responseCreate responseAdd idCart ISBN|
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload.
-	
-	ISBN _ 'book'.
-	
-	responseAdd _ internalApi addToCart: idCart withISBN: ISBN withQuantity: 3 on: (DateAndTime now). 
-
-	self assert: (internalApi cart: idCart has: ISBN times: 3).
-	
-	self assert: responseAdd code = 0.
-	
-	self assert: responseAdd payload equals: 'OK'.
-	! !
-
-!InternalAPITest methodsFor: 'addToCart' stamp: 'ja 12/2/2020 19:22:17'!
-test07AddToCartUnsuccessfulWithCartInvalid
-
-	| internalApi responseAdd idCart ISBN|
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ self invalidIdCart.
-	
-	ISBN _ 'book'.
-	
-	responseAdd _ internalApi addToCart: idCart withISBN: ISBN withQuantity: 3 on: (DateAndTime now). 
-	
-	self assert: responseAdd code = 1.
-	
-	self assert: responseAdd payload equals: InternalAPI cartNotRegisteredErrorDescription.
-	! !
-
-!InternalAPITest methodsFor: 'addToCart' stamp: 'ja 12/2/2020 19:22:21'!
-test08AddToCartUnsuccessfulWithIvalidISBN
-
-	| responseCreate internalApi idCart ISBN|
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload .
-	
-	ISBN _ self invalidISBN.
-	
-	self should: [ internalApi addToCart: idCart withISBN: ISBN withQuantity: 3 on: (DateAndTime now). self fail]  
-		raise: Error  
-		withMessageText: Cart invalidItemErrorMessage.
-	
-	
-	! !
-
-!InternalAPITest methodsFor: 'addToCart' stamp: 'ja 12/2/2020 19:22:32'!
-test09AddToCartUnsuccessfulWithIvalidISBN
-
-	| responseCreate internalApi responseAdd idCart ISBN|
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload .
-	
-	ISBN _ 'book'.
-	
-	responseAdd _ internalApi addToCart: idCart withISBN: ISBN withQuantity: 0 on: (DateAndTime now). 
-	
-	self assert: responseAdd code = 1.
-	
-	self assert: responseAdd payload equals: Cart invalidQuantityErrorMessage.
-	! !
-
-
-!InternalAPITest methodsFor: 'checkOut' stamp: 'ja 12/2/2020 19:22:55'!
-test13CheckOutSuccessfulWithNotEmptyCart
-
-	| internalApi responseCreate responseCheckOut ISBN1 ISBN2 idCart creditCard date |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload.
-	
-	ISBN1 _ 'book1'.
-	
-	ISBN2 _ 'book2'.
-	
-	internalApi addToCart: idCart withISBN: ISBN1 withQuantity: 3 on: (DateAndTime now). 
-	
-	internalApi addToCart: idCart withISBN: ISBN2 withQuantity: 5 on: (DateAndTime now).
-	
-	date _ DateAndTime now month.
-	creditCard _ CreditCard expiringOn: date.
-	
-	responseCheckOut _ internalApi checkOutCart: idCart withCreditCart: creditCard thatExpiresOn: date ofOwner: 'Alan Kay'.
-	
-	self assert: responseCheckOut payload = 1.
-	
-	self assert: responseCheckOut code = 0.! !
-
-!InternalAPITest methodsFor: 'checkOut' stamp: 'ja 12/2/2020 19:22:59'!
-test14CheckOutUnsuccessfulWithEmptyCart
-
-	| internalApi responseCreate responseCheckOut idCart creditCard date |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload.
-	
-	date _ DateAndTime now month.
-	
-	creditCard _ CreditCard expiringOn: date.
-	
-	responseCheckOut _ internalApi checkOutCart: idCart withCreditCart: creditCard thatExpiresOn: date ofOwner: 'Alan Kay'.
-	
-	self assert: responseCheckOut payload equals: Cashier cartCanNotBeEmptyErrorMessage.
-	
-	self assert: responseCheckOut code = 1.! !
-
-!InternalAPITest methodsFor: 'checkOut' stamp: 'ja 12/2/2020 19:23:04'!
-test15CheckOutUnsuccessfulWithInvalidCart
-
-	| internalApi responseCheckOut creditCard date |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	date _ DateAndTime now month.
-	
-	creditCard _ CreditCard expiringOn: date.
-	
-	responseCheckOut _ internalApi checkOutCart: self invalidIdCart withCreditCart: creditCard thatExpiresOn: date ofOwner: 'Alan Kay'.
-	
-	self assert: responseCheckOut payload equals: InternalAPI cartNotRegisteredErrorDescription .
-	
-	self assert: responseCheckOut code = 1.! !
-
-!InternalAPITest methodsFor: 'checkOut' stamp: 'ja 12/2/2020 19:23:08'!
-test16CheckOutUnsuccessfulWithExpiredCreditCard
-
-	| internalApi responseCreate responseCheckOut idCart creditCard ISBN |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload.
-	
-	creditCard _ testObjectFactory expiredCreditCard.
-	
-	idCart _ responseCreate payload.
-	
-	ISBN _ 'book'.
-	
-	internalApi addToCart: idCart withISBN: ISBN withQuantity: 3 on: testObjectFactory today . 
-	
-	responseCheckOut _ internalApi checkOutCart: idCart withCreditCard: creditCard ofOwner: 'Alan Kay' on: testObjectFactory today.
-	
-	self assert: responseCheckOut payload equals: Cashier canNotChargeAnExpiredCreditCardErrorMessage.
-	
-	self assert: responseCheckOut code = 1.! !
-
-!InternalAPITest methodsFor: 'checkOut' stamp: 'ja 12/2/2020 19:23:12'!
-test17CheckOutUnsuccessfulWithInvalidUser
-
-	| internalApi responseCreate responseCheckOut idCart creditCard ISBN |
-	
-	internalApi _ testObjectFactory internalApi.
- 	
-	responseCreate _ internalApi createCartFor: 'Alan Kay' with: 'objetos'.
-	
-	idCart _ responseCreate payload.
-	
-	creditCard _ testObjectFactory expiredCreditCard.
-	
-	idCart _ responseCreate payload.
-	
-	ISBN _ 'book'.
-	
-	internalApi addToCart: idCart withISBN: ISBN withQuantity: 3 on: testObjectFactory today . 
-	
-	responseCheckOut _ internalApi checkOutCart: idCart withCreditCard: creditCard ofOwner: 'Edsger Dijkstra' on: testObjectFactory today.
-	
-	self assert: responseCheckOut payload equals: Cashier canNotChargeAnExpiredCreditCardErrorMessage.
-	
-	self assert: responseCheckOut code = 1.! !
-
-
-!InternalAPITest methodsFor: 'setUp' stamp: 'ja 12/2/2020 18:41:35'!
+!InternalAPITest methodsFor: 'setUp' stamp: 'eb 12/2/2020 23:30:31'!
 setUp 
-
 	debitBehavior _ [ :anAmount :aCreditCard | ].
+	testObjectFactory _ StoreTestObjectsFactory new.
 	
-	testObjectFactory _ StoreTestObjectsFactory new.! !
+	internalApi _ testObjectFactory internalApiUsingMerchantProccessor: self.! !
 
 
 !classDefinition: #Cart category: #TusLibros!
@@ -662,7 +696,6 @@ Object subclass: #Cart
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
-
 
 !Cart methodsFor: 'assertions' stamp: 'ja 12/1/2020 19:12:30'!
 assertIsValidItem: anItem
@@ -869,164 +902,176 @@ expiringOn: aMonth
 
 !classDefinition: #InternalAPI category: #TusLibros!
 Object subclass: #InternalAPI
-	instanceVariableNames: 'users nextId carts date modifications cartsPerUser catalog merchantProcesor nextTransaction'
+	instanceVariableNames: 'users nextCartId carts date modifications cartsPerUser catalog merchantProcesor nextCheckOutId purchases detailedSalePerUser'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!InternalAPI methodsFor: 'initialization' stamp: 'ja 12/2/2020 17:01:08'!
+!InternalAPI methodsFor: 'initialization' stamp: 'eb 12/2/2020 23:57:42'!
 initializeWith: aUsersCollection on: aDate usingCatalog: aCatalog usingMerchantProccesor: aMerchantProccesor
-	
 	users _ aUsersCollection.
-	
 	date _ aDate.
-	
-	carts _ Dictionary new.
-	
 	catalog _ aCatalog.
-	
+	merchantProcesor _ aMerchantProccesor.
+	carts _ Dictionary new.
 	cartsPerUser _ Dictionary new.
-	
 	modifications _ Dictionary new.
-	
-	nextId _ 0.
-	
-	nextTransaction _ 0.
-	
-	merchantProcesor _ aMerchantProccesor.! !
+	detailedSalePerUser _ Dictionary new .
+	nextCartId _ 0.
+	nextCheckOutId _ 0.! !
 
 
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 12/1/2020 18:33:26'!
-cart: aCartId has: aISBN times: anAmount 
-	
+!InternalAPI methodsFor: 'login' stamp: 'eb 12/2/2020 22:01:48'!
+ensureUser: anUser isRegisteredWith: aPassword 
+	| registeredPassword |
+	registeredPassword _ users at: anUser ifAbsent:[ self error: self class userNotRegisteredErrorDescription ].
+	^ registeredPassword = aPassword.! !
+
+
+!InternalAPI methodsFor: 'testing' stamp: 'eb 12/2/2020 21:09:51'!
+cart: aCartId has: anItem withQuantity: aQuantity 
 	| cart |
-	
 	cart _ carts at: aCartId .
-	
-	^ (cart includes: aISBN) and: [(cart occurrencesOf: aISBN) = anAmount ].! !
+	^ (cart includes: anItem) and: [ (cart occurrencesOf: anItem) = aQuantity ].! !
 
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 12/1/2020 17:56:48'!
+!InternalAPI methodsFor: 'testing' stamp: 'eb 12/2/2020 22:04:57'!
+hasCartsOf: anUser
+	^ cartsPerUser includesKey: anUser.! !
+
+
+!InternalAPI methodsFor: 'add to cart' stamp: 'eb 12/2/2020 21:07:16'!
+add: anItem toCart: aCartId withQuantity: aQuantity
+	| cart |
+	[ cart _ carts at: aCartId ] 
+		on: Error 
+		do: [ ^ UnsuccessfulResponse with: self class cartNotRegisteredErrorDescription ].
+	[cart add: aQuantity of: anItem] 
+		on: InvalidBookQuantity 
+		do: [ :error | ^ UnsuccessfulResponse with: error messageText ].
+	^ SuccessfulResponse with: 'OK'.! !
+
+!InternalAPI methodsFor: 'add to cart' stamp: 'eb 12/2/2020 21:12:41'!
+add: anItem toCart: aCartId withQuantity: aQuantity on: aDate
+	[ ^ self 
+		ensureExecutionOf: [ self add: anItem toCart: aCartId withQuantity: aQuantity ] 
+		withCart: aCartId 
+		isValidOn: aDate. ] on: Error do: [ :error | ^ UnsuccessfulResponse with: error messageText ].
+	
+	! !
+
+
+!InternalAPI methodsFor: 'create cart' stamp: 'eb 12/2/2020 22:06:08'!
+createCartFor: anUser with: aPassword 
+	| cartId cart |
+	[ self ensureUser: anUser isRegisteredWith: aPassword ] 
+		on: Error 
+		do: [:error | ^UnsuccessfulResponse with: error messageText ].
+	cart _ Cart acceptingItemsOf: catalog.
+	cartId _ self nextCartId.
+	cartsPerUser add: anUser -> cart.
+	carts add: cartId -> cart.
+	modifications add: cartId -> date.
+	^ SuccessfulResponse with: cartId.! !
+
+
+!InternalAPI methodsFor: 'list cart' stamp: 'eb 12/2/2020 21:45:49'!
+listCart: aCartId
+	| cart listItems |
+	[ cart _ carts at: aCartId. ]
+		on: Error
+		do: [ ^ UnsuccessfulResponse with: self class cartNotRegisteredErrorDescription ].
+	listItems _ cart items.
+	^ SuccessfulResponse with: listItems asBag. 
+	
+	! !
+
+
+!InternalAPI methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 00:29:13'!
+addDetailedSaleTo: anUser of: anItemsCollection withCost: aCost
+	
+	| itemsWithPrice |
+		
+	itemsWithPrice _ Dictionary new .
+	
+	anItemsCollection do: [ :item | (itemsWithPrice includesKey: item) ifFalse:
+		 [ itemsWithPrice at: item put: ((self priceOf: item) * (anItemsCollection occurrencesOf: item)) ]
+	].
+	
+	detailedSalePerUser at: anUser put: (DetailedSale of: aCost with: itemsWithPrice)
+	
+	! !
+
+!InternalAPI methodsFor: 'checkout cart' stamp: 'eb 12/3/2020 00:00:48'!
+checkOutCart: aCartId withCreditCard: aCreditCard ofOwner: anUser on: aDate
+	| cart cashier checkoutId |	
+	[ cart _ carts at: aCartId ] 
+		on: Error 
+		do:[^ UnsuccessfulResponse with: self class cartNotRegisteredErrorDescription ].
+		
+	(self hasCartsOf: anUser) ifFalse: [ ^ UnsuccessfulResponse with: self class userHasNotCartsErrorDescription ].
+	
+	((cartsPerUser at: anUser) = cart) ifFalse: [ ^ UnsuccessfulResponse with: self class cartDoesNotBelongToUserErrorDescription ].
+	[ cashier _ Cashier  toCheckout: cart  charging: aCreditCard  throught: merchantProcesor  on: aDate  registeringOn: OrderedCollection new ] 
+		on: Error 
+		do: [:error| ^ UnsuccessfulResponse with: error messageText].
+		
+	checkoutId _ self nextCheckOutId.
+	
+	self addDetailedSaleTo: anUser of: cart items withCost: cashier checkOut.
+		
+	^ SuccessfulResponse with: checkoutId.
+	! !
+
+
+!InternalAPI methodsFor: 'id generation' stamp: 'eb 12/2/2020 21:59:08'!
+nextCartId
+	nextCartId _ nextCartId + 1.
+	^ nextCartId ! !
+
+!InternalAPI methodsFor: 'id generation' stamp: 'eb 12/2/2020 21:59:42'!
+nextCheckOutId
+	nextCheckOutId _ nextCheckOutId + 1.
+	^ nextCheckOutId
+	! !
+
+
+!InternalAPI methodsFor: 'expiration' stamp: 'eb 12/2/2020 22:00:46'!
 ensureDateOf: aCartId isValidOn: aDate
-
 	| halfHourAgo |
-	
 	halfHourAgo _ aDate - 30 minutes.
-	
-	((modifications includesKey: aCartId) and:[ (modifications at: aCartId)  < halfHourAgo ]) ifTrue:[self error: self class cartIsExpiredErrorDescription].! !
+	((modifications includesKey: aCartId) and: [(modifications at: aCartId)  < halfHourAgo ]) 
+		ifTrue: [ self error: self class cartIsExpiredErrorDescription ].! !
 
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 11/30/2020 19:19:27'!
-ensureExecutionOf: aBlock withCart: aCartId validOn: aDate
-
+!InternalAPI methodsFor: 'expiration' stamp: 'eb 12/2/2020 22:03:08'!
+ensureExecutionOf: aBlock withCart: aCartId isValidOn: aDate
 	| returnValue |
-
 	self ensureDateOf: aCartId isValidOn: aDate.
-	
 	returnValue _ aBlock value.
-	
-	self updateDateOf: aCartId to: aDate.
-	
+	self updateModificationDateOf: aCartId to: aDate.
 	^ returnValue .
 	
 	! !
 
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 11/29/2020 19:14:22'!
-ensureIsRegisteredUser: anUser with: aPassword 
-	
-	| aPasswordRegistered |
-	
-	aPasswordRegistered _ users at: anUser ifAbsent:[ self error: self class userNotRegisteredErrorDescription ].
-	
-	^ aPasswordRegistered = aPassword.! !
-
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 12/2/2020 17:09:47'!
-hasCartsOf: anUser
-	
-	^ cartsPerUser includesKey: anUser.! !
-
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 11/29/2020 17:24:25'!
-nextIdFree
-
-	nextId _ nextId + 1.
-	
-	^ nextId ! !
-
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 12/2/2020 16:46:31'!
-nextTransaction
-
-	nextTransaction _ nextTransaction + 1.
-	
-	^ nextTransaction
-	! !
-
-!InternalAPI methodsFor: 'as yet unclassified' stamp: 'ja 11/30/2020 19:34:11'!
-updateDateOf: aCartId to: aDate
-
+!InternalAPI methodsFor: 'expiration' stamp: 'eb 12/2/2020 22:03:07'!
+updateModificationDateOf: aCartId to: aDate
 	modifications at: aCartId put: aDate .! !
 
 
-!InternalAPI methodsFor: 'API' stamp: 'ja 12/2/2020 17:26:18'!
-addToCart: aCartId withISBN: aISBN withQuantity: aQuantity
-	
-	| cart |
-	
-	[ cart _ carts at: aCartId ] on: Error do: [^ UnsuccessfulResponse with: (self class cartNotRegisteredErrorDescription) ].
-	
-	[cart add: aQuantity of: aISBN] on: InvalidBookQuantity do: [:error | ^ UnsuccessfulResponse with: error messageText ].
-	
-	^ SuccessfulResponse with: 'OK'.! !
+!InternalAPI methodsFor: 'list purchases' stamp: 'eb 12/3/2020 00:36:26'!
+listPurchasesOf: anUser with: aPassword
 
-!InternalAPI methodsFor: 'API' stamp: 'ja 12/2/2020 17:10:27'!
-addToCart: aCartId withISBN: aISBN withQuantity: aQuantity on: aDate
+	| detailedSale |
 	
-	^ self ensureExecutionOf: [ self addToCart: aCartId withISBN: aISBN withQuantity: aQuantity ] withCart: aCartId validOn: aDate.
-	
-	! !
+	detailedSale  _ detailedSalePerUser at: anUser ifAbsent: 
+		[ ^ UnsuccessfulResponse with: self class canNotQueryListPurchsesOfEmptyCartErrorDescription ].
+ 
+	^ SuccessfulResponse with: detailedSale.! !
 
-!InternalAPI methodsFor: 'API' stamp: 'ja 12/2/2020 19:18:57'!
-checkOutCart: aCartId withCreditCard: aCreditCard ofOwner: anUser on: aDate
-	
-	| cart cashier|
-	
-	[cart _ carts at: aCartId ] on: Error do:[^ UnsuccessfulResponse with: (self class cartNotRegisteredErrorDescription) ].
-	
-	[cashier _ Cashier toCheckout: cart charging: aCreditCard throught: merchantProcesor on: aDate registeringOn: OrderedCollection new] on: Error do: [:error| ^ UnsuccessfulResponse with: error messageText].
-	
-	cashier checkOut.
-	
-	^ SuccessfulResponse with: self nextTransaction.
-	! !
 
-!InternalAPI methodsFor: 'API' stamp: 'ja 12/1/2020 18:32:20'!
-createCartFor: anUser with: aPassword 
+!InternalAPI methodsFor: 'price' stamp: 'eb 12/3/2020 00:03:36'!
+priceOf: anItem
 	
-	| idCart cart|
-	
-	[ self ensureIsRegisteredUser: anUser with: aPassword ] on: Error do: [:error | ^UnsuccessfulResponse with: error messageText ].
-	
-	cart _ Cart acceptingItemsOf: catalog.
-	
-	idCart _ self nextIdFree.
-	
-	cartsPerUser add: anUser -> cart.
-	
-	carts add: idCart -> cart.
-	
-	modifications add: idCart -> date.
-	
-	^ SuccessfulResponse with: idCart.! !
-
-!InternalAPI methodsFor: 'API' stamp: 'ja 12/1/2020 19:38:17'!
-listCart: aCartId
-	
-	| cart listItems |
-	
-	cart _ carts at: aCartId.
-	
-	listItems _ cart items.
-		
-	^ SuccessfulResponse with: listItems asBag. 
-	
-	! !
+	^ catalog at: anItem .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1034,50 +1079,51 @@ listCart: aCartId
 InternalAPI class
 	instanceVariableNames: ''!
 
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 12/1/2020 18:57:34'!
+!InternalAPI class methodsFor: 'instance creation' stamp: 'ja 12/2/2020 16:37:19'!
+with: aUsersCollection on: aDate usingCatalog: aCatalog usingMerchantProccesor: aMerchantProccesor
+	
+	^self new initializeWith: aUsersCollection on: aDate usingCatalog: aCatalog usingMerchantProccesor: aMerchantProccesor.! !
+
+
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'ja 12/1/2020 18:57:34'!
 ISBNNotRegisteredErrorDescription
 
 	^ 'ISBN is not registered'! !
 
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 11/30/2020 19:34:39'!
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'eb 12/3/2020 00:35:14'!
+canNotQueryListPurchsesOfEmptyCartErrorDescription
+	
+	^ 'Can not query list purchases of empty cart'.! !
+
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'eb 12/2/2020 22:53:25'!
+cartDoesNotBelongToUserErrorDescription
+	
+	^ 'Cart does not belong to user'.! !
+
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'ja 11/30/2020 19:34:39'!
 cartIsExpiredErrorDescription
 
 	^ 'Cart is expired'! !
 
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 12/1/2020 18:42:33'!
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'ja 12/1/2020 18:42:33'!
 cartNotRegisteredErrorDescription
 
 	^ 'Cart is not registered'! !
 
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 12/1/2020 19:03:55'!
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'ja 12/1/2020 19:03:55'!
 invalidQuantityErrorDescription
 
 	^'Invalid quantity'! !
 
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 11/29/2020 13:47:40'!
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'eb 12/2/2020 22:43:30'!
+userHasNotCartsErrorDescription
+	
+	^ 'User has not carts'.! !
+
+!InternalAPI class methodsFor: 'error descriptions' stamp: 'ja 11/29/2020 13:47:40'!
 userNotRegisteredErrorDescription
 
 	^ 'User not registered'! !
-
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 11/29/2020 18:11:07'!
-with: aUsersCollection
-	
-	^self new initializeWith: aUsersCollection.! !
-
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 12/1/2020 17:21:47'!
-with: aUsersCollection on: aDate
-	
-	^self new initializeWith: aUsersCollection on: aDate.! !
-
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 12/1/2020 18:30:00'!
-with: aUsersCollection on: aDate usingCatalog: aCatalog
-	
-	^self new initializeWith: aUsersCollection on: aDate usingCatalog: aCatalog .! !
-
-!InternalAPI class methodsFor: 'as yet unclassified' stamp: 'ja 12/2/2020 16:37:19'!
-with: aUsersCollection on: aDate usingCatalog: aCatalog usingMerchantProccesor: aMerchantProccesor
-	
-	^self new initializeWith: aUsersCollection on: aDate usingCatalog: aCatalog usingMerchantProccesor: aMerchantProccesor.! !
 
 
 !classDefinition: #InternalAPIResponse category: #TusLibros!
@@ -1092,15 +1138,16 @@ code
 
 	self subclassResponsibility ! !
 
-!InternalAPIResponse methodsFor: 'accesing' stamp: 'ja 11/29/2020 18:56:21'!
+!InternalAPIResponse methodsFor: 'accesing' stamp: 'eb 12/2/2020 19:42:21'!
+payload
+
+	^ payload copy.! !
+
+
+!InternalAPIResponse methodsFor: 'initialization' stamp: 'ja 11/29/2020 18:56:21'!
 initializeWith: aPayload
 
 	payload _ aPayload! !
-
-!InternalAPIResponse methodsFor: 'accesing' stamp: 'ja 11/29/2020 18:57:44'!
-payload
-
-	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1126,11 +1173,6 @@ code
 
 	^ 0! !
 
-!SuccessfulResponse methodsFor: 'accesing' stamp: 'ja 11/29/2020 18:58:33'!
-payload
-	 
-	^ payload ! !
-
 
 !classDefinition: #UnsuccessfulResponse category: #TusLibros!
 InternalAPIResponse subclass: #UnsuccessfulResponse
@@ -1143,11 +1185,6 @@ InternalAPIResponse subclass: #UnsuccessfulResponse
 code 
 
 	^ 1! !
-
-!UnsuccessfulResponse methodsFor: 'accesing' stamp: 'ja 11/29/2020 18:59:00'!
-payload
-
-	^ payload ! !
 
 
 !classDefinition: #Sale category: #TusLibros!
@@ -1181,12 +1218,62 @@ of: aTotal
 	^self new initializeTotal: aTotal ! !
 
 
+!classDefinition: #DetailedSale category: #TusLibros!
+Sale subclass: #DetailedSale
+	instanceVariableNames: 'detail'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!DetailedSale methodsFor: 'accessing' stamp: 'eb 12/2/2020 23:23:19'!
+detail
+
+	^ detail copy.! !
+
+
+!DetailedSale methodsFor: 'initialization' stamp: 'eb 12/2/2020 23:26:33'!
+initializeOf: aTotal with: anItemCollection
+	
+	total _ aTotal .
+	detail _ anItemCollection .
+	
+	^ self .! !
+
+
+!DetailedSale methodsFor: 'equality' stamp: 'eb 12/2/2020 23:41:33'!
+= aDetailedSale
+
+	^ total = aDetailedSale total and: (detail = aDetailedSale detail).
+	! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'DetailedSale class' category: #TusLibros!
+DetailedSale class
+	instanceVariableNames: ''!
+
+!DetailedSale class methodsFor: 'instance creation' stamp: 'eb 12/2/2020 23:25:29'!
+of: aTotal with: anItemCollection
+
+	^ self new initializeOf: aTotal with: anItemCollection .! !
+
+
 !classDefinition: #StoreTestObjectsFactory category: #TusLibros!
 Object subclass: #StoreTestObjectsFactory
 	instanceVariableNames: 'today'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
+
+!StoreTestObjectsFactory methodsFor: 'items' stamp: 'eb 12/3/2020 00:17:12'!
+anotherItemSellByTheStore
+	
+	^ 'anotherValidBook'! !
+
+!StoreTestObjectsFactory methodsFor: 'items' stamp: 'eb 12/3/2020 00:17:23'!
+anotherItemSellByTheStorePrice
+	
+	^20! !
 
 !StoreTestObjectsFactory methodsFor: 'items' stamp: 'HernanWilkinson 6/17/2013 18:08'!
 itemNotSellByTheStore
@@ -1209,11 +1296,13 @@ createCart
 	
 	^Cart acceptingItemsOf: self defaultCatalog! !
 
-!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'HernanWilkinson 6/17/2013 18:08'!
+!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'eb 12/3/2020 00:26:15'!
 defaultCatalog
 	
 	^ Dictionary new
 		at: self itemSellByTheStore put: self itemSellByTheStorePrice;
+		
+		at: self anotherItemSellByTheStore put: self anotherItemSellByTheStorePrice;
 		yourself ! !
 
 
@@ -1245,21 +1334,13 @@ authenticatedUsers
 	
 	^ users.! !
 
-!StoreTestObjectsFactory methodsFor: 'internal API' stamp: 'ja 12/2/2020 19:25:36'!
-internalApi
-	
-	^ InternalAPI with: self authenticatedUsers 
-				on: today 
-				usingCatalog: self defaultCatalog 
-				usingMerchantProccesor: self.! !
-
-!StoreTestObjectsFactory methodsFor: 'internal API' stamp: 'ja 12/2/2020 19:28:26'!
+!StoreTestObjectsFactory methodsFor: 'internal API' stamp: 'eb 12/2/2020 19:39:04'!
 internalApiUsingMerchantProccessor: aMerchantProccessor
 	
 	^ InternalAPI with: self authenticatedUsers 
 				on: today 
 				usingCatalog: self defaultCatalog 
-				usingMerchantProccesor: self.! !
+				usingMerchantProccesor: aMerchantProccessor.! !
 
 
 !StoreTestObjectsFactory methodsFor: 'date' stamp: 'ja 12/2/2020 18:39:00'!
